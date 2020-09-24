@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css">
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+ <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
+
+<style>
+body{
+    margin:0px;
+    padding:0px;
+}
+nav{
+width:100%;
+position:fixed;
+height:70px;
+background-color:rgba(0,0,0,1);
+z-index:9999;
+}
+nav .logo{
+    float:left;
+    color:#fff;
+    padding-top:18px;
+    padding-bottom:18px;
+    padding-left:60px;
+    font-family:'Inconsolata', serif;
+    font-weight:bold;
+}
+nav ul{
+    text-align:right;
+    margin:0px;
+    padding:0px;
+    display:flex;
+    float:right;
+}
+nav ul li{
+    list-style:none;
+    display:inline-block;
+    padding:15px;
+}
+nav ul li a{
+    float:right;
+    text-decoration:none;
+    display:block;
+    text-transform:uppercase;
+    color:#fff;
+    font-size:15px;
+    font-family:'Raleway';
+    padding:9px 10px;
+    margin-right:8px;
+}
+nav ul li a:hover{
+    text-decoration:none;
+    background-color:#fff;
+    color:#000;
+    border-radius:7px;
+    .icon{
+  color:red;
+}
+    
+}
+nav ul li a.active{
+background:#cc0000;
+color:#fff;
+border-radius:7px;
+
+}
+#section1{
+    width:100vw;
+    height:75vh;
+    background:url(https://media.cntraveler.com/photos/5e9471d05cd3cb0009ca9612/master/pass/FranceSummerTravel-2020-GettyImages-805553090.jpg);
+    background-size:cover;
+    background-poition:center;
+}
+#lightSlider{
+  list-style:none;
+  display:flex;
+}
+#lightslider li{
+  display:inline-block;
+}
+.box{
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+#transport{
+  width:100vw;
+  height:30vh;
+  list-style:none;
+  display:flex;
+  text-align:center;
+  justify-content:center;
+}
+#transport li{
+  display:inline;
+  text-align:center;
+  width:100vw;
+  justify-content:center;
+}
+.mode{
+  height:20vh;
+  width:20vh;
+  margin:10vh 16vh;
+  border-radius:10vh;
+  background-color:black;
+  text-align:center;
+  justify-content:center;
+  display:flex;
+
+}
+
+.carousel-inner > .item >img{
+  min-height : 300px;
+  max-height : 300px;
+  width : 80%;
+}
+.swiper-container {
+    width: 100vw;
+    height: 200px;
+}
+.swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      background: #fff;
+
+      /* Center slide text vertically */
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="logo">
+      <h3><i class="fa fa-suitcase" aria-hidden="true" style="padding:5px 10px;color:red;"></i>PACK YOUR BAGS</h3>
+    </div>
+    <ul>
+      <li><a href="#" class="active"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
+      <li><a href="#"><i class="fa fa-user" aria-hidden="true" style="padding-right:10px;" class="icon"></i>Login</a></li>
+      <li><a href="#"><i class="fa fa-user-plus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Signup</a></li>
+      <li><a href="#"><i class="fa fa-info" aria-hidden="true" style="padding-right:10px;"class="icon"></i>About</a></li>
+      <li><a href="#"><i class="fa fa-phone" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Contact</a></li>
+    </ul>
+  </nav>
+</div>
+<div id="section1">
+  <div id="introduction" style="position:absolute;top:70px;background-color:rgba(0,0,0,0.4);padding:20px;;width:100vw;height:65vh;">
+    <h5 style="text-align:center;color:white;font-family:serif; ">Looking to run away from stressful life?<br> Looking for some awesome holiday packages at great deals?<br> we got you covered<br> welcome to </h4>
+    <h3 style="text-align:center;color:white;font-family:'Inconsolata',serif;font-weight:bold;"><i class="fa fa-suitcase" style="color:red;margin-right:5px;"></i>PACK YOUR BAGS</h3>
+    <h4 style="text-align:center;color:white;font-family:serif;">Book flights,trains,buses and holiday packages<br> at affordable prices.</h4>
+    <h5 style="text-align:center;color:white;font-family:serif;">Signup now and join us today!!<br> We wish you a</h4>
+    <h4 style="text-align:center;color:white;font-family:serif;">Happy and safe journey</h4>
+  </div>
+</div>
+<div>
+  <h4 style="text-align:center;font-family:'Raleway';font-weight:bold;padding:15px;">Popular Holiday packages</h4>
+</div>
+<div class="wrap" style="text-align:center;position:absolute;display:flex;justify-content:center;width:100vw;">
+  <ul id="lightSlider" style="text-align:center;position:absolute;display:flex;justify-content:center;width:100vw;">
+    <li style="width:300px;height:400px;">
+      <div class="box" style="border-radius:8px;margin:15px;">
+        <img src="https://media.nature.com/lw800/magazine-assets/d41586-020-02446-7/d41586-020-02446-7_18296506.jpg" height="160" width="100%" class="cardimg" style="object-fit:cover;">
+        <div style="padding:10px;background-color:white;">
+          <h5 style="text-align:center;">Mauritius</h5>
+          <h6>Surrounded by seemingly endless stretches of cobalt-blue water, the stunning island of Mauritius is situated in the southwestern part of the Indian Ocean Here, travellers enjoy a magnificent and unforgettable holiday on this paradise.</h6>
+        </div>
+      </div>
+    </li>
+    <li style="width:300px;height:400px;">
+      <div class="box"  style="border-radius:8px;margin:15px;">
+        <img src="https://www.tripsavvy.com/thmb/K2vk3axIMIqMbU10VFcSzhgUOdo=/3400x2550/smart/filters:no_upscale()/where-is-singapore-dcc07b5514284c58bea037a9b7344568.jpg" height="160" width="100%" class="cardimg" style="object-fit:cover;">
+        <div style="padding:10px;background-color:white">
+          <h5 style="text-align:center;">Singapore</h5>
+          <h6>Singapore is a tiny country that is smaller than many major cities around the world, but this city state has managed to make its mark on the world with some top notch accolades despite its diminutive size and relatively young age.</h6>
+        </div>
+      </div>
+    </li>
+    <li style="width:300px;height:400px;">
+      <div class="box"  style="border-radius:8px;margin:15px;">
+        <img src="https://www.azamara.com/sites/default/files/heros/smal5b-traditional-modern-malaysia-hero-1800x1000.jpg" height="160" width="100%" class="cardimg" style="object-fit:cover;">
+        <div style="padding:10px;background-color:white;">
+          <h5 style="text-align:center;">Malaysia</h5>
+          <h6> Malaysia is known for its capital city of Kuala Lumpur, a powerhouse financial and business hub in South East Asia, as well as its beautiful beaches, secluded islands, elevated hill stations, and UNESCO World Heritage Sites</h6>
+        </div>
+      </div>
+    </li>
+    <li style="width:300px;height:400px;">
+      <div class="box"  style="border-radius:8px;margin:15px;">
+        <img src="https://news.cgtn.com/news/2020-06-26/Thailand-to-greenlight-entry-of-several-types-of-inbound-travelers-RD9CFeGsWk/img/6a5b75257fb544cdaa3c22a644bdc368/6a5b75257fb544cdaa3c22a644bdc368.jpeg" height="160" width="100%" class="cardimg" style="object-fit:cover;">
+        <div style="padding:10px;background-color:white;">
+          <h5 style="text-align:center;">Thailand</h5>
+          <h6>Thailand is one of the most visited countries in the world,Some of the most iconic attractions include the stunning islands in the south, the diverse street food scene in Bangkok, and the thousands of temples scattered across the country.</h6>
+        </div>
+      </div>
+    </li>
+    <li style="width:300px;height:400px;">
+      <div class="box"  style="border-radius:8px;border-style:solid;margin:15px;border:2px;">
+        <img src="https://cdn.kimkim.com/files/a/content_articles/featured_photos/d21b085ef2ce77c4331c462d385aed66315ae019/big-c0028d755da3df7d7160a6015869431d.jpg" height="160" width="100%" class="cardimg" style="object-fit:cover;">
+        <div style="padding:10px;background-color:white;">
+          <h5 style="text-align:center;">Egypt</h5>
+          <h6> Egypt is full of wonders, from big cities where you can enjoy the markets and the atmosphere of the city, to temples and ruins to learn all about Egypt. There are million activities and places to go in Egypt including the pyramids of Giza!. </h6>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div> 
+<br>
+<div style="width=100vw;background-color:red;height:50vh;display:block;">
+</div>
+<div  style="margin:20px 20px;width:100vw;text-align:center;">
+  <h4 style="text-align:center;font-family:'Raleway';font-weight:bold;padding:15px;">Modes of transport offered by us</h4>
+   <ul id="transport">
+    <li>
+        <div class="mode">
+          <i class="fa fa-bus fa-4x" style="color:white;margin:auto;width=100%"></i>
+        </div>
+    </li>
+    <li> 
+      <div class="mode">
+        <i class="fa fa-train fa-4x" style="color:white;margin:auto;"></i>
+      </div>
+    </li>
+    <li>
+      <div class="mode">
+        <i class="fa fa-plane fa-4x" style="color:white;margin:auto;"></i>
+      </div>
+    </li>
+  </ul>
+</div>
+<br>
+<div style="background-color:#36454f;width:100vw;height:50vh;">
+  <div style="z-index:9999;">
+    <h4 style="text-align:center;font-family:'Raleway';font-weight:bold;padding:15px;z-index:9998;color:white;">Why choose us?</h4>
+    <div class="wrap" style="text-align:center;position:absolute;display:flex;justify-content:center;width:100vw;">
+      <ul id="lightSlider" style="text-align:center;position:absolute;display:flex;justify-content:center;width:100vw;">
+        <li style="width:300px;height:400px;">
+          <div class="box" style="border-radius:8px;margin:15px;">
+            <i class="fa fa-money fa-4x" style="padding:10px;"></i>
+            <div style="padding:10px;background-color:white;">
+              <h5 style="text-align:center;">Best price</h5>
+                <h6>We offer every tour and travel with the cheapest price all over the world</h6>
+            </div>
+         </div>
+       </li>
+       <li style="width:300px;height:400px;">
+        <div class="box"  style="border-radius:8px;margin:15px;">
+          <i class="fa fa-heart fa-4x" style="padding:10px;"></i>
+           <div style="padding:10px;background-color:white">
+             <h5 style="text-align:center;">Travellers love us</h5>
+             <h6>With the rating of every trip above 4.5 customer satisfaction is our main priority</h6>
+           </div>
+        </div>
+       </li>
+       <li style="width:300px;height:400px;">
+         <div class="box"  style="border-radius:8px;margin:15px;">
+           <i class="fa fa-user fa-4x" style="padding:10px;"></i>
+           <div style="padding:10px;background-color:white;">
+             <h5 style="text-align:center;">Best travel agents</h5>
+             <h6>Highly knowledgeable andd trained travel agents to provide you with the best experience.</h6>
+           </div>
+         </div>
+       </li>
+       <li style="width:300px;height:400px;">
+         <div class="box"  style="border-radius:8px;margin:15px;">
+           <i class="fa fa-globe fa-4x" style="padding:10px;"></i>
+           <div style="padding:10px;background-color:white;">
+             <h5 style="text-align:center;">variety of packages</h5>
+             <h6>We offer a variety of packages which are not offered by any other service out in the world.</h6>
+           </div>
+         </div>
+       </li>
+       <li style="width:300px;height:400px;">
+         <div class="box"  style="border-radius:8px;border-style:solid;margin:15px;border:2px;">
+           <i class="fa fa-users fa-4x" style="padding:10px;"></i>
+           <div style="padding:10px;background-color:white;">
+             <h5 style="text-align:center;">24 hr customer care</h5>
+             <h6>Our customer care agents work day and night to clear each and every trouble or doubt you have. </h6>
+           </div>
+         </div>
+       </li>
+     </ul>
+   </div> 
+ </div>
+</div>
+</body>
+</html>
