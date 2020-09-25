@@ -6,7 +6,11 @@ from django.contrib.auth.forms import UserCreationForm
 def Home(request):
     return render(request,'authentication/home.html')
 
+def Log_In(request):
+    return render(request,'authentication/login.html')
 
+def Sign_Up(request):
+    return render(request,'authentication/signup.html')
 
 
 # Create your views here.
