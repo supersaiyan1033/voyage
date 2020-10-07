@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Voyage-login</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata">
    <style>
     @import "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css";
 body{
@@ -9,15 +10,20 @@ body{
     padding: 0;
     font-family:sans-serif;
     background:url(https://media.cntraveler.com/photos/5e9471d05cd3cb0009ca9612/master/pass/FranceSummerTravel-2020-GettyImages-805553090.jpg);
+    opacity:rgba(0,0,0,0.6);
     background-size: cover;
 }
 .login-box{
     width: 300px;
+    border-radius:10px;
     color:red;
+    background-color:rgba(255,255,255,1);
+    padding:0px 20px;
     position: absolute;
-    top: 40%;
-    left: 20%;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%,-50%);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .login-box h1{
 
@@ -26,6 +32,7 @@ body{
     border-bottom-color:black;
     margin-bottom:50px ;
     padding:13px 0;
+    text-align:center;
 }
 .textbox{
     width:100%;
@@ -38,7 +45,7 @@ body{
 }
 .textbox i{
     width:26px;
-    float:left;
+   float:left;
     color:red;
     text-align: center;
 }
@@ -52,22 +59,37 @@ body{
     float:left;
     margin: 0 10px;
 }
+.loginbtn{
+    text-align:center;
+    margin:0px;
+}
 .btn{
+    text-align:center;
     color:white;
-    width:100%;
-    background: red;
+    width:60%;
+    background: #e60000;
     border:2px solid;
     border-color: black;
     padding:5px;
     font-size: 18px;
     cursor: pointer;
-    margin:12px 0;
+    margin:12px 0px;
+    border-radius:7px;
+}
+.btn:hover{
+  transform:scale(1.1);
+  background:#ff1a1a
 }
 .signup{
     color:black;
     padding:20px;
-    font-size: 20px;
+    font-size: 17px;
     font-weight: bold;
+    text-align:center;
+}
+.signup:hover{
+    color:#ff1a1a;
+    font-size:18px;
 }
 nav{
 width:100%;
@@ -132,7 +154,7 @@ border-radius:7px;
           <h3><i class="fa fa-suitcase" aria-hidden="true" style="padding:5px 10px;color:red;"></i>PACK YOUR BAGS</h3>
         </div>
         <ul>
-          <li><a href="{% url 'home' %}" class="active"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
+          <li><a href="{% url 'home' %}"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
           <li><a href="{% url 'auth-signup' %}"><i class="fa fa-user" aria-hidden="true" style="padding-right:10px;" class="icon"></i>Signup</a></li>
           <li><a href="#"><i class="fa fa-info" aria-hidden="true" style="padding-right:10px;"class="icon"></i>About</a></li>
           <li><a href="#"><i class="fa fa-phone" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Contact</a></li>
@@ -142,13 +164,15 @@ border-radius:7px;
         <h1>Login</h1>
         <div class="textbox" >
             <i class="fa fa-user" aria-hidden="true"></i>
-            <input type="text" placeholder="Username" name="" value="">
+            <input type="text" placeholder="Username" name="" value="" autocomplete="off">
         </div>
         <div class="textbox">
             <i class="fa fa-lock" aria-hidden="true"></i>
-            <input type="password" placeholder="password" name="" value="">
+            <input type="password" placeholder="password" name="" value="" autocomplete="off">
         </div>
+        <div class="loginbtn">
            <input class="btn" type="button" name="" value="Sign in">
+        </div>
            <a class='signup 'href="{% url 'auth-signup' %}"><p>Don't Have An Account?SignUp</p></a> 
     </div>
 </body>

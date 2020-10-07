@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Voyage</title>
+     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata">
     <style>
         @import "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css";
 body{
@@ -11,12 +12,17 @@ body{
     background:url(https://media.cntraveler.com/photos/5e9471d05cd3cb0009ca9612/master/pass/FranceSummerTravel-2020-GettyImages-805553090.jpg);
     background-size: cover;
 }
+
 .Signup-box{
     width: 300px;
+    background-color:rgba(255,255,255,1);
+    padding:0px 20px;
     position: absolute;
-    top: 50%;
-    left: 15%;
+    top: 55%;
+    left: 50%;
     transform: translate(-50%,-50%);
+    border-radius:10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .Signup-box h1{
     color:red;
@@ -25,11 +31,12 @@ body{
     border-bottom-color: black;
     margin-bottom:30px ;
     padding:13px 0;
+    text-align:center;
 }
 .textbox{
     width:100%;
     overflow:hidden;
-    font-size: 20px ;
+    font-size: 20px;
     padding:8px 0;
     margin:8px 0;
     border-bottom: 1px solid;
@@ -40,33 +47,60 @@ body{
     border:none;
     outline:none;
     background: white;
-    font-size: 18px;
+    font-size: 19px;
     width:250px;
     float:left;
     margin: 0 10px;
+   
+}
+#select{
+    color:black;
+    border:none;
+    outline:none;
+    background: white;
+    font-size: 19px;
+    width:250px;
+    float:left;
+    margin: 0 10px;
+   
 }
 .textbox i{
     width:26px;
     float:left;
     color:red;
     text-align: center;
+   
+}
+.loginbtn{
+    text-align:center;
+    justify-content:center;
 }
 .btn{
     color:white;
-    width:100%;
-    background:red;
+    width:60%;
+    background:#e60000;
     border:2px solid;
     border-color: black;
     padding:5px;
     font-size: 20px;
     cursor: pointer;
     margin:12px 0;
+    border-radius:7px;
+}
+.btn:hover{
+    transform: scale(1.1);
+    background:#ff1a1a;
 }
 .login {
     color:black;
     padding:10px;
-    font-size: 20px;
+    text-align:center;
+    font-size: 17px;
     font-weight: bold;
+}
+.login:hover{
+    font-size:18px;
+    color:#ff1a1a
 }
 nav{
 width:100%;
@@ -131,44 +165,58 @@ border-radius:7px;
           <h3><i class="fa fa-suitcase" aria-hidden="true" style="padding:5px 10px;color:red;"></i>PACK YOUR BAGS</h3>
         </div>
         <ul>
-          <li><a href="{% url 'home' %}" class="active"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
+          <li><a href="{% url 'home' %}"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
           <li><a href="{% url 'auth-login' %}"><i class="fa fa-user" aria-hidden="true" style="padding-right:10px;" class="icon"></i>Login</a></li>
           <li><a href="#"><i class="fa fa-info" aria-hidden="true" style="padding-right:10px;"class="icon"></i>About</a></li>
           <li><a href="#"><i class="fa fa-phone" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Contact</a></li>
         </ul>
       </nav>
+      <form method="POST">
+      {%csrf_token%}
     <div class="Signup-box">
         <h1>Sign Up</h1>
         <div class="textbox" >
             <i class="fa fa-user" aria-hidden="true"></i>
-            <input type="text" placeholder="First name" name="" value="">
+            <input type="text" placeholder="First name" name="firstname" value="" required>
         </div>
         <div class="textbox">
             <i class="fa fa-user" aria-hidden="true"></i>
-            <input type="text" placeholder="Lastname" name="" value="">
+            <input type="text" placeholder="Lastname" name="lastname" value="" required>
         </div>
         <div class="textbox" >
-            <i class="fa fa-user" aria-hidden="true"></i>
-            <input type="text" placeholder="gender" name="" value="">
+            <i class="fa fa-venus-mars" aria-hidden="true"></i>
+            <select id="select" name="gender" required>
+              <option value="" selected disabled="true">Select gender</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+              <option value="O">Others</option>
+            </select>
         </div>
         <div class="textbox" >
             <i class="fa fa-map-marker" aria-hidden="true"></i>
-            <input type="text" placeholder="Address" name="" value="">
+            <input type="text" placeholder="Address" name="address" value="" required>
         </div>
         <div class="textbox" >
-            <i class="fa fa-mobile" aria-hidden="true"></i>
-            <input type="text" placeholder="Mobile Number" name="" value="">
+            <i class="fa fa-calendar" aria-hidden="true"></i>
+            <input type="date" placeholder="Date of birth" name="DOB" value="" required>
+        </div>
+        <div class="textbox" >
+            <i class="fa fa-phone" aria-hidden="true"></i>
+            <input type="tel" placeholder="Mobile Number" name="mobileno" value="" required>
         </div>
         <div class="textbox" >
             <i class="fa fa-envelope" aria-hidden="true"></i>
-            <input type="text" placeholder="Email" name="" value="">
+            <input type="text" placeholder="Email" name="email" value="" autocomplete="off" required>
         </div>
         <div class="textbox" >
             <i class="fa fa-lock" aria-hidden="true"></i>
-            <input type="password" placeholder="Password" name="" value="">
+            <input type="password" placeholder="Password" name="password" value="" autocomplete="off" required>
         </div>
-        <input class="btn" type="button" name="" value="Sign Up">
+        <div class="loginbtn">
+        <input class="btn" type="submit" name="" value="Sign up">
+        </div>
         <a class='login' href='{% url "auth-login" %}'><p>Already Have An Account?Login</p> </a>
     </div>
+    </form>
 </body>
 </html>
