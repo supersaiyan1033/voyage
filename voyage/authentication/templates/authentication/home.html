@@ -5,10 +5,12 @@
  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css">
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-
+<script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
 
 <style>
 body{
@@ -76,20 +78,16 @@ border-radius:7px;
     background:url(https://media.cntraveler.com/photos/5e9471d05cd3cb0009ca9612/master/pass/FranceSummerTravel-2020-GettyImages-805553090.jpg);
     background-size:cover;
     background-poition:center;
-    margin:auto;
 }
 #lightSlider{
   list-style:none;
   display:flex;
-  magin:auto;
 }
 #lightslider li{
   display:inline-block;
-  margin:auto;
 }
 .box{
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  margin:auto;
 }
 #transport{
   width:100vw;
@@ -98,14 +96,12 @@ border-radius:7px;
   display:flex;
   text-align:center;
   justify-content:center;
-  margin:auto;
 }
 #transport li{
   display:inline;
   text-align:center;
   width:100vw;
   justify-content:center;
-  margin:auto;
 }
 .mode{
   height:20vh;
@@ -124,6 +120,17 @@ border-radius:7px;
   max-height : 300px;
   width : 80%;
 }
+.swiper-container {
+    width: 100vw;
+    height: 200px;
+}
+.swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      background: #fff;
+
+      /* Center slide text vertically */
+    }
 </style>
 </head>
 <body>
