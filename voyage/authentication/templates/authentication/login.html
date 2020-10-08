@@ -89,7 +89,6 @@ body{
 }
 .signup:hover{
     color:#ff1a1a;
-    font-size:18px;
 }
 nav{
 width:100%;
@@ -160,20 +159,23 @@ border-radius:7px;
           <li><a href="#"><i class="fa fa-phone" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Contact</a></li>
         </ul>
       </nav>
+      <form method="POST">
+       {%csrf_token%}
     <div class="login-box">
         <h1>Login</h1>
         <div class="textbox" >
-            <i class="fa fa-user" aria-hidden="true"></i>
-            <input type="text" placeholder="Username" name="" value="" autocomplete="off">
+            <i class="fa fa-envelope" aria-hidden="true"></i>
+            <input type="text" placeholder="Username" name="email" value="" autocomplete="off">
         </div>
         <div class="textbox">
             <i class="fa fa-lock" aria-hidden="true"></i>
-            <input type="password" placeholder="password" name="" value="" autocomplete="off">
+            <input type="password" placeholder="password" name="password" value="" autocomplete="off">
         </div>
         <div class="loginbtn">
-           <input class="btn" type="button" name="" value="Sign in">
+           <input class="btn" type="submit" name="" value="Sign in">
         </div>
            <a class='signup 'href="{% url 'auth-signup' %}"><p>Don't Have An Account?SignUp</p></a> 
     </div>
+    </form>
 </body>
 </html> 
