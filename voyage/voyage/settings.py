@@ -84,10 +84,15 @@ DATABASES = {
         'PASSWORD':'roomno605',
         'HOST': 'localhost',
         'PORT':'3333',
+         'OPTIONS': {
+                        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+                    }
 
     }
 }
-
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
