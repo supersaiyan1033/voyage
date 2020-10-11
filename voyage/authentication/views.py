@@ -3,7 +3,6 @@ from django import forms
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.db import connection
-from .models import Signup_UserForm
 import bcrypt
 import hashlib, sys
 import base64
@@ -25,7 +24,7 @@ def Log_In(request):
              print(dbpassword)
              if bcrypt.checkpw(password.encode('utf8'),dbpassword.encode('utf8')):
                  print('user exists login successfully')
-                 return render(request,'authentication/login.html')
+                 return render(request,'user/user.html')
              else:
                print('incorrect password')
           else:
