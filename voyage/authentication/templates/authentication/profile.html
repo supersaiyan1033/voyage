@@ -1,10 +1,97 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>profile</title>
-</head>
-<body>
-    <div>hello</div>
-</body>
-</html>
+<!-- CSS only -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+<!-- JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+<div class="container">
+    <h1>Edit Profile</h1>
+  	<hr>
+	<div class="row">
+      <!-- left column -->
+      <div class="col-md-3">
+        <div class="text-center">
+          <img src="data:image/jpeg;base64,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" class="avatar img-circle" alt="avatar">
+        
+        </div>
+      </div>
+      
+      <!-- edit form column -->
+      <div class="col-md-9 personal-info">
+        
+        <form class="form-horizontal" role="form">
+          <div class="form-group">
+            <label class="col-lg-3 control-label">First Name:</label>
+            <div class="col-lg-8">
+              <input class="form-control" type="text" value="">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">Last Name:</label>
+            <div class="col-lg-8">
+              <input class="form-control" type="text" value="">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">Address:</label>
+            <div class="col-lg-8">
+              <input class="form-control" type="text" value="">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">Email:</label>
+            <div class="col-lg-8">
+              <input class="form-control" type="text" value="">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">Gender:</label>
+            <div class="col-lg-8">
+              <div class="ui-select">
+                <select id="Gender" class="form-control">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Non-Binary">Non binary</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Mobile:</label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" value="">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Old Password:</label>
+            <div class="col-md-8">
+              <input class="form-control" type="password" value="">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">New Password:</label>
+            <div class="col-md-8">
+              <input class="form-control" type="password" value="">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Confirm New password:</label>
+            <div class="col-md-8">
+              <input class="form-control" type="password" value="">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label"></label>
+            <div class="col-md-8">
+              <input type="button" class="btn btn-primary" value="Save Changes">
+              <span></span>
+              <input type="reset" class="btn btn-default" value="Cancel">
+            </div>
+          </div>
+        </form>
+      </div>
+  </div>
+</div>
+<hr>
