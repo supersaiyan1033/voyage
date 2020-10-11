@@ -57,9 +57,9 @@ body{
       <span></span>
     </div>  
     <div class="list">
-      <div class="item"><a  href="" >profile</a></div>
+      <div class="item"><a  href="{% url 'profile' %}" >profile</a></div>
       <div class="item"><a  href="">change password</a></div>
-      <div class="item"><a  href="">log out</a></div>
+      <div class="item"><a  href="{% url 'auth-login' %}">log out</a></div>
     </div>
   </div>
   <script>

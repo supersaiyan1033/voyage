@@ -51,7 +51,8 @@ def Sign_Up(request):
           return render(request,'authentication/signup.html')    
      else:        
         return render(request,'authentication/signup.html')
-def user(request):
-     return render (request,'authentication/user.html')
+
+def Profile(request):
+     return render(request,"authentication/profile.html")
 
 # Create your views here.
