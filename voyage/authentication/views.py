@@ -24,7 +24,7 @@ def Log_In(request):
              print(dbpassword)
              if bcrypt.checkpw(password.encode('utf8'),dbpassword.encode('utf8')):
                  print('user exists login successfully')
-                 return render(request,'authentication/user.html')
+                 return render (request,'authentication/user.html')
              else:
                print('incorrect password')
           else:

@@ -23,6 +23,6 @@ urlpatterns = [
     path('',views.Home,name='home'),
     path('login/',views.Log_In,name='auth-login'),
     path('signup/',views.Sign_Up,name='auth-signup'),
-    path('login/home',views.user,name='update-user'),
+    path('login/user',views.user,name='user'),
    
 ]

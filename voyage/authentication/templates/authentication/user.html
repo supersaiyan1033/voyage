@@ -1,196 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
-<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css">
-<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
-
-<style>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+    * {
+  margin:0px;
+  padding:0px;
+  box-sizing:border-box;
+  font-family:sans-serif;
+}
 body{
-    margin:0px;
-    padding:0px;
-}
-nav{
-width:100%;
-position:fixed;
-height:70px;
-background-color:rgba(0,0,0,1);
-z-index:9999;
-}
-nav .logo{
-    float:left;
-    color:#fff;
-    padding-top:18px;
-    padding-bottom:18px;
-    padding-left:60px;
-    font-family:'Inconsolata', serif;
-    font-weight:bold;
-}
-nav ul{
-    text-align:right;
-    margin:0px;
-    padding:0px;
-    display:flex;
-    float:right;
-}
-nav ul li{
-    list-style:none;
-    display:inline-block;
-    padding:15px;
-}
-nav ul li a{
-    float:right;
-    text-decoration:none;
-    display:block;
-    text-transform:uppercase;
-    color:#fff;
-    font-size:15px;
-    font-family:'Raleway';
-    padding:9px 10px;
-    margin-right:8px;
-}
-nav ul li a:hover{
-    text-decoration:none;
-    background-color:#fff;
-    color:#000;
-    border-radius:7px;
-    .icon{
-  color:red;
-}
-    
-}
-nav ul li a.active{
-background:#cc0000;
-color:#fff;
-border-radius:7px;
-
-}
-#section1{
-    width:100vw;
-    height:75vh;
     background:url(https://media.cntraveler.com/photos/5e9471d05cd3cb0009ca9612/master/pass/FranceSummerTravel-2020-GettyImages-805553090.jpg);
-    background-size:cover;
-    background-poition:center;
-}
-#lightSlider{
-  list-style:none;
-  display:flex;
-}
-#lightslider li{
-  display:inline-block;
-}
-.box{
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-#transport{
-  width:100vw;
-  height:30vh;
-  list-style:none;
-  display:flex;
-  text-align:center;
-  justify-content:center;
-}
-#transport li{
-  display:inline;
-  text-align:center;
-  width:100vw;
-  justify-content:center;
-}
-.mode{
-  height:20vh;
-  width:20vh;
-  margin:10vh 16vh;
-  border-radius:10vh;
-  background-color:black;
-  text-align:center;
-  justify-content:center;
-  display:flex;
-
 }
 
-.carousel-inner > .item >img{
-  min-height : 300px;
-  max-height : 300px;
-  width : 80%;
+#sidebar {
+  position:absolute;
+  top:0px;
+  left:-200px;
+  width:200px;
+  height:100%;
+  background:red;
+  transition:all 300ms linear;
 }
-.swiper-container {
-    width: 100vw;
-    height: 200px;
+#sidebar.active {
+  left:0px;
 }
-.swiper-slide {
-      text-align: center;
-      font-size: 18px;
-      background: #fff;
-
-      /* Center slide text vertically */
-    }
-</style>
+#sidebar .toggle-btn {
+  position:absolute;
+  left:220px;
+  top:10px;
+}
+#sidebar .toggle-btn span {
+  display:block;
+  width:30px;
+  height:5px;
+  background:#151719;
+  margin:5px 0px;
+  cursor:pointer;
+}
+#sidebar div.list div.item  {
+  padding:15px 10px;
+  font-weight: bold;
+  border-bottom:1px solid #444;
+  color:#fcfcfc;
+  text-transform:uppercase;
+  font-size:15px;
+}
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <nav>
-    <div class="logo">
-      <h3><i class="fa fa-suitcase" aria-hidden="true" style="padding:5px 10px;color:red;"></i>PACK YOUR BAGS</h3>
+  <div id="sidebar">
+    <div class="toggle-btn" onclick="toggleSidebar(this)">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>  
+    <div class="list">
+      <div class="item"><a  href="" >profile</a></div>
+      <div class="item"><a  href="">change password</a></div>
+      <div class="item"><a  href="">log out</a></div>
     </div>
-    <ul>
-      <li><a href="" class="active"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
-      <li><a href="login"><i class="fa fa-user" aria-hidden="true" style="padding-right:10px;" class="icon"></i>Login</a></li>
-      <li><a href="signup"><i class="fa fa-user-plus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Signup</a></li>
-      <li><a href="#"><i class="fa fa-info" aria-hidden="true" style="padding-right:10px;"class="icon"></i>About</a></li>
-      <li><a href="#"><i class="fa fa-phone" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Contact</a></li>
-    </ul>
-  </nav>
-</div>
-<div id="section1">
-  <div id="introduction" style="position:absolute;top:70px;background-color:rgba(0,0,0,0.4);padding:20px;;width:100vw;height:65vh;">
-    
   </div>
-</div>
-
-    </li>
-  </ul>
-</div> 
-<br>
-<div style="width=100vw;background-color:red;height:50vh;display:block;">
-</div>
-    <li>
-        <div class="mode">
-          <i class="fa fa-bus fa-4x" style="color:white;margin:auto;width=100%"></i>
-        </div>
-    </li>
-    <li> 
-      <div class="mode">
-        <i class="fa fa-train fa-4x" style="color:white;margin:auto;"></i>
-      </div>
-    </li>
-    <li>
-      <div class="mode">
-        <i class="fa fa-plane fa-4x" style="color:white;margin:auto;"></i>
-      </div>
-    </li>
-  </ul>
-</div>
-<br>
-
-         </div>
-       </li>
-        </div>
-       </li>
-         </div>
-       </li>
-       
-       
-       </li>
-     </ul>
-   </div> 
- </div>
-</div>
+  <script>
+  function toggleSidebar(ref){
+    document.getElementById("sidebar").classList.toggle('active');
+  }
+</script>
 </body>
 </html>
