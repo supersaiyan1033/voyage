@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+    * {
+  margin:0px;
+  padding:0px;
+  box-sizing:border-box;
+  font-family:sans-serif;
+}
+body{
+    background:url(https://media.cntraveler.com/photos/5e9471d05cd3cb0009ca9612/master/pass/FranceSummerTravel-2020-GettyImages-805553090.jpg);
+}
+
+#sidebar {
+  position:absolute;
+  top:0px;
+  left:-200px;
+  width:200px;
+  height:100%;
+  background:red;
+  transition:all 300ms linear;
+}
+#sidebar.active {
+  left:0px;
+}
+#sidebar .toggle-btn {
+  position:absolute;
+  left:220px;
+  top:10px;
+}
+#sidebar .toggle-btn span {
+  display:block;
+  width:30px;
+  height:5px;
+  background:#151719;
+  margin:5px 0px;
+  cursor:pointer;
+}
+#sidebar div.list div.item  {
+  padding:15px 10px;
+  font-weight: bold;
+  border-bottom:1px solid #444;
+  color:#fcfcfc;
+  text-transform:uppercase;
+  font-size:15px;
+}
+  </style>
+</head>
+<body>
+  <div id="sidebar">
+    <div class="toggle-btn" onclick="toggleSidebar(this)">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>  
+    <div class="list">
+      <div class="item"><a  href="{% url 'profile' %}" >profile</a></div>
+      <div class="item"><a  href="">change password</a></div>
+      <div class="item"><a  href="{% url 'auth-login' %}">log out</a></div>
+    </div>
+  </div>
+  <script>
+  function toggleSidebar(ref){
+    document.getElementById("sidebar").classList.toggle('active');
+  }
+</script>
+</body>
+</html>
