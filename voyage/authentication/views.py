@@ -24,7 +24,7 @@ def Log_In(request):
              print(dbpassword)
              if bcrypt.checkpw(password.encode('utf8'),dbpassword.encode('utf8')):
                  print('user exists login successfully')
-                 return render(request,'user/user.html')
+                 return render(request,'authentication/user.html')
              else:
                print('incorrect password')
           else:
@@ -51,6 +51,7 @@ def Sign_Up(request):
           return render(request,'authentication/signup.html')    
      else:        
         return render(request,'authentication/signup.html')
-
+def user(request):
+     return render (request,'authentication/user.html')
 
 # Create your views here.
