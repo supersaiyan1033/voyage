@@ -217,5 +217,12 @@ border-radius:7px;
         <a class='login' href='{% url "auth-login" %}'><p>Already Have An Account?Login</p> </a>
     </div>
     </form>
+    {% if messages %}
+        {% for message in messages %}
+         {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
 </body>
 </html> 

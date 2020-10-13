@@ -18,3 +18,10 @@ voyage/voyage/__pycache__/settings.cpython-38.pyc
 voyage/voyage/__pycache__/urls.cpython-38.pyc
 voyage/authentication/__pycache__/views.cpython-38.pyc
 voyage/voyage/__pycache__/urls.cpython-38.pyc
+env/Lib/site-packages/__pycache__/six.cpython-38.pyc
+env/
+voyage/voyage/__pycache__/settings.cpython-38.pyc
+voyage/voyage/__pycache__/urls.cpython-38.pyc
+voyage/authentication/migrations/__pycache__/__init__.cpython-38.pyc
+*.pyc
+voyage/authentication/__pycache__/models.cpython-38.pyc

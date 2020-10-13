@@ -21,71 +21,71 @@
       <!-- edit form column -->
       <div class="col-md-9 personal-info">
         
-        <form class="form-horizontal" role="form">
+        <form class="form-horizontal" role="form" method="POST">
           <div class="form-group">
             <label class="col-lg-3 control-label">First Name:</label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" value="">
+              <input class="form-control" type="text" value="" name="firstname" required>
             </div>
           </div>
           <div class="form-group">
             <label class="col-lg-3 control-label">Last Name:</label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" value="">
+              <input class="form-control" type="text" value="" name="lastname" required>
             </div>
           </div>
           <div class="form-group">
             <label class="col-lg-3 control-label">Address:</label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" value="">
+              <input class="form-control" type="text" value="" name="address" required>
             </div>
           </div>
           <div class="form-group">
             <label class="col-lg-3 control-label">Email:</label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" value="">
+              <input class="form-control" type="email" value="" name="email" required>
             </div>
           </div>
           <div class="form-group">
             <label class="col-lg-3 control-label">Gender:</label>
             <div class="col-lg-8">
               <div class="ui-select">
-                <select id="Gender" class="form-control">
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Non-Binary">Non binary</option>
+                <select id="Gender" class="form-control" name="gender" required >
+                  <option value="M">Male</option>
+                  <option value="F">Female</option>
+                  <option value="O">Non binary</option>
                 </select>
               </div>
             </div>
           </div>
           <div class="form-group">
-            <label class="col-md-3 control-label">Mobile:</label>
+            <label class="col-md-3 control-label">Mobileno:</label>
             <div class="col-md-8">
-              <input class="form-control" type="text" value="">
+              <input class="form-control" type="text" value="" name="mobileno" required>
             </div>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label">Old Password:</label>
             <div class="col-md-8">
-              <input class="form-control" type="password" value="">
+              <input class="form-control" type="password" value="" name="oldpassword" required>
             </div>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label">New Password:</label>
             <div class="col-md-8">
-              <input class="form-control" type="password" value="">
+              <input class="form-control" type="password" value="" name="newpassword" required>
             </div>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label">Confirm New password:</label>
             <div class="col-md-8">
-              <input class="form-control" type="password" value="">
+              <input class="form-control" type="password" value="" name="confirmnewpassword" required>
             </div>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label"></label>
             <div class="col-md-8">
-              <input type="button" class="btn btn-primary" value="Save Changes">
+              <input type="submit" class="btn btn-primary" value="Save Changes" style="background-color:red;border-color:red;">
               <span></span>
               <input type="reset" class="btn btn-default" value="Cancel">
             </div>

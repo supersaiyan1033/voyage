@@ -177,5 +177,12 @@ border-radius:7px;
            <a class='signup 'href="{% url 'auth-signup' %}"><p>Don't Have An Account?SignUp</p></a> 
     </div>
     </form>
+     {% if messages %}
+        {% for message in messages %}
+         {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
 </body>
 </html> 
