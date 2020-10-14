@@ -52,7 +52,7 @@ def Sign_Up(request):
           row = cursor.fetchall()
           if cursor.rowcount==0:
              cursor.execute("""INSERT INTO users (firstname,lastname,gender,address,mobileno,email,password,DOB) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""", (firstname ,lastname,gender,address,mobileno,email,password,DOB))
-             return render(request,'authentication/profile.html')  
+             return render(request,'authentication/user.html')  
           else:
              messages.success(request,'User with the entered email already exists!!!')
              return render(request,'authentication/signup.html')

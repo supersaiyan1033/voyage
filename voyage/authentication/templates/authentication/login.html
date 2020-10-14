@@ -162,14 +162,14 @@ border-radius:7px;
       <form method="POST">
        {%csrf_token%}
     <div class="login-box">
-        <h1>Login</h1>
+        <h1><i class="fa fa-user" style="margin-right:10px;"></i>Login</h1>
         <div class="textbox" >
             <i class="fa fa-envelope" aria-hidden="true"></i>
-            <input type="text" placeholder="Username" name="email" value="" autocomplete="off">
+            <input type="text" placeholder="email" name="email" value="" autocomplete="off" required>
         </div>
         <div class="textbox">
             <i class="fa fa-lock" aria-hidden="true"></i>
-            <input type="password" placeholder="password" name="password" value="" autocomplete="off">
+            <input type="password" placeholder="password" name="password" value="" autocomplete="off" required>
         </div>
         <div class="loginbtn">
            <input class="btn" type="submit" name="" value="Sign in">
