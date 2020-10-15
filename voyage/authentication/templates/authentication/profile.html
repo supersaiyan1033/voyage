@@ -7,6 +7,13 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 
 <div class="container">
+  {% if messages %}
+        {% for message in messages %}
+         {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
     <h1>Edit Profile</h1>
   	<hr>
 	<div class="row">
@@ -22,38 +29,46 @@
       <div class="col-md-9 personal-info">
         
         <form class="form-horizontal" role="form" method="POST">
+          {%csrf_token%}
           <div class="form-group">
             <label class="col-lg-3 control-label">First Name:</label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" value="" name="firstname" required>
+              <input class="form-control" type="text" value="{{firstname}}" name="firstname" required>
             </div>
           </div>
           <div class="form-group">
             <label class="col-lg-3 control-label">Last Name:</label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" value="" name="lastname" required>
+              <input class="form-control" type="text" value="{{lastname}}" name="lastname" required>
             </div>
           </div>
           <div class="form-group">
             <label class="col-lg-3 control-label">Address:</label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" value="" name="address" required>
+              <input class="form-control" type="text" value="{{address}}" name="address" required>
             </div>
           </div>
+          <!-- <div class="form-group">
+            <label class="col-lg-3 control-label">DOB:</label>
+            <div class="col-lg-8">
+              <input class="form-control" type="date" value="{{ DOB }}"name="DOB" required>
+            </div>
+          </div> -->
           <div class="form-group">
             <label class="col-lg-3 control-label">Email:</label>
             <div class="col-lg-8">
-              <input class="form-control" type="email" value="" name="email" required>
+              <input class="form-control" type="email" value="{{email}}" name="email" required>
             </div>
           </div>
           <div class="form-group">
             <label class="col-lg-3 control-label">Gender:</label>
             <div class="col-lg-8">
               <div class="ui-select">
-                <select id="Gender" class="form-control" name="gender" required >
-                  <option value="M">Male</option>
-                  <option value="F">Female</option>
-                  <option value="O">Non binary</option>
+                <select id="Gender" class="form-control" name="gender"  required >
+                  <option value="{{gender}}" >{{gender}}</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Others">others</option>
                 </select>
               </div>
             </div>
@@ -61,27 +76,27 @@
           <div class="form-group">
             <label class="col-md-3 control-label">Mobileno:</label>
             <div class="col-md-8">
-              <input class="form-control" type="text" value="" name="mobileno" required>
+              <input class="form-control" type="text" value="{{mobileno}}" name="mobileno" required>
             </div>
           </div>
           <div class="form-group">
-            <label class="col-md-3 control-label">Old Password:</label>
+            <label class="col-md-3 control-label"> Password:</label>
             <div class="col-md-8">
-              <input class="form-control" type="password" value="" name="oldpassword" required>
+              <input class="form-control" type="password"  name="password" required>
             </div>
           </div>
-          <div class="form-group">
-            <label class="col-md-3 control-label">New Password:</label>
+          <!-- <div class="form-group">
+            <label class="col-md-3 control-label">NEW PASSWORD:</label>
             <div class="col-md-8">
               <input class="form-control" type="password" value="" name="newpassword" required>
             </div>
-          </div>
-          <div class="form-group">
+          </div> -->
+          <!-- <div class="form-group">
             <label class="col-md-3 control-label">Confirm New password:</label>
             <div class="col-md-8">
               <input class="form-control" type="password" value="" name="confirmnewpassword" required>
             </div>
-          </div>
+          </div> -->
           <div class="form-group">
             <label class="col-md-3 control-label"></label>
             <div class="col-md-8">

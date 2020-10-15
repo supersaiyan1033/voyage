@@ -23,7 +23,8 @@ urlpatterns = [
     path('',views.Home,name='home'),
     path('login/',views.Log_In,name='auth-login'),
     path('signup/',views.Sign_Up,name='auth-signup'),
-    path('login/profile',views.Profile,name='profile'),
+    path('login/<userId>/<email>/profile',views.Profile,name='profile'),
+    path('login/<userId>/<email>',views.user,name='user')
 
    
 ]
