@@ -7,6 +7,7 @@ from django.contrib import messages
 import bcrypt
 import hashlib, sys
 import base64
+from datetime import datetime
 
 def Home(request):
     return render(request,'authentication/home.html')
@@ -65,8 +66,8 @@ def Sign_Up(request):
           row = cursor.fetchall()
           if cursor.rowcount==0:
              cursor.execute("""INSERT INTO users (firstname,lastname,gender,address,mobileno,email,password,DOB) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""", (firstname ,lastname,gender,address,mobileno,email,password,DOB))
-             messages.success(request,'Singned Up successfully!')
-             return redirect('http://127.0.0.1:8000/login')  
+             messages.success(request,'Sign Up successful!')
+             return redirect('http://127.0.0.1:8000/login') 
           else:
              messages.success(request,'User with the entered email already exists!!!')
              return render(request,'authentication/signup.html')
@@ -74,8 +75,19 @@ def Sign_Up(request):
         return render(request,'authentication/signup.html')
 
 def user(request,userId,email):
+   cursor = connection.cursor()
+   cursor.execute("""SELECT * FROM users WHERE email= %s""",[email])
+   row = cursor.fetchall()
+   data={
+             'firstname':row[0][0],
+             'mobileno':row[0][4],
+             'email':row[0][5],
+             'userId':row[0][7],
+             'wallet':row[0][9]
+     }
 
-   return render(request,'authentication/user.html',{'userId':userId,'email':email})
+
+   return render(request,'authentication/user.html',data)
 
 
 def Profile(request,userId,email):
@@ -83,6 +95,7 @@ def Profile(request,userId,email):
      cursor.execute("""SELECT * FROM users WHERE email= %s""",[email])
      row = cursor.fetchall()
     
+     dateOfBirth = row[0][8].strftime("%Y-%m-%d")
      data={
              'firstname':row[0][0],
              'lastname':row[0][1],
@@ -92,7 +105,7 @@ def Profile(request,userId,email):
              'email':row[0][5],
              'password':row[0][6],
              'userId':row[0][7],
-             'DOB':row[0][8],
+             'DOB':dateOfBirth,
      }
      if request.method=="POST":
         firstname = request.POST.get('firstname')
@@ -105,13 +118,41 @@ def Profile(request,userId,email):
         password = request.POST.get('password')
         if bcrypt.checkpw(password.encode('utf8'),data['password'].encode('utf8')):
            messages.success(request,'Profile is Updated Successfully!')
-           cursor.execute("""UPDATE users SET firstname=%s,lastname=%s,gender=%s,address=%s,mobileno=%s,email=%s WHERE userId=%s """, (firstname ,lastname,gender,address,mobileno,email,data['userId']))
-           return redirect('http://127.0.0.1:8000/login/{}/{}/profile'.format(data["userId"],data["email"]))
+           cursor.execute("""UPDATE users SET firstname=%s,lastname=%s,gender=%s,address=%s,mobileno=%s,email=%s,DOB=%s WHERE userId=%s """, (firstname ,lastname,gender,address,mobileno,email,DOB,data['userId']))
+           return redirect('http://127.0.0.1:8000/login/{}/{}'.format(data["userId"],data["email"]))
         else:
            messages.success(request,'incorrect password please try again!!')
            return render(request,'authentication/profile.html',data)
      else:
         return render(request,"authentication/profile.html",data)
 
+ 
+def ChangePassword(request,userId,email):
+     cursor = connection.cursor()
+     cursor.execute("""SELECT * FROM users WHERE email= %s """,[email])
+     row = cursor.fetchall()
+     dbPassword = row[0][6]
+     if request.method=="POST":
+        oldPassword = request.POST.get('oldpassword')
+        newPassword = request.POST.get('newpassword')
+        confirmPassword = request.POST.get('confirmpassword')
+        if bcrypt.checkpw(oldPassword.encode('utf8'),dbPassword.encode('utf8')):
+           if newPassword ==confirmPassword:
+              dbPassword = bcrypt.hashpw(newPassword.encode('utf8'), bcrypt.gensalt(rounds=12))
+              cursor.execute("""UPDATE users SET password=%s """,[dbPassword])
+              messages.success(request,'Password changed successfully!')
+              return redirect('http://127.0.0.1:8000/login/{}/{}'.format(userId,email))
+           else:
+              messages.success(request,'new password and confirm password must be the same!!')
+              return render(request,'authentication/changepassword.html')
+        else:
+            messages.success(request,'incorrect password!!')
+            return render(request,'authentication/changepassword.html')
 
+
+
+     else:
+        return render(request,'authentication/changepassword.html')
+
+         
 # Create your views here.

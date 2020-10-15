@@ -197,7 +197,7 @@ border-radius:7px;
         </div>
         <div class="textbox" >
             <i class="fa fa-calendar" aria-hidden="true"></i>
-            <input type="date" placeholder="Date of birth" name="DOB" required>
+            <input type="date" placeholder="Date of birth" id="datepicker" name="DOB" required>
         </div>
         <div class="textbox" >
             <i class="fa fa-phone" aria-hidden="true"></i>
@@ -219,10 +219,11 @@ border-radius:7px;
     </form>
     {% if messages %}
         {% for message in messages %}
-         {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
+         {% if message.tags %}  <script>window.alert("{{ message }}")</script> {% endif %}
 
         {% endfor %}
 
     {% endif %}
+
 </body>
 </html> 
