@@ -66,7 +66,7 @@ def Sign_Up(request):
           if cursor.rowcount==0:
              cursor.execute("""INSERT INTO users (firstname,lastname,gender,address,mobileno,email,password,DOB) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""", (firstname ,lastname,gender,address,mobileno,email,password,DOB))
              messages.success(request,'Singned Up successfully!')
-             return render(request,'authentication/signup.html')  
+             return redirect('http://127.0.0.1:8000/login')  
           else:
              messages.success(request,'User with the entered email already exists!!!')
              return render(request,'authentication/signup.html')
