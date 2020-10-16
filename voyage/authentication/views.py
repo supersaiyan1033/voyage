@@ -139,7 +139,7 @@ def ChangePassword(request,userId,email):
         if bcrypt.checkpw(oldPassword.encode('utf8'),dbPassword.encode('utf8')):
            if newPassword ==confirmPassword:
               dbPassword = bcrypt.hashpw(newPassword.encode('utf8'), bcrypt.gensalt(rounds=12))
-              cursor.execute("""UPDATE users SET password=%s """,[dbPassword])
+              cursor.execute("""UPDATE users SET password=%s WHERE email=%s""",(dbPassword,email))
               messages.success(request,'Password changed successfully!')
               return redirect('http://127.0.0.1:8000/login/{}/{}'.format(userId,email))
            else:
@@ -154,5 +154,8 @@ def ChangePassword(request,userId,email):
      else:
         return render(request,'authentication/changepassword.html')
 
-         
+
+
+def Flights(request):
+     return render(request,'authentication/flights.html')        
 # Create your views here.

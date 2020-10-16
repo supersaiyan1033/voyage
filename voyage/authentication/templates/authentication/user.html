@@ -12,7 +12,7 @@
  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
-  <title>Document</title>
+  <title>User homepage</title>
   <style>
     * {
   margin:0px;
@@ -134,10 +134,11 @@ left:0;
 transform:scale(1.01);
 }
 #part1{
+
   position:absolute;
-  top:70px;
+  top:15%;
+  width:50vw;
   padding:20px;
-  width:70vw;
   height:20vh;
   margin:auto;
   justify-content:center;
@@ -149,8 +150,8 @@ transform:scale(1.01);
     background-color:rgba(255,255,255,1);
     padding:0px 20px;
     position: absolute;
-    top: 65%;
-    right: 20%;
+    top: 60%;
+    left:20%;
     transform: translate(-50%,-50%);
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
@@ -219,6 +220,17 @@ transform:scale(1.01);
 .signup:hover{
     color:#ff1a1a;
 }
+#select{
+    color:black;
+    border:none;
+    outline:none;
+    background: white;
+    font-size: 19px;
+    width:86%;
+    float:left;
+    margin: 0 10px;
+
+}
   </style>
 </head>
 <body>
@@ -266,22 +278,20 @@ transform:scale(1.01);
         <h1><i class="fa fa-plane" style="margin-right:10px;"></i>Flight Booking</h1>
         <div class="textbox" >
          
-          <div class="ui-select">
-            <select id="Text" class="form-control" name="Starting point"  required >
+             <i class="fa fa-circle-o"></i>
+            <select id="select"  name="Starting point"  required >
               <option value="Starting Point" >Starting Point</option>
               <option value="Bangalore">Bangalore</option>
               <option value="Chennai">Chennai</option>
               <option value="Delhi">Delhi</option>
               <option value="Mumbai">Mumbai</option>
               <option value="Hyderabad">hyderabad</option>
-            </select>
-          </div>
+              </select>
            
         </div>
         <div class="textbox">
-         
-          <div class="ui-select">
-            <select id="Text" class="form-control" name="Destination point"  required >
+         <i class="fa fa-map-marker"></i>
+            <select id="select"  name="Destination point"  required >
               <option value="Destination Point" >Destination Point</option>
               <option value="Bangalore">Bangalore</option>
               <option value="Chennai">Chennai</option>
@@ -289,7 +299,6 @@ transform:scale(1.01);
               <option value="Mumbai">Mumbai</option>
               <option value="Hyderabad">hyderabad</option>
             </select>
-          </div>
         </div>
         <div class="textbox" >
             <i class="fa fa-calendar" aria-hidden="true"></i>
