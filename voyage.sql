@@ -358,6 +358,8 @@ CREATE TABLE `flight` (
   `Starting Point` varchar(45) DEFAULT NULL,
   `Destination point` varchar(45) DEFAULT NULL,
   `Company` varchar(45) DEFAULT NULL,
+  `Price` int NOT NULL,
+  `Day` varchar(20) NOT NULL,
   PRIMARY KEY (`Flight_No`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -368,6 +370,7 @@ CREATE TABLE `flight` (
 
 LOCK TABLES `flight` WRITE;
 /*!40000 ALTER TABLE `flight` DISABLE KEYS */;
+INSERT INTO `flight` VALUES (20502,'Bangalore','Hyderabad','SpiceJet',2499,'Thursday'),(70704,'Chennai','Mumbai','AirIndia',3999,'Tuesday'),(111201,'Mumbai','Chennai','AirIndia',3999,'Monday'),(123456,'Hyderabad','Mumbai','TruJet',2699,'Saturday'),(200702,'Chennai','Delhi','Indigo',3499,'Wednesday'),(234567,'Mumbai','Bangalore','Indigo',2899,'Friday'),(345678,'Hyderabad','Delhi','AirIndia',3499,'Sunday'),(456789,'Bangalore','Mumbai','Trujet ',2349,'Monday');
 /*!40000 ALTER TABLE `flight` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -469,6 +472,32 @@ LOCK TABLES `restaurents` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `ticket`
+--
+
+DROP TABLE IF EXISTS `ticket`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ticket` (
+  `ticket_ID` int NOT NULL,
+  `UserID` int DEFAULT NULL,
+  `flightNo` int DEFAULT NULL,
+  PRIMARY KEY (`ticket_ID`),
+  KEY `userID_idx` (`UserID`),
+  CONSTRAINT `userID` FOREIGN KEY (`UserID`) REFERENCES `users` (`userID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ticket`
+--
+
+LOCK TABLES `ticket` WRITE;
+/*!40000 ALTER TABLE `ticket` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ticket` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tour_guide`
 --
 
@@ -528,16 +557,18 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `firstname` varchar(100) NOT NULL,
   `lastname` varchar(100) NOT NULL,
-  `gender` varchar(1) NOT NULL,
+  `gender` varchar(10) NOT NULL,
   `address` varchar(200) NOT NULL,
   `mobileno` varchar(10) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
   `userID` int NOT NULL AUTO_INCREMENT,
   `DOB` date NOT NULL,
+  `wallet` int NOT NULL DEFAULT '2000',
   PRIMARY KEY (`userID`),
-  UNIQUE KEY `userID_UNIQUE` (`userID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `userID_UNIQUE` (`userID`),
+  UNIQUE KEY `email_UNIQUE` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -546,7 +577,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('Revanth','Thota','M','flat no cs-3 myhome complex beside srr college vijayawada','9502974806','thotarevanth347@gmail.com','hi1234',1,'2001-12-11');
+INSERT INTO `users` VALUES ('Revanth','Thota','M','flat no cs-3 myhome complex beside srr college vijayawada','9502974806','thotarevanth347@gmail.com','$2b$12$D.pj4DL8e96K8i69CvIP6u9FgpTSOAhmjgj4gM7pBQWtmtLZtKani',1,'2001-12-11',2000),('REVANTH','THOTA','M','Flat no:CS3,My Home Complex,Beside SRR College, Machavaram, Vijayawada.','9502974806','wasd','$2b$12$D.pj4DL8e96K8i69CvIP6u9FgpTSOAhmjgj4gM7pBQWtmtLZtKani',4,'2001-12-11',2000),('sumanth','Thota','Male','Flat no:CS3,My Home Complex,Beside SRR College, Machavaram, Vijayawada.','9502974806','sumu','$2b$12$D.pj4DL8e96K8i69CvIP6u9FgpTSOAhmjgj4gM7pBQWtmtLZtKani',5,'2004-07-07',2000);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -559,4 +590,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-10-08 15:57:49
+-- Dump completed on 2020-10-16  9:14:36

@@ -149,8 +149,8 @@ transform:scale(1.01);
     background-color:rgba(255,255,255,1);
     padding:0px 20px;
     position: absolute;
-    top: 50%;
-    left: 20%;
+    top: 65%;
+    right: 20%;
     transform: translate(-50%,-50%);
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
@@ -265,12 +265,31 @@ transform:scale(1.01);
     <div class="login-box">
         <h1><i class="fa fa-plane" style="margin-right:10px;"></i>Flight Booking</h1>
         <div class="textbox" >
-            <i class="fa fa-circle-o" aria-hidden="true"></i>
-            <input type="text" placeholder="From" name="from" value="" autocomplete="off" required>
+         
+          <div class="ui-select">
+            <select id="Text" class="form-control" name="Starting point"  required >
+              <option value="Starting Point" >Starting Point</option>
+              <option value="Bangalore">Bangalore</option>
+              <option value="Chennai">Chennai</option>
+              <option value="Delhi">Delhi</option>
+              <option value="Mumbai">Mumbai</option>
+              <option value="Hyderabad">hyderabad</option>
+            </select>
+          </div>
+           
         </div>
         <div class="textbox">
-            <i class="fa fa-map-marker" aria-hidden="true"></i>
-            <input type="text" placeholder="destination" name="destination" value="" autocomplete="off" required>
+         
+          <div class="ui-select">
+            <select id="Text" class="form-control" name="Destination point"  required >
+              <option value="Destination Point" >Destination Point</option>
+              <option value="Bangalore">Bangalore</option>
+              <option value="Chennai">Chennai</option>
+              <option value="Delhi">Delhi</option>
+              <option value="Mumbai">Mumbai</option>
+              <option value="Hyderabad">hyderabad</option>
+            </select>
+          </div>
         </div>
         <div class="textbox" >
             <i class="fa fa-calendar" aria-hidden="true"></i>

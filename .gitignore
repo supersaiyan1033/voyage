@@ -26,3 +26,5 @@ voyage/authentication/migrations/__pycache__/__init__.cpython-38.pyc
 *.pyc
 voyage/authentication/__pycache__/models.cpython-38.pyc
 voyage/voyage/__pycache__/wsgi.cpython-38.pyc
+voyage/authentication/__pycache__/views.cpython-38.pyc
+voyage/voyage/__pycache__/urls.cpython-38.pyc
