@@ -279,30 +279,31 @@ transform:scale(1.01);
         <div class="textbox" >
          
              <i class="fa fa-circle-o"></i>
-            <select id="select"  name="Starting point"  required >
-              <option value="Starting Point" >Starting Point</option>
+            <input list="startingpoints" name="startfrom" placeholder="Starting point">
+  <datalist id="startingpoints">
+  
               <option value="Bangalore">Bangalore</option>
               <option value="Chennai">Chennai</option>
               <option value="Delhi">Delhi</option>
               <option value="Mumbai">Mumbai</option>
               <option value="Hyderabad">hyderabad</option>
-              </select>
+  </datalist>
            
         </div>
         <div class="textbox">
          <i class="fa fa-map-marker"></i>
-            <select id="select"  name="Destination point"  required >
-              <option value="Destination Point" >Destination Point</option>
+            <input list="destinations" name="destination" placeholder="Destination point">
+  <datalist id="destinations">
               <option value="Bangalore">Bangalore</option>
               <option value="Chennai">Chennai</option>
               <option value="Delhi">Delhi</option>
               <option value="Mumbai">Mumbai</option>
               <option value="Hyderabad">hyderabad</option>
-            </select>
+  </datalist>
         </div>
         <div class="textbox" >
             <i class="fa fa-calendar" aria-hidden="true"></i>
-            <input type="date" placeholder="Date of Travel" id="d1" name="dateOfTravel" value="" required>
+            <input type="date" placeholder="Date of Travel" id="d1" name="dateOfTravel" value="" required >
         </div>
         <div class="textbox" >
             <i class="fa fa-users" aria-hidden="true"></i>

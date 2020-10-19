@@ -78,11 +78,17 @@ def user(request,userId,email):
    cursor = connection.cursor()
    cursor.execute("""SELECT * FROM users WHERE email= %s""",[email])
    row = cursor.fetchall()
+   dateOfBirth = row[0][8].strftime("%Y-%m-%d")
    data={
              'firstname':row[0][0],
+             'lastname':row[0][1],
+             'gender':row[0][2],
+             'address':row[0][3],
              'mobileno':row[0][4],
              'email':row[0][5],
+             'password':row[0][6],
              'userId':row[0][7],
+             'DOB':dateOfBirth,
              'wallet':row[0][9]
      }
 
