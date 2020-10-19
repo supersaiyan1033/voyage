@@ -212,27 +212,34 @@ LOCK TABLES `bus` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `destination`
+-- Table structure for table `date_pk`
 --
 
-DROP TABLE IF EXISTS `destination`;
+DROP TABLE IF EXISTS `date_pk`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `destination` (
-  `Name` varchar(60) NOT NULL,
-  `Nearest City` varchar(60) NOT NULL,
-  `Modes Of Transport` double DEFAULT NULL,
-  PRIMARY KEY (`Name`)
+CREATE TABLE `date_pk` (
+  `KID` int NOT NULL,
+  `date_from` date NOT NULL,
+  `date_to` date NOT NULL,
+  `no of seats vacant` int DEFAULT NULL,
+  `Total seats` int DEFAULT '40',
+  `Date_PK` varchar(45) NOT NULL,
+  PRIMARY KEY (`Date_PK`),
+  KEY `KID_idx` (`KID`),
+  KEY `ID_idx` (`no of seats vacant`),
+  CONSTRAINT `KID` FOREIGN KEY (`KID`) REFERENCES `flight_specific` (`KID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `destination`
+-- Dumping data for table `date_pk`
 --
 
-LOCK TABLES `destination` WRITE;
-/*!40000 ALTER TABLE `destination` DISABLE KEYS */;
-/*!40000 ALTER TABLE `destination` ENABLE KEYS */;
+LOCK TABLES `date_pk` WRITE;
+/*!40000 ALTER TABLE `date_pk` DISABLE KEYS */;
+INSERT INTO `date_pk` VALUES (1,'2020-12-11','2020-12-13',4,40,'1'),(2,'2020-12-12','2020-12-13',45,40,'2'),(1,'2020-05-02','2020-07-07',13,40,'3'),(3,'2020-05-02','2020-04-04',14,40,'4'),(4,'2020-09-12','2020-12-14',26,40,'5');
+/*!40000 ALTER TABLE `date_pk` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -355,11 +362,9 @@ DROP TABLE IF EXISTS `flight`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `flight` (
   `Flight_No` int NOT NULL,
-  `Starting Point` varchar(45) DEFAULT NULL,
-  `Destination point` varchar(45) DEFAULT NULL,
-  `Company` varchar(45) DEFAULT NULL,
-  `Price` int NOT NULL,
-  `Day` varchar(20) NOT NULL,
+  `Company` varchar(45) NOT NULL,
+  `Flight_name` varchar(45) NOT NULL,
+  `seat_Capacity` int DEFAULT NULL,
   PRIMARY KEY (`Flight_No`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -370,8 +375,40 @@ CREATE TABLE `flight` (
 
 LOCK TABLES `flight` WRITE;
 /*!40000 ALTER TABLE `flight` DISABLE KEYS */;
-INSERT INTO `flight` VALUES (20502,'Bangalore','Hyderabad','SpiceJet',2499,'Thursday'),(70704,'Chennai','Mumbai','AirIndia',3999,'Tuesday'),(111201,'Mumbai','Chennai','AirIndia',3999,'Monday'),(123456,'Hyderabad','Mumbai','TruJet',2699,'Saturday'),(200702,'Chennai','Delhi','Indigo',3499,'Wednesday'),(234567,'Mumbai','Bangalore','Indigo',2899,'Friday'),(345678,'Hyderabad','Delhi','AirIndia',3499,'Sunday'),(456789,'Bangalore','Mumbai','Trujet ',2349,'Monday');
+INSERT INTO `flight` VALUES (1,'SpiceJet','a1',200),(2,'AirIndia','b1',300),(3,'AirIndia','c1',500),(4,'TruJet','d1',140),(5,'Indigo','e1',240),(6,'Indigo','f1',250),(7,'AirIndia','g1',600),(8,'Trujet ','h1',800);
 /*!40000 ALTER TABLE `flight` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `flight_specific`
+--
+
+DROP TABLE IF EXISTS `flight_specific`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `flight_specific` (
+  `Flight_ID` int NOT NULL,
+  `Time_From` time DEFAULT NULL,
+  `Time_To` time DEFAULT NULL,
+  `Price` int DEFAULT NULL,
+  `KID` int NOT NULL,
+  `RID` int NOT NULL,
+  PRIMARY KEY (`KID`),
+  KEY `Flight_ID_idx` (`Flight_ID`),
+  KEY `RID_idx` (`RID`),
+  CONSTRAINT `Flight_ID` FOREIGN KEY (`Flight_ID`) REFERENCES `flight` (`Flight_No`),
+  CONSTRAINT `RID` FOREIGN KEY (`RID`) REFERENCES `route` (`Route_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `flight_specific`
+--
+
+LOCK TABLES `flight_specific` WRITE;
+/*!40000 ALTER TABLE `flight_specific` DISABLE KEYS */;
+INSERT INTO `flight_specific` VALUES (1,'00:12:00','00:13:40',2499,1,1),(2,'00:14:50','00:16:40',3599,2,1),(1,'12:34:43','23:43:42',1234,3,2),(3,'09:13:12','12:14:13',999,4,4);
+/*!40000 ALTER TABLE `flight_specific` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -432,11 +469,15 @@ DROP TABLE IF EXISTS `passenger`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `passenger` (
-  `First_Name` int DEFAULT NULL,
-  `Last_name` varchar(45) DEFAULT NULL,
-  `Gender` varchar(45) DEFAULT NULL,
-  `DateofBirth` date DEFAULT NULL,
-  `userID` int NOT NULL
+  `Name` varchar(45) NOT NULL,
+  `Gender` varchar(45) NOT NULL,
+  `Age` int NOT NULL,
+  `Booking_ID` int NOT NULL,
+  `Passenger_ID` int NOT NULL AUTO_INCREMENT,
+  `Seat_no` int NOT NULL,
+  PRIMARY KEY (`Passenger_ID`),
+  KEY `Booking_Id_idx` (`Booking_ID`),
+  CONSTRAINT `Booking_Id` FOREIGN KEY (`Booking_ID`) REFERENCES `ticket` (`Booking_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -472,6 +513,31 @@ LOCK TABLES `restaurents` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `route`
+--
+
+DROP TABLE IF EXISTS `route`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `route` (
+  `From_P` varchar(45) NOT NULL,
+  `To_P` varchar(45) NOT NULL,
+  `Route_ID` int NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`Route_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `route`
+--
+
+LOCK TABLES `route` WRITE;
+/*!40000 ALTER TABLE `route` DISABLE KEYS */;
+INSERT INTO `route` VALUES ('Indore','Hyderabad',1),('Hyderabad ','Vijayawada',2),('Chennai','Bangalore',3),('Delhi','Chennai',4),('Mumbai ','Kolkata',5),('Hyderabad ','Warangal',6),('Mumbai','Chennai',7),('Chennai','Delhi',8),('Kolkata','Bangalore',9);
+/*!40000 ALTER TABLE `route` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `ticket`
 --
 
@@ -479,13 +545,15 @@ DROP TABLE IF EXISTS `ticket`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ticket` (
-  `ticket_ID` int NOT NULL,
-  `UserID` int DEFAULT NULL,
-  `flightNo` int DEFAULT NULL,
-  PRIMARY KEY (`ticket_ID`),
-  KEY `userID_idx` (`UserID`),
-  CONSTRAINT `userID` FOREIGN KEY (`UserID`) REFERENCES `users` (`userID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `Booking_ID` int NOT NULL AUTO_INCREMENT,
+  `User_ID` int DEFAULT NULL,
+  `Date_of_booking` date DEFAULT NULL,
+  `Date_PK` varchar(45) DEFAULT NULL,
+  `No of passengers` int DEFAULT NULL,
+  PRIMARY KEY (`Booking_ID`),
+  KEY `Date_PK_idx` (`Date_PK`),
+  CONSTRAINT `Date_PK` FOREIGN KEY (`Date_PK`) REFERENCES `date_pk` (`Date_PK`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -494,6 +562,7 @@ CREATE TABLE `ticket` (
 
 LOCK TABLES `ticket` WRITE;
 /*!40000 ALTER TABLE `ticket` DISABLE KEYS */;
+INSERT INTO `ticket` VALUES (1,1,'2020-10-18','1',NULL),(2,1,'2020-10-18','1',NULL),(3,1,'2020-10-18','1',NULL),(4,1,'2020-10-18','1',NULL),(5,1,'2020-10-18','1',NULL),(6,1,'2020-10-18','1',NULL),(7,1,'2020-10-18','1',NULL),(8,1,'2020-10-18','1',NULL),(9,1,'2020-10-18','1',NULL),(10,1,'2020-10-18','1',NULL),(11,1,'2020-10-18','1',NULL);
 /*!40000 ALTER TABLE `ticket` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -548,6 +617,32 @@ LOCK TABLES `train` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `transaction`
+--
+
+DROP TABLE IF EXISTS `transaction`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `transaction` (
+  `Transaction_ID` int NOT NULL,
+  `booking_ID` int DEFAULT NULL,
+  `Payment_Method` varchar(45) DEFAULT 'Wallet',
+  PRIMARY KEY (`Transaction_ID`),
+  KEY `booking_ID_idx` (`booking_ID`),
+  CONSTRAINT `bookings_ID` FOREIGN KEY (`booking_ID`) REFERENCES `ticket` (`Booking_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `transaction`
+--
+
+LOCK TABLES `transaction` WRITE;
+/*!40000 ALTER TABLE `transaction` DISABLE KEYS */;
+/*!40000 ALTER TABLE `transaction` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 
@@ -590,4 +685,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-10-16  9:14:36
+-- Dump completed on 2020-10-19 20:18:27
