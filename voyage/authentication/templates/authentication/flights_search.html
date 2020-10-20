@@ -217,6 +217,7 @@ transform:scale(1.01);
     </div>
     <div id="navbar">
     <ul>
+      <li><a href="http://127.0.0.1:8000/login/{{userId}}/{{email}}"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
       <li><a href="http://127.0.0.1:8000/login/{{userId}}/{{email}}/flights" class="active"><i class="fa fa-plane" aria-hidden="true" style="padding-right:10px;"></i>Flights</a></li>
       <li><a href="#"><i class="fa fa-train" aria-hidden="true" style="padding-right:10px;" class="icon"></i>Trains</a></li>
       <li><a href="#"><i class="fa fa-bus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Buses</a></li>
@@ -232,10 +233,10 @@ transform:scale(1.01);
       <span></span>
     </div>  
     <div class="list">
-      <div class="item" style="color:black;padding:6px;"><i class="fa fa-user-circle fa-4x" style="color:red;" ></i>Nitin krishna</div>
-      <div class="item"><i class="fa fa-credit-card-alt" style="color:red;padding-right:10px;"></i><i class="fa fa-inr" style="color:white;padding-right:5px;"></i>10000</div>
-      <div class="item"><a   href="{{email}}/profile" style="text-decoration:none;" ><i class="fa fa-user" style="padding-right:10px;color:red"></i>profile</a></div>
-      <div class="item"><a  href="{{email}}/changepassword" style="text-decoration:none;"><i class="fa fa-key" style="padding-right:10px;color:red"></i>change password</a></div>
+      <div class="item" style="color:black;padding:6px;"><i class="fa fa-user-circle fa-4x" style="color:red;" ></i>{{firstname}} {{lastname}}</div>
+      <div class="item"><i class="fa fa-credit-card-alt" style="color:red;padding-right:10px;"></i><i class="fa fa-inr" style="color:white;padding-right:5px;"></i>{{wallet}}</div>
+      <div class="item"><a   href="http://127.0.0.1:8000/login/{{userId}}/{{email}}/profile" style="text-decoration:none;" ><i class="fa fa-user" style="padding-right:10px;color:red"></i>profile</a></div>
+      <div class="item"><a  href="http://127.0.0.1:8000/login/{{userId}}/{{email}}/changepassword" style="text-decoration:none;"><i class="fa fa-key" style="padding-right:10px;color:red"></i>change password</a></div>
       <div class="item"><a href="#" style="text-decoration:none;"><i class="fa fa-suitcase" style="padding-right:10px;color:red"></i>My bookings</a></div>
       <div class="item" ><a  href="{% url 'auth-login' %}" style="text-decoration:none;"><i class="fa fa-sign-out" style="padding-right:10px;color:red"></i>log out</a></div>
     </div>
@@ -245,18 +246,17 @@ transform:scale(1.01);
       <br><br><br>
 <table class="center">
 <tr>
+  <form method="POST">
+    {% csrf_token %}
 <td style="padding:10px 20px;">
  <div class="textbox" >
          
              <i class="fa fa-circle-o"></i>
-            <input list="startingpoints" name="startfrom" placeholder="Starting point">
+            <input list="startingpoints" name="startfrom" value="{{from_p}}" placeholder="Starting point">
   <datalist id="startingpoints">
-  
-              <option value="Bangalore">Bangalore</option>
-              <option value="Chennai">Chennai</option>
-              <option value="Delhi">Delhi</option>
-              <option value="Mumbai">Mumbai</option>
-              <option value="Hyderabad">hyderabad</option>
+    {% for from_p_list in from_p_list %}
+    <option value="{{from_p_list}}">{{from_p_list}}</option>
+    {% endfor %}
   </datalist>
            
         </div>
@@ -264,26 +264,24 @@ transform:scale(1.01);
 <td style="padding:10px 20px;">
 <div class="textbox">
          <i class="fa fa-map-marker"></i>
-              <input list="destinations" name="destination" placeholder="Destination point">
+              <input list="destinations" name="destination" value="{{to_p}}" placeholder="Destination point">
   <datalist id="destinations">
-              <option value="Bangalore">Bangalore</option>
-              <option value="Chennai">Chennai</option>
-              <option value="Delhi">Delhi</option>
-              <option value="Mumbai">Mumbai</option>
-              <option value="Hyderabad">hyderabad</option>
+            {% for to_p_list in to_p_list %}
+             <option value="{{to_p_list}}">{{to_p_list}}</option>
+            {% endfor %}
   </datalist>
         </div>
 </td>
 <td style="padding:10px 20px;">
  <div class="textbox" >
             <i class="fa fa-calendar" aria-hidden="true"></i>
-            <input type="date" placeholder="Date of Travel" id="d1" name="dateOfTravel" value="" required >
+            <input type="date" placeholder="Date of Travel" id="d1" name="dateOfTravel" value="{{date}}" required >
         </div>
 </td>
 <td style="padding:10px 20px;">
 <div class="textbox" >
             <i class="fa fa-users" aria-hidden="true"></i>
-            <input type="text" placeholder="No of travellers" name="travellers" value="" autocomplete="off" required>
+            <input type="text" placeholder="No of travellers" name="travellers" value="{{passengers}}" autocomplete="off" required>
         </div>
 </td>
 <td>
@@ -291,6 +289,7 @@ transform:scale(1.01);
            <input class="btn" type="submit" name="" value="Search">
         </div>
 </td>
+</form>
 </tr>
 </table>
 <hr>
@@ -325,6 +324,7 @@ transform:scale(1.01);
 </td>
 <td style="text-align:right;padding-left:100px;vertical-align:text-top;align:left;">
 <div class="results" style="border-left-style:solid;float:right;margin:auto;border-color:grey; margin:4px, 4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; text-align:justify; ">
+{% for flights in flights %}
 <div class="flights" style="background-color:white;border-radius:7px;margin:20px;">
 <table>
 <tr>
@@ -332,146 +332,30 @@ transform:scale(1.01);
 <img src="images/airindia.jpg" height="70">
 </td>
 <td style="padding:5px 30px;">
-<h6>AirIndia</h6>
+<h6>{{flights.company}}</h6>
 </td>
 <td style="padding:5px 30px;">
-<h6>HYD - IND</h6>
+<h6>{{flights.from_p}} - {{flights.to_p}}</h6>
 </td>
 
 <td style="padding:5px 30px;">
-<h5>20:15-06:40</h6>
+<h5>{{flights.time_from}}-{{flights.time_to}}</h6>
 </td>
 <td style="padding:5px 30px;">
-<h6>available:61</h6>
+<h6>available:{{flights.available}}</h6>
 </td>
 <td style="padding:5px 30px;">
-<h6><i class="fa fa-inr"></i>3,900</h6>
+<h6><i class="fa fa-inr"></i>{{flights.price}}</h6>
 </td>
 <td style="padding:5px 30px;">
 <div class="loginbtn">
-           <input class="btn" type="submit" name="" value="Book">>
+           <a href="http://127.0.0.1:8000/login/{{userId}}/{{email}}/flights/book/?c1={{flights.date_pk}}&c2={{passengers}}">book</a>
         </div>
 </td>
 </tr>
 </table>
 </div>
-<div class="flights" style="background-color:white;border-radius:7px;margin:20px;">
-<table>
-<tr>
-<td style="padding:5px 30px;">
-<img src="images/airindia.jpg" height="70">
-</td>
-<td style="padding:5px 30px;">
-<h6>AirIndia</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6>DEL - MUM</h6>
-</td>
-
-<td style="padding:5px 30px;">
-<h5>00:15-04:40</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6>available:1</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6><i class="fa fa-inr"></i>5,900</h6>
-</td>
-<td style="padding:5px 30px;">
-<div class="loginbtn">
-           <input class="btn" type="submit" name="" value="Book">
-        </div>
-</td>
-</tr>
-</table>
-</div>
-<div class="flights" style="background-color:white;border-radius:7px;margin:20px;">
-<table>
-<tr>
-<td style="padding:5px 30px;">
-<img src="images/airasia.png" height="70">
-</td>
-<td style="padding:5px 30px;">
-<h6>AirAsia</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6>BAN - MUM</h6>
-</td>
-<td style="padding:5px 30px;">
-<h5>03:15-07:40</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6>available:54</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6><i class="fa fa-inr"></i>4,900</h6>
-</td>
-<td style="padding:5px 30px;">
-<div class="loginbtn">
-           <input class="btn" type="submit" name="" value="Book">
-        </div>
-</td>
-</tr>
-</table>
-</div>
-<div class="flights" style="background-color:white;border-radius:7px;margin:20px;">
-<table>
-<tr>
-<td style="padding:5px 30px;">
-<img src="images/indigo.png" height="70">
-</td>
-<td style="padding:5px 30px;">
-<h6>Indigo</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6>KOL - CHEN</h6>
-</td>
-<td style="padding:5px 30px;">
-<h5>21:15-00:40</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6>available:12</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6><i class="fa fa-inr"></i>2,900</h6>
-</td>
-<td style="padding:5px 30px;">
-<div class="loginbtn">
-           <input class="btn" type="submit" name="" value="Book">
-        </div>
-</td>
-</tr>
-</table>
-</div>
-<div class="flights" style="background-color:white;border-radius:7px;margin:20px;">
-<table>
-<tr>
-<td style="padding:5px 30px;">
-<img src="images/spicejet.png" height="70">
-</td>
-<td style="padding:5px 30px;">
-<h6>SpiceJet</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6>BAN - DEL</h6>
-</td>
-<td style="padding:5px 30px;">
-<h5>02:15-08:40</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6>available:31</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6><i class="fa fa-inr"></i>10,900</h6>
-</td>
-<td style="padding:5px 30px;">
-<div class="loginbtn">
-           <input class="btn" type="submit" name="" value="Book">
-        </div>
-</td>
-</tr>
-</table>
-</div>
+{% endfor %}
 </div>
 </td>
 </tr>

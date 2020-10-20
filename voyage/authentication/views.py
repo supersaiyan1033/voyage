@@ -163,29 +163,128 @@ def ChangePassword(request,userId,email):
 
 
 def Flights(request,userId,email):
+
      if request.method=="POST":
-
-        print('Akash work starts here')
-
-      #   extract data from form and subtitue in k values 
-      #   k1 is from_place
-      #   k2 is to_place
-      #   k3 is datetime
-      #   k4 is no of passengers
-
-        return redirect('http://127.0.0.1:8000/login/{}/{}/flights/search/?k1=a&k2=b&k3=1&k4=5'.format(userId,email))
+        from_p=request.POST.get("startfrom")
+        to_p=request.POST.get("destination")
+        date=request.POST.get("dateOfTravel")
+        passengers=request.POST.get("travellers")
+        return redirect('http://127.0.0.1:8000/login/{}/{}/flights/search/?k1={}&k2={}&k3={}&k4={}'.format(userId,email,from_p,to_p,date,passengers))
       
      else:
-        return render(request,'authentication/flights.html')  
+
+        cursor=connection.cursor()
+        cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""",[userId])
+        row=cursor.fetchall()
+        firstname=row[0][0]
+        lastname=row[0][1]
+        wallet=row[0][2]
+
+        cursor=connection.cursor()
+        cursor.execute("SELECT DISTINCT from_p FROM route")
+        a=cursor.rowcount
+        row=cursor.fetchall()
+        from_p_list=[]
+        for n in range(a):
+           from_p_list.append(row[n][0])
+
+        cursor.execute("SELECT DISTINCT to_p FROM route")
+        a=cursor.rowcount
+        row=cursor.fetchall()
+        to_p_list=[]
+        for n in range(a):
+           to_p_list.append(row[n][0])
+        data={
+           'userId':userId,
+           'email':email,
+           'firstname':firstname,
+           'lastname':lastname,
+           'wallet':wallet,
+           'from_p_list':from_p_list,
+           'to_p_list':to_p_list
+        }
+        return render(request,'authentication/flights.html',data)  
 
 def Flights_Search(request,userId,email):
 
-       #Extract k1 ,k2,k3,k4 and search the flights and display them
-       
-   return render(request,'authentication/flights_search.html',{'userId':userId,'email':email})
+   if request.method=="POST":
+      from_p=request.POST.get("startfrom")
+      to_p=request.POST.get("destination")
+      date=request.POST.get("dateOfTravel")
+      passengers=request.POST.get("travellers")
+      return redirect('http://127.0.0.1:8000/login/{}/{}/flights/search/?k1={}&k2={}&k3={}&k4={}'.format(userId,email,from_p,to_p,date,passengers)) 
+
+   else:
+
+      cursor=connection.cursor()
+      cursor.execute("SELECT DISTINCT from_p FROM route")
+      a=cursor.rowcount
+      row=cursor.fetchall()
+      from_p_list=[]
+      for n in range(a):
+         from_p_list.append(row[n][0])
+
+      cursor.execute("SELECT DISTINCT to_p FROM route")
+      a=cursor.rowcount
+      row=cursor.fetchall()
+      to_p_list=[]
+      for n in range(a):
+         to_p_list.append(row[n][0])
+
+      cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""",[userId])
+      row=cursor.fetchall()
+      firstname=row[0][0]
+      lastname=row[0][1]
+      wallet=row[0][2]
+
+      from_p=request.GET.get('k1')
+      to_p=request.GET.get('k2')
+      date=request.GET.get('k3')
+      passengers=int(request.GET.get('k4'))
+      cursor=connection.cursor()
+      cursor.execute("""select Date_Pk,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant 
+    FROM date_pk JOIN flight_specific ON date_pk.KID=flight_specific.KID JOIN route ON route.RID=flight_specific.RID JOIN flight ON flight.Flight_No=flight_specific.Flight_No
+    WHERE date_from=%s AND from_p=%s AND to_p=%s AND no_of_seats_vacant>=%s""",(date,from_p,to_p,passengers))
+      a=cursor.rowcount
+      row=cursor.fetchall() 
+      if cursor.rowcount!=0:
+         flights=[]
+         for n in range(a):
+            flights.append({
+               'date_pk':row[n][0],
+               'company':row[n][1],
+               'from_p':row[n][2],
+               'to_p':row[n][3],
+               'time_from':row[n][4],
+               'time_to':row[n][5],
+               'price':row[n][6],
+              'available':row[n][7]
+            })
+            data={
+               'userId':userId,
+               'firstname':firstname,
+               'lastname':lastname,
+               'wallet':wallet,
+               'email':email,
+               'from_p':from_p,
+               'to_p':to_p,
+               'date':date,
+               'passengers':passengers,
+               'flights':flights,
+               'from_p_list':from_p_list,
+               'to_p_list':to_p_list
+            }
+         return render(request,'authentication/flights_search.html',data)
+      else:
+         return redirect("http://127.0.0.1:8000/login/{}/{}/flights".format(userId,email))
+
+
+   
 
 def Flights_Book(request,userId,email):
-   
+
+   date_pk=request.GET.get('c1')
+   passengers=request.GET.get('c2')
    return render(request,'authentication/flights_book.html')
 
 # Create your views here.
