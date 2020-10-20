@@ -238,7 +238,7 @@ CREATE TABLE `date_pk` (
 
 LOCK TABLES `date_pk` WRITE;
 /*!40000 ALTER TABLE `date_pk` DISABLE KEYS */;
-INSERT INTO `date_pk` VALUES (1,'2020-12-11','2020-12-13',4,40,'1'),(2,'2020-12-12','2020-12-13',45,40,'2'),(1,'2020-05-02','2020-07-07',13,40,'3'),(3,'2020-05-02','2020-04-04',14,40,'4'),(4,'2020-09-12','2020-12-14',26,40,'5');
+INSERT INTO `date_pk` VALUES (1,'2020-12-11','2020-12-13',4,40,'1'),(2,'2020-12-12','2020-12-13',45,40,'2'),(1,'2020-05-02','2020-07-07',13,40,'3'),(3,'2020-05-02','2020-04-04',14,40,'4'),(4,'2020-09-12','2020-12-14',26,40,'5'),(5,'2020-10-21','2020-10-22',23,40,'6');
 /*!40000 ALTER TABLE `date_pk` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -387,14 +387,17 @@ DROP TABLE IF EXISTS `flight_specific`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `flight_specific` (
-  `Flight_ID` int NOT NULL,
+  `Flight_No` int NOT NULL,
   `Time_From` time DEFAULT NULL,
   `Time_To` time DEFAULT NULL,
   `Price` int DEFAULT NULL,
   `KID` int NOT NULL,
+  `RID` int DEFAULT NULL,
   PRIMARY KEY (`KID`),
-  KEY `Flight_ID_idx` (`Flight_ID`),
-  CONSTRAINT `Flight_ID` FOREIGN KEY (`Flight_ID`) REFERENCES `flight` (`Flight_No`)
+  KEY `Flight_ID_idx` (`Flight_No`),
+  KEY `RID_idx` (`RID`),
+  CONSTRAINT `Flight_No` FOREIGN KEY (`Flight_No`) REFERENCES `flight` (`Flight_No`),
+  CONSTRAINT `RID` FOREIGN KEY (`RID`) REFERENCES `route` (`RID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -404,7 +407,7 @@ CREATE TABLE `flight_specific` (
 
 LOCK TABLES `flight_specific` WRITE;
 /*!40000 ALTER TABLE `flight_specific` DISABLE KEYS */;
-INSERT INTO `flight_specific` VALUES (1,'00:12:00','00:13:40',2499,1),(2,'00:14:50','00:16:40',3599,2),(1,'12:34:43','23:43:42',1234,3),(3,'09:13:12','12:14:13',999,4);
+INSERT INTO `flight_specific` VALUES (1,'00:12:00','00:13:40',2499,1,3),(2,'23:43:42','00:16:40',3599,2,5),(1,'12:34:43','23:43:42',1234,3,6),(3,'09:13:12','12:14:13',999,4,8),(4,'12:34:43','15:13:23',2599,5,7),(5,'00:20:43','02:05:20',3499,6,1),(6,'23:43:42','00:16:40',2999,7,10);
 /*!40000 ALTER TABLE `flight_specific` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -507,6 +510,31 @@ CREATE TABLE `restaurents` (
 LOCK TABLES `restaurents` WRITE;
 /*!40000 ALTER TABLE `restaurents` DISABLE KEYS */;
 /*!40000 ALTER TABLE `restaurents` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `route`
+--
+
+DROP TABLE IF EXISTS `route`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `route` (
+  `RID` int NOT NULL,
+  `from_p` varchar(45) DEFAULT NULL,
+  `to_p` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`RID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `route`
+--
+
+LOCK TABLES `route` WRITE;
+/*!40000 ALTER TABLE `route` DISABLE KEYS */;
+INSERT INTO `route` VALUES (1,'Bangalore','Hyderabad'),(2,'Chennai','Mumbai'),(3,'Delhi','Bangalore'),(4,'Hyderabad','Delhi'),(5,'Mumbai','Delhi'),(6,'Delhi','Mumbai'),(7,'Hyderabad','Chennai'),(8,'Bangalore','Chennai'),(9,'Mumbai','Bangalore'),(10,'Chennai','Hyderabad');
+/*!40000 ALTER TABLE `route` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -631,7 +659,7 @@ CREATE TABLE `users` (
   `password` varchar(100) NOT NULL,
   `userID` int NOT NULL AUTO_INCREMENT,
   `DOB` date NOT NULL,
-  `wallet` int NOT NULL DEFAULT '2000',
+  `wallet` int NOT NULL DEFAULT '10000',
   PRIMARY KEY (`userID`),
   UNIQUE KEY `userID_UNIQUE` (`userID`),
   UNIQUE KEY `email_UNIQUE` (`email`)
@@ -657,4 +685,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-10-20 10:12:51
+-- Dump completed on 2020-10-20 15:56:14
