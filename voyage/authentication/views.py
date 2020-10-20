@@ -162,6 +162,30 @@ def ChangePassword(request,userId,email):
 
 
 
-def Flights(request):
-     return render(request,'authentication/flights.html')        
+def Flights(request,userId,email):
+     if request.method=="POST":
+
+        print('Akash work starts here')
+
+      #   extract data from form and subtitue in k values 
+      #   k1 is from_place
+      #   k2 is to_place
+      #   k3 is datetime
+      #   k4 is no of passengers
+
+        return redirect('http://127.0.0.1:8000/login/{}/{}/flights/search/?k1=a&k2=b&k3=1&k4=5'.format(userId,email))
+      
+     else:
+        return render(request,'authentication/flights.html')  
+
+def Flights_Search(request,userId,email):
+
+       #Extract k1 ,k2,k3,k4 and search the flights and display them
+       
+   return render(request,'authentication/flights_search.html',{'userId':userId,'email':email})
+
+def Flights_Book(request,userId,email):
+   
+   return render(request,'authentication/flights_book.html')
+
 # Create your views here.
