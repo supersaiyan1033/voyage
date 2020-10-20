@@ -392,12 +392,9 @@ CREATE TABLE `flight_specific` (
   `Time_To` time DEFAULT NULL,
   `Price` int DEFAULT NULL,
   `KID` int NOT NULL,
-  `RID` int NOT NULL,
   PRIMARY KEY (`KID`),
   KEY `Flight_ID_idx` (`Flight_ID`),
-  KEY `RID_idx` (`RID`),
-  CONSTRAINT `Flight_ID` FOREIGN KEY (`Flight_ID`) REFERENCES `flight` (`Flight_No`),
-  CONSTRAINT `RID` FOREIGN KEY (`RID`) REFERENCES `route` (`Route_ID`)
+  CONSTRAINT `Flight_ID` FOREIGN KEY (`Flight_ID`) REFERENCES `flight` (`Flight_No`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -407,7 +404,7 @@ CREATE TABLE `flight_specific` (
 
 LOCK TABLES `flight_specific` WRITE;
 /*!40000 ALTER TABLE `flight_specific` DISABLE KEYS */;
-INSERT INTO `flight_specific` VALUES (1,'00:12:00','00:13:40',2499,1,1),(2,'00:14:50','00:16:40',3599,2,1),(1,'12:34:43','23:43:42',1234,3,2),(3,'09:13:12','12:14:13',999,4,4);
+INSERT INTO `flight_specific` VALUES (1,'00:12:00','00:13:40',2499,1),(2,'00:14:50','00:16:40',3599,2),(1,'12:34:43','23:43:42',1234,3),(3,'09:13:12','12:14:13',999,4);
 /*!40000 ALTER TABLE `flight_specific` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -510,31 +507,6 @@ CREATE TABLE `restaurents` (
 LOCK TABLES `restaurents` WRITE;
 /*!40000 ALTER TABLE `restaurents` DISABLE KEYS */;
 /*!40000 ALTER TABLE `restaurents` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `route`
---
-
-DROP TABLE IF EXISTS `route`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `route` (
-  `From_P` varchar(45) NOT NULL,
-  `To_P` varchar(45) NOT NULL,
-  `Route_ID` int NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`Route_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `route`
---
-
-LOCK TABLES `route` WRITE;
-/*!40000 ALTER TABLE `route` DISABLE KEYS */;
-INSERT INTO `route` VALUES ('Indore','Hyderabad',1),('Hyderabad ','Vijayawada',2),('Chennai','Bangalore',3),('Delhi','Chennai',4),('Mumbai ','Kolkata',5),('Hyderabad ','Warangal',6),('Mumbai','Chennai',7),('Chennai','Delhi',8),('Kolkata','Bangalore',9);
-/*!40000 ALTER TABLE `route` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -685,4 +657,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-10-19 20:18:27
+-- Dump completed on 2020-10-20 10:12:51
