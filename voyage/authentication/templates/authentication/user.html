@@ -241,7 +241,8 @@ transform:scale(1.01);
     </div>
     <div id="navbar">
     <ul>
-      <li><a href="#" class="active"><i class="fa fa-plane" aria-hidden="true" style="padding-right:10px;"></i>Flights</a></li>
+      <li><a href="#" class="active"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
+      <li><a href="#"><i class="fa fa-plane" aria-hidden="true" style="padding-right:10px;"></i>Flights</a></li>
       <li><a href="#"><i class="fa fa-train" aria-hidden="true" style="padding-right:10px;" class="icon"></i>Trains</a></li>
       <li><a href="#"><i class="fa fa-bus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Buses</a></li>
       <li><a href="#"><i class="fa fa-suitcase" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Trips</a></li>
@@ -266,54 +267,6 @@ transform:scale(1.01);
   </div>
   </nav>
 </div>
- <div id="part1">
-<div id="title" style="margin:auto;justify-content:center;">
-<h3 style="text-align:center;position:absolute;color:white;justify-content:center;">Book Domestic and international Flight tickets
-</div>
-<br>
-</div>
-<form method="POST">
-       {%csrf_token%}
-    <div class="login-box">
-        <h1><i class="fa fa-plane" style="margin-right:10px;"></i>Flight Booking</h1>
-        <div class="textbox" >
-         
-             <i class="fa fa-circle-o"></i>
-            <input list="startingpoints" name="startfrom" placeholder="Starting point">
-  <datalist id="startingpoints">
-  
-              <option value="Bangalore">Bangalore</option>
-              <option value="Chennai">Chennai</option>
-              <option value="Delhi">Delhi</option>
-              <option value="Mumbai">Mumbai</option>
-              <option value="Hyderabad">hyderabad</option>
-  </datalist>
-           
-        </div>
-        <div class="textbox">
-         <i class="fa fa-map-marker"></i>
-            <input list="destinations" name="destination" placeholder="Destination point">
-  <datalist id="destinations">
-              <option value="Bangalore">Bangalore</option>
-              <option value="Chennai">Chennai</option>
-              <option value="Delhi">Delhi</option>
-              <option value="Mumbai">Mumbai</option>
-              <option value="Hyderabad">hyderabad</option>
-  </datalist>
-        </div>
-        <div class="textbox" >
-            <i class="fa fa-calendar" aria-hidden="true"></i>
-            <input type="date" placeholder="Date of Travel" id="d1" name="dateOfTravel" value="" required >
-        </div>
-        <div class="textbox" >
-            <i class="fa fa-users" aria-hidden="true"></i>
-            <input type="text" placeholder="No of travellers" name="travellers" value="" autocomplete="off" required>
-        </div>
-        <div class="loginbtn">
-           <input class="btn" type="submit" name="" value="Search">
-        </div>
-    </div>
-    </form>
 {% if messages %}
         {% for message in messages %}
          {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}

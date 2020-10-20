@@ -1,24 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <meta charset="UTF-8">
+  <meta charset="UTF-8">
   <link href="https://fonts.googleapis.com/css2?family=Piedra&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css">
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-<style>
+<script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
+  <title>Flights</title>
+  <style>
+    * {
+  margin:0px;
+  padding:0px;
+  box-sizing:border-box;
+  font-family:'ABeeZee', sans-serif;
+}
 body{
-  background-color:#E8E8E8;
+    background:url(https://i.pinimg.com/originals/da/1d/1c/da1d1ca12720d0e5bdcfc519902666e9.jpg);
+    background-size:cover;
+    height:100%;
 }
 nav{
 width:100%;
 margin:auto;
 position:fixed;
 height:70px;
-background-color:rgba(0,0,0,1);
+background-color:rgba(0,0,0,0);
 z-index:9999;
 }
 nav .logo{
@@ -83,46 +95,118 @@ width:100%;
 left:0;
 }
 
+#sidebar {
+  position:absolute;
+  top:0px;
+  right:-220px;
+  width:220px;
+  height:100%;
+  background:rgba(0,0,0,0);
+  transition:all 300ms linear;
+}
+#sidebar.active {
+  right:0px;
+  height:100vh;
+}
+#sidebar .toggle-btn {
+  position:absolute;
+  right:240px;
+  top:10px;
+}
+#sidebar .toggle-btn span {
+  display:block;
+  width:30px;
+  height:5px;
+  background:white;
+  margin:5px 0px;
+  cursor:pointer;
+}
+#sidebar div.list div.item  {
+  padding:15px 10px;
+  font-weight: bold;
+  border-bottom:1px solid #fff;
+  color:white;
+  text-transform:uppercase;
+  font-size:14px;
+}
+#sidebar div.list div.item:hover {
+transform:scale(1.01);
+}
+#part1{
+
+  position:absolute;
+  top:15%;
+  width:50vw;
+  padding:20px;
+  height:20vh;
+  margin:auto;
+  justify-content:center;
+}
+.login-box{
+    width: 400px;
+    border-radius:10px;
+    color:red;
+    background-color:rgba(255,255,255,1);
+    padding:0px 20px;
+    position: absolute;
+    top: 60%;
+    left:20%;
+    transform: translate(-50%,-50%);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.login-box h1{
+
+    font-size:40px;
+    border-bottom: 4px solid;
+    border-bottom-color:black;
+    margin-bottom:50px ;
+    padding:13px 0;
+    text-align:center;
+}
 .textbox{
     width:100%;
     overflow:hidden;
     font-size: 20px ;
     padding:8px 0;
     margin:8px 0;
-   border-bottom: 1px solid;
-    border-bottom-color: white ; 
+    border-bottom: 1px solid;
+    border-bottom-color: black ;
 }
 .textbox i{
     width:26px;
    float:left;
-    color:white;
-   
+    color:red;
+    text-align: center;
 }
 .textbox input{
     border:none;
     outline:none;
     background: white;
     font-size: 18px;
-    color:white;
+    color:black;
+    width:310px;
     float:left;
-    background-color:transparent;
     margin: 0 10px;
 }
 .loginbtn{
     text-align:center;
-    margin:0 10px;
+    margin:0px;
 }
 .btn{
     text-align:center;
     color:white;
+    width:60%;
     background: #e60000;
-    padding:5px 15px;
+    border:2px solid;
+    border-color: black;
+    padding:5px;
     font-size: 18px;
     cursor: pointer;
     margin:12px 0px;
     border-radius:7px;
 }
 .btn:hover{
+  transform:scale(1.1);
   background:#ff1a1a
 }
 .signup{
@@ -141,73 +225,12 @@ left:0;
     outline:none;
     background: white;
     font-size: 19px;
+    width:86%;
     float:left;
     margin: 0 10px;
 
 }
-.center{
-  padding:10px;
-  margin:auto;
-    border-radius:7px;
-    background-color:#2F4F4F;
-
-}
-.filter{
-  padding:10px;
-  margin:0px 20px;
-  width:15vw;
-   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-#sidebar {
-  position:absolute;
-  top:0px;
-  right:-220px;
-  width:220px;
-  height:100%;
-  background:rgba(0,0,0,0);
-  transition:all 300ms linear;
-}
-#sidebar.active {
-  right:0px;
-  height:100vh;
-   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-   background-color:white;
-}
-#sidebar .toggle-btn {
-  position:absolute;
-  right:240px;
-  top:10px;
-}
-#sidebar .toggle-btn span {
-  display:block;
-  width:30px;
-  height:5px;
-  background:white;
-  margin:5px 0px;
-  cursor:pointer;
-}
-#sidebar div.list div.item  {
-  padding:15px 10px;
-  font-weight: bold;
-  border-bottom:1px solid black;
-  color:blue;
-  text-transform:uppercase;
-  font-size:14px;
-}
-#sidebar div.list div.item:hover {
-transform:scale(1.01);
-}
-.results{
-
-}
-::placeholder{
-  color:white;
-}
-.flights:hover{
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-</style>
-  <title>Flights booking</title>
+  </style>
 </head>
 <body>
 <div class="wrap">
@@ -217,6 +240,7 @@ transform:scale(1.01);
     </div>
     <div id="navbar">
     <ul>
+      <li><a href="#"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
       <li><a href="#" class="active"><i class="fa fa-plane" aria-hidden="true" style="padding-right:10px;"></i>Flights</a></li>
       <li><a href="#"><i class="fa fa-train" aria-hidden="true" style="padding-right:10px;" class="icon"></i>Trains</a></li>
       <li><a href="#"><i class="fa fa-bus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Buses</a></li>
@@ -224,7 +248,7 @@ transform:scale(1.01);
      
       </ul>
       </div>
-       <div id="side-navbar">
+      <div id="side-navbar">
       <div id="sidebar">
     <div class="toggle-btn" onclick="toggleSidebar(this)">
       <span></span>
@@ -232,21 +256,27 @@ transform:scale(1.01);
       <span></span>
     </div>  
     <div class="list">
-      <div class="item" style="color:black;padding:6px;"><i class="fa fa-user-circle fa-4x" style="color:red;" ></i>Nitin krishna</div>
-      <div class="item"><i class="fa fa-credit-card-alt" style="color:red;padding-right:10px;"></i><i class="fa fa-inr" style="color:white;padding-right:5px;"></i>10000</div>
-      <div class="item"><a   href="{{email}}/profile" style="text-decoration:none;" ><i class="fa fa-user" style="padding-right:10px;color:red"></i>profile</a></div>
-      <div class="item"><a  href="{{email}}/changepassword" style="text-decoration:none;"><i class="fa fa-key" style="padding-right:10px;color:red"></i>change password</a></div>
-      <div class="item"><a href="#" style="text-decoration:none;"><i class="fa fa-suitcase" style="padding-right:10px;color:red"></i>My bookings</a></div>
-      <div class="item" ><a  href="{% url 'auth-login' %}" style="text-decoration:none;"><i class="fa fa-sign-out" style="padding-right:10px;color:red"></i>log out</a></div>
+      <div class="item"><i class="fa fa-user-circle fa-4x" style="color:red;" ></i>{{firstname}}</div>
+      <div class="item"><i class="fa fa-credit-card-alt" style="color:red;padding-right:10px;"></i><i class="fa fa-inr" style="color:white;padding-right:5px;"></i>{{wallet}}</div>
+      <div class="item"><a   href="{{email}}/profile" style="text-decoration:none;color:white;" ><i class="fa fa-user" style="padding-right:10px;color:red"></i>profile</a></div>
+      <div class="item"><a  href="{{email}}/changepassword" style="text-decoration:none;color:white;"><i class="fa fa-key" style="padding-right:10px;color:red"></i>change password</a></div>
+      <div class="item"><a href="#" style="text-decoration:none;color:white;"><i class="fa fa-suitcase" style="padding-right:10px;color:red"></i>My bookings</a></div>
+      <div class="item" ><a  href="{% url 'auth-login' %}" style="text-decoration:none;color:white;"><i class="fa fa-sign-out" style="padding-right:10px;color:red"></i>log out</a></div>
     </div>
   </div>
-      </nav>
-      </div>
-      <br><br><br>
-<table class="center">
-<tr>
-<td style="padding:10px 20px;">
- <div class="textbox" >
+  </nav>
+</div>
+<div id="part1">
+<div id="title" style="margin:auto;justify-content:center;">
+<h3 style="text-align:center;position:absolute;color:white;justify-content:center;">Book Domestic and international Flight tickets
+</div>
+<br>
+</div>
+<form method="POST">
+       {% csrf_token %}
+    <div class="login-box">
+        <h1><i class="fa fa-plane" style="margin-right:10px;"></i>Flight Booking</h1>
+        <div class="textbox" >
          
              <i class="fa fa-circle-o"></i>
             <input list="startingpoints" name="startfrom" placeholder="Starting point">
@@ -260,11 +290,9 @@ transform:scale(1.01);
   </datalist>
            
         </div>
-</td>
-<td style="padding:10px 20px;">
-<div class="textbox">
+        <div class="textbox">
          <i class="fa fa-map-marker"></i>
-              <input list="destinations" name="destination" placeholder="Destination point">
+            <input list="destinations" name="destination" placeholder="Destination point">
   <datalist id="destinations">
               <option value="Bangalore">Bangalore</option>
               <option value="Chennai">Chennai</option>
@@ -273,217 +301,34 @@ transform:scale(1.01);
               <option value="Hyderabad">hyderabad</option>
   </datalist>
         </div>
-</td>
-<td style="padding:10px 20px;">
- <div class="textbox" >
+        <div class="textbox" >
             <i class="fa fa-calendar" aria-hidden="true"></i>
             <input type="date" placeholder="Date of Travel" id="d1" name="dateOfTravel" value="" required >
         </div>
-</td>
-<td style="padding:10px 20px;">
-<div class="textbox" >
+        <div class="textbox" >
             <i class="fa fa-users" aria-hidden="true"></i>
             <input type="text" placeholder="No of travellers" name="travellers" value="" autocomplete="off" required>
         </div>
-</td>
-<td>
-<div class="loginbtn">
+        <div class="loginbtn">
            <input class="btn" type="submit" name="" value="Search">
         </div>
-</td>
-</tr>
-</table>
-<hr>
-<table style="width=100vw;">
-<tr>
-<td valign="top" style="align:right;">
-<div class="filter" style="background-color:white;">
-<form method="POST">
-<h4>Apply filters:</h4>
-<hr>
-<label for="comapny">company:</label><br>
- <input type="checkbox" id="vehicle1" name="vehicle1" value="Indigo">
-  <label for="vehicle1"> Indigo</label><br>
-  <input type="checkbox" id="vehicle2" name="vehicle2" value="AirAsia">
-  <label for="vehicle2">AirAsia</label><br>
-  <input type="checkbox" id="vehicle3" name="vehicle3" value="SpiceJet">
-  <label for="vehicle3">SpiceJet</label><br>
-  <input type="checkbox" id="vehicle2" name="vehicle2" value="TrueJet">
-  <label for="vehicle2">TrueJet</label><br>
-<hr>
-<label for="pricerange">minimumm price:</label>
- <input type="range" value="2000" min="2999" max="30999" oninput="this.nextElementSibling.value = this.value">
-<output>2999</output>&nbsp<i class="fa fa-inr"></i>
-<label for="pricerange">maximum price:</label>
-<input type="range" value="2000" min="2999" max="30999" oninput="this.nextElementSibling.value = this.value">
-<output>2999</output>&nbsp<i class="fa fa-inr"></i>
-<div class="loginbtn">
-           <input class="btn" type="submit" name="" value="Apply" style="background-color:#3392FF;">
-        </div>
-</form>
-</div>
-</td>
-<td style="text-align:right;padding-left:100px;vertical-align:text-top;align:left;">
-<div class="results" style="border-left-style:solid;float:right;margin:auto;border-color:grey; margin:4px, 4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; text-align:justify; ">
-<div class="flights" style="background-color:white;border-radius:7px;margin:20px;">
-<table>
-<tr>
-<td style="padding:5px 30px;">
-<img src="images/airindia.jpg" height="70">
-</td>
-<td style="padding:5px 30px;">
-<h6>AirIndia</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6>HYD - IND</h6>
-</td>
-
-<td style="padding:5px 30px;">
-<h5>20:15-06:40</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6>available:61</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6><i class="fa fa-inr"></i>3,900</h6>
-</td>
-<td style="padding:5px 30px;">
-<div class="loginbtn">
-           <input class="btn" type="submit" name="" value="Book">
-        </div>
-</td>
-</tr>
-</table>
-</div>
-<div class="flights" style="background-color:white;border-radius:7px;margin:20px;">
-<table>
-<tr>
-<td style="padding:5px 30px;">
-<img src="images/airindia.jpg" height="70">
-</td>
-<td style="padding:5px 30px;">
-<h6>AirIndia</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6>DEL - MUM</h6>
-</td>
-
-<td style="padding:5px 30px;">
-<h5>00:15-04:40</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6>available:1</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6><i class="fa fa-inr"></i>5,900</h6>
-</td>
-<td style="padding:5px 30px;">
-<div class="loginbtn">
-           <input class="btn" type="submit" name="" value="Book">
-        </div>
-</td>
-</tr>
-</table>
-</div>
-<div class="flights" style="background-color:white;border-radius:7px;margin:20px;">
-<table>
-<tr>
-<td style="padding:5px 30px;">
-<img src="images/airasia.png" height="70">
-</td>
-<td style="padding:5px 30px;">
-<h6>AirAsia</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6>BAN - MUM</h6>
-</td>
-<td style="padding:5px 30px;">
-<h5>03:15-07:40</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6>available:54</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6><i class="fa fa-inr"></i>4,900</h6>
-</td>
-<td style="padding:5px 30px;">
-<div class="loginbtn">
-           <input class="btn" type="submit" name="" value="Book">
-        </div>
-</td>
-</tr>
-</table>
-</div>
-<div class="flights" style="background-color:white;border-radius:7px;margin:20px;">
-<table>
-<tr>
-<td style="padding:5px 30px;">
-<img src="images/indigo.png" height="70">
-</td>
-<td style="padding:5px 30px;">
-<h6>Indigo</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6>KOL - CHEN</h6>
-</td>
-<td style="padding:5px 30px;">
-<h5>21:15-00:40</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6>available:12</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6><i class="fa fa-inr"></i>2,900</h6>
-</td>
-<td style="padding:5px 30px;">
-<div class="loginbtn">
-           <input class="btn" type="submit" name="" value="Book">
-        </div>
-</td>
-</tr>
-</table>
-</div>
-<div class="flights" style="background-color:white;border-radius:7px;margin:20px;">
-<table>
-<tr>
-<td style="padding:5px 30px;">
-<img src="images/spicejet.png" height="70">
-</td>
-<td style="padding:5px 30px;">
-<h6>SpiceJet</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6>BAN - DEL</h6>
-</td>
-<td style="padding:5px 30px;">
-<h5>02:15-08:40</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6>available:31</h6>
-</td>
-<td style="padding:5px 30px;">
-<h6><i class="fa fa-inr"></i>10,900</h6>
-</td>
-<td style="padding:5px 30px;">
-<div class="loginbtn">
-           <input class="btn" type="submit" name="" value="Book">
-        </div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-</td>
-</tr>
-</table>
-
-
- <script>
+    </div>
+    </form>
+  <script>
   function toggleSidebar(ref){
     document.getElementById("sidebar").classList.toggle('active');
   }
-
-  
-  </script>
-</body>   
+ 
+var d1 = new Date();
+var y1= d1.getFullYear();
+var m1 = d1.getMonth()+1;
+if(m1<10)
+    m1="0"+m1;
+var dt1 = d1.getDate();
+if(dt1<10)
+dt1 = "0"+dt1;
+var d2 = y1+"-"+m1+"-"+dt1;
+document.getElementById('d1').value=d2;
+</script>
+</body>
 </html>
