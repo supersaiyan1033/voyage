@@ -327,7 +327,7 @@ transform:scale(1.01);
 <hr>
 {% if minm_price %}
 <label for="pricerange">minimumm price:</label>
- <input type="range" value="0" min="0" max="30999" oninput="this.nextElementSibling.value = this.value" name="minm_price">
+ <input type="range" value="{{minm_price}}" min="0" max="30999" oninput="this.nextElementSibling.value = this.value" name="minm_price">
 <output>{{minm_price}}</output>&nbsp<i class="fa fa-inr"></i>
 {% else %}
 <label for="pricerange">minimumm price:</label>
@@ -336,7 +336,7 @@ transform:scale(1.01);
 {%  endif %}
 {% if maxm_price %}
 <label for="pricerange">maximum price:</label>
-<input type="range" value="30999" min="2000" max="30999" oninput="this.nextElementSibling.value = this.value" name="maxm_price">
+<input type="range" value="{{maxm_price}}" min="2000" max="30999" oninput="this.nextElementSibling.value = this.value" name="maxm_price">
 <output>{{maxm_price}}</output>&nbsp<i class="fa fa-inr"></i>
 {% else %}
 <label for="pricerange">maximum price:</label>
