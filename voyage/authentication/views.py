@@ -261,17 +261,21 @@ def Flights_Search(request,userId,email):
         minm_price=int(request.POST.get("minm_price"))
         maxm_price=int(request.POST.get("maxm_price"))
         print(minm_price,type(minm_price),maxm_price,type(maxm_price))
+        error_type_1=None
+        error_type_2=None
         cursor=connection.cursor()
         if len(companies)!=0:
              cursor.execute("""select Date_Pk,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant 
              FROM date_pk JOIN flight_specific ON date_pk.KID=flight_specific.KID JOIN route ON route.RID=flight_specific.RID JOIN flight ON flight.Flight_No=flight_specific.Flight_No
              WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s  AND Company IN %s""",(date,from_p,to_p,minm_price,maxm_price,companies))
+             error_type_1=1
         else:
              cursor.execute("""select Date_Pk,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant 
              FROM date_pk JOIN flight_specific ON date_pk.KID=flight_specific.KID JOIN route ON route.RID=flight_specific.RID JOIN flight ON flight.Flight_No=flight_specific.Flight_No
              WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s """,(date,from_p,to_p,minm_price,maxm_price))
+             error_type_2=1
         a=cursor.rowcount
-        companies = list(companies)
+        companies = list(companies) 
         row=cursor.fetchall() 
         if cursor.rowcount!=0:
          flights=[]
@@ -287,7 +291,7 @@ def Flights_Search(request,userId,email):
                'price':row[n][6],
               'available':row[n][7]
                 })
-
+                           
             data={
                'userId':userId,
                'firstname':firstname,
@@ -304,7 +308,7 @@ def Flights_Search(request,userId,email):
                'minm_price':minm_price,
                'maxm_price':maxm_price,
                'companies':companies,
-               'unchecked':unchecked
+               'unchecked':unchecked,
             }
          return render(request,'authentication/flights_search.html',data)
         else:
@@ -317,13 +321,16 @@ def Flights_Search(request,userId,email):
             'from_p':from_p,
             'to_p':to_p,
             'date':date,
+            'flights':None,
             'passengers':passengers,
             'from_p_list':from_p_list,
             'to_p_list':to_p_list,
             'minm_price':minm_price,
             'maxm_price':maxm_price,
             'companies':companies,
-            'unchecked':unchecked
+            'unchecked':unchecked,
+            'error_type_1':error_type_1,
+            'error_type_2':error_type_2
 
          }
          return render(request,'authentication/flights_search.html',data)
@@ -372,6 +379,7 @@ def Flights_Search(request,userId,email):
             'from_p':from_p,
             'to_p':to_p,
             'date':date,
+            'flights':None,
             'passengers':passengers,
             'from_p_list':from_p_list,
             'to_p_list':to_p_list
