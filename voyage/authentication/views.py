@@ -392,7 +392,7 @@ def Flights_Search(request,userId,email):
 
 def Flights_Book(request,userId,email):
    date_pk=request.GET.get('c1')
-   passengers=request.GET.get('c2')
+   passengers=int(request.GET.get('c2'))
 
    cursor=connection.cursor()
    cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""",[userId])
@@ -422,7 +422,7 @@ def Flights_Book(request,userId,email):
       'time_from':time_from,
       'time_to':time_to,
       'price':price,
-      'passengers':passengers
+      'passengers':range(1,passengers+1)
    }
 
    return render(request,'authentication/flights_book.html',data)
