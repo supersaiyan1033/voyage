@@ -244,7 +244,7 @@ def Flights_Search(request,userId,email):
       cursor=connection.cursor()
       cursor.execute("""select Date_Pk,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant 
     FROM date_pk JOIN flight_specific ON date_pk.KID=flight_specific.KID JOIN route ON route.RID=flight_specific.RID JOIN flight ON flight.Flight_No=flight_specific.Flight_No
-    WHERE date_from=%s AND from_p=%s AND to_p=%s AND no_of_seats_vacant>=%s""",(date,from_p,to_p,passengers))
+    WHERE date_from=%s AND from_p=%s AND to_p=%s""",(date,from_p,to_p))
       a=cursor.rowcount
       row=cursor.fetchall() 
       if cursor.rowcount!=0:
@@ -276,15 +276,60 @@ def Flights_Search(request,userId,email):
             }
          return render(request,'authentication/flights_search.html',data)
       else:
-         return redirect("http://127.0.0.1:8000/login/{}/{}/flights".format(userId,email))
+         data={
+            'userId':userId,
+            'firstname':firstname,
+            'lastname':lastname,
+            'wallet':wallet,
+            'email':email,
+            'from_p':from_p,
+            'to_p':to_p,
+            'date':date,
+            'passengers':passengers,
+            'from_p_list':from_p_list,
+            'to_p_list':to_p_list
+         }
+         return render(request,'authentication/flights_search.html',data)
+
 
 
    
 
 def Flights_Book(request,userId,email):
-
    date_pk=request.GET.get('c1')
    passengers=request.GET.get('c2')
-   return render(request,'authentication/flights_book.html')
+
+   cursor=connection.cursor()
+   cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""",[userId])
+   row=cursor.fetchall()
+   firstname=row[0][0]
+   lastname=row[0][1]
+   wallet=row[0][2]
+   cursor=connection.cursor()
+   cursor.execute("""SELECT Company,from_p,to_p,Time_From,Time_To,Price FROM date_pk JOIN flight_specific ON date_pk.KID=flight_specific.KID JOIN route ON route.RID=flight_specific.RID JOIN flight ON flight.Flight_No=flight_specific.Flight_No WHERE Date_Pk=%s""",[date_pk])
+   row=cursor.fetchall()
+   company=row[0][0]
+   from_p=row[0][1]
+   to_p=row[0][2]
+   time_from=row[0][3]
+   time_to=row[0][4]
+   price=row[0][5]
+
+   data={
+      'userId':userId,
+      'email':email,
+      'firstname':firstname,
+      'lastname':lastname,
+      'wallet':wallet,
+      'company':company,
+      'from_p':from_p,
+      'to_p':to_p,
+      'time_from':time_from,
+      'time_to':time_to,
+      'price':price,
+      'passengers':passengers
+   }
+
+   return render(request,'authentication/flights_book.html',data)
 
 # Create your views here.

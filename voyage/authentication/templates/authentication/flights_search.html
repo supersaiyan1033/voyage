@@ -324,6 +324,7 @@ transform:scale(1.01);
 </td>
 <td style="text-align:right;padding-left:100px;vertical-align:text-top;align:left;">
 <div class="results" style="border-left-style:solid;float:right;margin:auto;border-color:grey; margin:4px, 4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; text-align:justify; ">
+{% if flights %}
 {% for flights in flights %}
 <div class="flights" style="background-color:white;border-radius:7px;margin:20px;">
 <table>
@@ -356,6 +357,9 @@ transform:scale(1.01);
 </table>
 </div>
 {% endfor %}
+{% else %}
+<h1>Flights are not available for the given Route and Date</h1>
+{% endif %}
 </div>
 </td>
 </tr>
