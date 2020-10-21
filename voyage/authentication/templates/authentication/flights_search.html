@@ -210,6 +210,7 @@ transform:scale(1.01);
   <title>Flights booking</title>
 </head>
 <body>
+{% load static %}
 <div class="wrap">
   <nav>
     <div class="logo">
@@ -246,8 +247,7 @@ transform:scale(1.01);
       <br><br><br>
 <table class="center">
 <tr>
-  <form method="POST">
-    {% csrf_token %}
+  <form method="GET">
 <td style="padding:10px 20px;">
  <div class="textbox" >
          
@@ -298,39 +298,68 @@ transform:scale(1.01);
 <td valign="top" style="align:right;">
 <div class="filter" style="background-color:white;">
 <form method="POST">
+{% csrf_token %}
 <h4>Apply filters:</h4>
 <hr>
+{% if companies %}
+
 <label for="comapny">company:</label><br>
- <input type="checkbox" id="vehicle1" name="vehicle1" value="Indigo">
-  <label for="vehicle1"> Indigo</label><br>
-  <input type="checkbox" id="vehicle2" name="vehicle2" value="AirAsia">
-  <label for="vehicle2">AirAsia</label><br>
-  <input type="checkbox" id="vehicle3" name="vehicle3" value="SpiceJet">
+{% for company in companies%}
+ <input type="checkbox"  name="{{company}}" value="{{company}}" checked>
+  <label for="vehicle1">{{company}}</label><br>
+{% endfor %}
+  {% for uncheck in unchecked %}
+  <input type="checkbox"  name="{{uncheck}}" value="{{uncheck}}">
+  <label for="vehicle2">{{uncheck}}</label><br>
+  {% endfor %}
+{% else%}
+  <input type="checkbox"  name="Indigo" value="Indigo" >
+  <label for="vehicle1">Indigo</label><br>
+  <input type="checkbox"  name="AirAsia" value="AirAsia" >
+  <label for="vehicle1">AirAsia</label><br>
+  <input type="checkbox" id="company2" name="AirIndia" value="AirIndia" >
+  <label for="vehicle2">AirIndia</label><br>
+  <input type="checkbox" id="company3" name="SpiceJet" value="SpiceJet" >
   <label for="vehicle3">SpiceJet</label><br>
-  <input type="checkbox" id="vehicle2" name="vehicle2" value="TrueJet">
+  <input type="checkbox" id="company4" name="TruJet" value="TruJet" >
   <label for="vehicle2">TrueJet</label><br>
+  {% endif %}
 <hr>
+{% if minm_price %}
 <label for="pricerange">minimumm price:</label>
- <input type="range" value="2000" min="2999" max="30999" oninput="this.nextElementSibling.value = this.value">
-<output>2999</output>&nbsp<i class="fa fa-inr"></i>
+ <input type="range" value="0" min="0" max="30999" oninput="this.nextElementSibling.value = this.value" name="minm_price">
+<output>{{minm_price}}</output>&nbsp<i class="fa fa-inr"></i>
+{% else %}
+<label for="pricerange">minimumm price:</label>
+ <input type="range" value="0" min="0" max="30999" oninput="this.nextElementSibling.value = this.value" name="minm_price">
+<output>0</output>&nbsp<i class="fa fa-inr"></i>
+{%  endif %}
+{% if maxm_price %}
 <label for="pricerange">maximum price:</label>
-<input type="range" value="2000" min="2999" max="30999" oninput="this.nextElementSibling.value = this.value">
-<output>2999</output>&nbsp<i class="fa fa-inr"></i>
+<input type="range" value="30999" min="2000" max="30999" oninput="this.nextElementSibling.value = this.value" name="maxm_price">
+<output>{{maxm_price}}</output>&nbsp<i class="fa fa-inr"></i>
+{% else %}
+<label for="pricerange">maximum price:</label>
+<input type="range" value="30999" min="2000" max="30999" oninput="this.nextElementSibling.value = this.value" name="maxm_price">
+<output>30999</output>&nbsp<i class="fa fa-inr"></i>
+{% endif %}
+
 <div class="loginbtn">
            <input class="btn" type="submit" name="" value="Apply" style="background-color:#3392FF;">
         </div>
 </form>
 </div>
 </td>
-<td style="text-align:right;padding-left:100px;vertical-align:text-top;align:left;">
-<div class="results" style="border-left-style:solid;float:right;margin:auto;border-color:grey; margin:4px, 4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; text-align:justify; ">
+
 {% if flights %}
+<td style="text-align:right;padding-left:50px;vertical-align:text-top;align:left;">
+<div class="results" style="border-left-style:solid;float:right;margin:auto;border-color:grey; margin:4px, 4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; text-align:justify; ">
 {% for flights in flights %}
 <div class="flights" style="background-color:white;border-radius:7px;margin:20px;">
 <table>
 <tr>
 <td style="padding:5px 30px;">
-<img src="images/airindia.jpg" height="70">
+<img src= "{% static 'authentication/images/SpiceJet.png' %}" height="70">
 </td>
 <td style="padding:5px 30px;">
 <h6>{{flights.company}}</h6>
@@ -350,18 +379,22 @@ transform:scale(1.01);
 </td>
 <td style="padding:5px 30px;">
 <div class="loginbtn">
-           <a href="http://127.0.0.1:8000/login/{{userId}}/{{email}}/flights/book/?c1={{flights.date_pk}}&c2={{passengers}}">book</a>
+             <input class="btn" type="submit" name="" value="Search" onclick="window.location.href='http://127.0.0.1:8000/login/{{userId}}/{{email}}/flights/book/?c1={{flights.date_pk}}&c2={{passengers}}'">
         </div>
 </td>
 </tr>
 </table>
 </div>
 {% endfor %}
-{% else %}
-<h1>Flights are not available for the given Route and Date</h1>
-{% endif %}
 </div>
 </td>
+{% else %}
+<td valign="middle" style="padding-left:50px;align:center;" >
+<div class="results" style="border-left-style:solid;margin:auto;border-color:grey; margin:4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; ">
+<h2 style="text-align:center;padding:20px;margin:10px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="margin-right:10px;color:red;"></i>Flights are not available or booked for the given Route and Date</h2>
+</div>
+</td>
+{% endif %}
 </tr>
 </table>
 

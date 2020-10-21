@@ -100,6 +100,7 @@ def Profile(request,userId,email):
      cursor = connection.cursor()
      cursor.execute("""SELECT * FROM users WHERE email= %s""",[email])
      row = cursor.fetchall()
+     genders=['Male','Female','Others']
     
      dateOfBirth = row[0][8].strftime("%Y-%m-%d")
      data={
@@ -112,6 +113,7 @@ def Profile(request,userId,email):
              'password':row[0][6],
              'userId':row[0][7],
              'DOB':dateOfBirth,
+             'genders':genders
      }
      if request.method=="POST":
         firstname = request.POST.get('firstname')
@@ -169,7 +171,7 @@ def Flights(request,userId,email):
         to_p=request.POST.get("destination")
         date=request.POST.get("dateOfTravel")
         passengers=request.POST.get("travellers")
-        return redirect('http://127.0.0.1:8000/login/{}/{}/flights/search/?k1={}&k2={}&k3={}&k4={}'.format(userId,email,from_p,to_p,date,passengers))
+        return redirect('http://127.0.0.1:8000/login/{}/{}/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(userId,email,from_p,to_p,date,passengers))
       
      else:
 
@@ -207,15 +209,7 @@ def Flights(request,userId,email):
 
 def Flights_Search(request,userId,email):
 
-   if request.method=="POST":
-      from_p=request.POST.get("startfrom")
-      to_p=request.POST.get("destination")
-      date=request.POST.get("dateOfTravel")
-      passengers=request.POST.get("travellers")
-      return redirect('http://127.0.0.1:8000/login/{}/{}/flights/search/?k1={}&k2={}&k3={}&k4={}'.format(userId,email,from_p,to_p,date,passengers)) 
-
-   else:
-
+  
       cursor=connection.cursor()
       cursor.execute("SELECT DISTINCT from_p FROM route")
       a=cursor.rowcount
@@ -237,17 +231,110 @@ def Flights_Search(request,userId,email):
       lastname=row[0][1]
       wallet=row[0][2]
 
-      from_p=request.GET.get('k1')
-      to_p=request.GET.get('k2')
-      date=request.GET.get('k3')
-      passengers=int(request.GET.get('k4'))
-      cursor=connection.cursor()
-      cursor.execute("""select Date_Pk,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant 
-    FROM date_pk JOIN flight_specific ON date_pk.KID=flight_specific.KID JOIN route ON route.RID=flight_specific.RID JOIN flight ON flight.Flight_No=flight_specific.Flight_No
-    WHERE date_from=%s AND from_p=%s AND to_p=%s""",(date,from_p,to_p))
-      a=cursor.rowcount
-      row=cursor.fetchall() 
-      if cursor.rowcount!=0:
+      from_p=request.GET.get('startfrom')
+      to_p=request.GET.get('destination')
+      date=request.GET.get('dateOfTravel')
+      passengers=int(request.GET.get('travellers'))
+      if request.method=="POST":
+        temp =[]
+        companies=[]
+        from_p=request.GET.get('startfrom')
+        to_p=request.GET.get('destination')
+        date=request.GET.get('dateOfTravel')
+        Indigo = request.POST.get('Indigo')
+        AirAsia =request.POST.get('AirAsia')
+        SpiceJet = request.POST.get('SpiceJet')
+        TruJet = request.POST.get('TruJet')
+        AirIndia = request.POST.get('AirIndia')
+        total = ['AirAsia','Indigo','SpiceJet','TruJet','AirIndia']
+        temp =[Indigo,AirAsia,SpiceJet,TruJet,AirIndia]
+        unchecked =[]
+        print(temp)
+        for company in temp:
+           if company!=None:
+              companies.append(company)
+
+        unchecked = [i for i in total + companies if i not in total or i not in companies]
+        companies = tuple(companies)
+        print(companies)
+        passengers=int(request.GET.get('travellers'))
+        minm_price=int(request.POST.get("minm_price"))
+        maxm_price=int(request.POST.get("maxm_price"))
+        print(minm_price,type(minm_price),maxm_price,type(maxm_price))
+        cursor=connection.cursor()
+        if len(companies)!=0:
+             cursor.execute("""select Date_Pk,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant 
+             FROM date_pk JOIN flight_specific ON date_pk.KID=flight_specific.KID JOIN route ON route.RID=flight_specific.RID JOIN flight ON flight.Flight_No=flight_specific.Flight_No
+             WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s  AND Company IN %s""",(date,from_p,to_p,minm_price,maxm_price,companies))
+        else:
+             cursor.execute("""select Date_Pk,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant 
+             FROM date_pk JOIN flight_specific ON date_pk.KID=flight_specific.KID JOIN route ON route.RID=flight_specific.RID JOIN flight ON flight.Flight_No=flight_specific.Flight_No
+             WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s """,(date,from_p,to_p,minm_price,maxm_price))
+        a=cursor.rowcount
+        companies = list(companies)
+        row=cursor.fetchall() 
+        if cursor.rowcount!=0:
+         flights=[]
+         for n in range(a):
+           
+            flights.append({
+               'date_pk':row[n][0],
+               'company':row[n][1],
+               'from_p':row[n][2],
+               'to_p':row[n][3],
+               'time_from':row[n][4],
+               'time_to':row[n][5],
+               'price':row[n][6],
+              'available':row[n][7]
+                })
+
+            data={
+               'userId':userId,
+               'firstname':firstname,
+               'lastname':lastname,
+               'wallet':wallet,
+               'email':email,
+               'from_p':from_p,
+               'to_p':to_p,
+               'date':date,
+               'passengers':passengers,
+               'flights':flights,
+               'from_p_list':from_p_list,
+               'to_p_list':to_p_list,
+               'minm_price':minm_price,
+               'maxm_price':maxm_price,
+               'companies':companies,
+               'unchecked':unchecked
+            }
+         return render(request,'authentication/flights_search.html',data)
+        else:
+         data={
+            'userId':userId,
+            'firstname':firstname,
+            'lastname':lastname,
+            'wallet':wallet,
+            'email':email,
+            'from_p':from_p,
+            'to_p':to_p,
+            'date':date,
+            'passengers':passengers,
+            'from_p_list':from_p_list,
+            'to_p_list':to_p_list,
+            'minm_price':minm_price,
+            'maxm_price':maxm_price,
+            'companies':companies,
+            'unchecked':unchecked
+
+         }
+         return render(request,'authentication/flights_search.html',data)
+      else:
+        cursor=connection.cursor()
+        cursor.execute("""select Date_Pk,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant 
+        FROM date_pk JOIN flight_specific ON date_pk.KID=flight_specific.KID JOIN route ON route.RID=flight_specific.RID JOIN flight ON flight.Flight_No=flight_specific.Flight_No
+        WHERE date_from=%s AND from_p=%s AND to_p=%s""",(date,from_p,to_p))
+        a=cursor.rowcount
+        row=cursor.fetchall() 
+        if cursor.rowcount!=0:
          flights=[]
          for n in range(a):
             flights.append({
@@ -272,10 +359,10 @@ def Flights_Search(request,userId,email):
                'passengers':passengers,
                'flights':flights,
                'from_p_list':from_p_list,
-               'to_p_list':to_p_list
+               'to_p_list':to_p_list,
             }
          return render(request,'authentication/flights_search.html',data)
-      else:
+        else:
          data={
             'userId':userId,
             'firstname':firstname,

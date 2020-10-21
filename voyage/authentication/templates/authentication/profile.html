@@ -66,10 +66,14 @@
             <div class="col-lg-8">
               <div class="ui-select">
                 <select id="Gender" class="form-control" name="gender"  required >
-                  <option value="{{gender}}" >{{gender}}</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Others">others</option>
+                 {% for list_gender in genders %}
+             <option
+              value="{{ list_gender}}"
+              {% if list_gender == gender %}
+                  selected="selected"
+              {% endif %}
+             >{{ list_gender }}</option>
+         {% endfor %}
                 </select>
               </div>
             </div>
@@ -86,18 +90,6 @@
               <input class="form-control" type="password"  name="password" required>
             </div>
           </div>
-          <!-- <div class="form-group">
-            <label class="col-md-3 control-label">NEW PASSWORD:</label>
-            <div class="col-md-8">
-              <input class="form-control" type="password" value="" name="newpassword" required>
-            </div>
-          </div> -->
-          <!-- <div class="form-group">
-            <label class="col-md-3 control-label">Confirm New password:</label>
-            <div class="col-md-8">
-              <input class="form-control" type="password" value="" name="confirmnewpassword" required>
-            </div>
-          </div> -->
           <div class="form-group">
             <label class="col-md-3 control-label"></label>
             <div class="col-md-8">
