@@ -1,36 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+ <meta charset="UTF-8">
+ <title>My Bookings</title>
   <link href="https://fonts.googleapis.com/css2?family=Piedra&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
-<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css">
-<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
-  <title>User homepage</title>
-  <style>
-    * {
-  margin:0px;
-  padding:0px;
-  box-sizing:border-box;
-  {% comment %} font-family:'ABeeZee', sans-serif; {% endcomment %}
-}
+<style>
 body{
-    background:url(https://i.pinimg.com/originals/da/1d/1c/da1d1ca12720d0e5bdcfc519902666e9.jpg);
-    background-size:cover;
-    height:100%;
+  background-color:#E8E8E8;
 }
 nav{
 width:100%;
 margin:auto;
 position:fixed;
 height:70px;
-background-color:rgba(0,0,0,0);
+background-color:rgba(0,0,0,1);
 z-index:9999;
 }
 nav .logo{
@@ -95,119 +84,46 @@ width:100%;
 left:0;
 }
 
-#sidebar {
-  position:absolute;
-  top:0px;
-  right:-220px;
-  width:220px;
-  height:100%;
-  background:rgba(0,0,0,0);
-  transition:all 300ms linear;
-}
-#sidebar.active {
-  right:0px;
-  height:100vh;
-   {% comment %} box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19); {% endcomment %}
-}
-#sidebar .toggle-btn {
-  position:absolute;
-  right:240px;
-  top:10px;
-}
-#sidebar .toggle-btn span {
-  display:block;
-  width:30px;
-  height:5px;
-  background:white;
-  margin:5px 0px;
-  cursor:pointer;
-}
-#sidebar div.list div.item  {
-  padding:15px 10px;
-  font-weight: bold;
-  border-bottom:1px solid #fff;
-  color:white;
-  text-transform:uppercase;
-  font-size:14px;
-}
-#sidebar div.list div.item:hover {
-transform:scale(1.01);
-}
-#part1{
-
-  position:absolute;
-  top:15%;
-  width:50vw;
-  padding:20px;
-  height:20vh;
-  margin:auto;
-  justify-content:center;
-}
-.login-box{
-    width: 400px;
-    border-radius:10px;
-    color:red;
-    background-color:rgba(255,255,255,1);
-    padding:0px 20px;
-    position: absolute;
-    top: 60%;
-    left:20%;
-    transform: translate(-50%,-50%);
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-.login-box h1{
-
-    font-size:40px;
-    border-bottom: 4px solid;
-    border-bottom-color:black;
-    margin-bottom:50px ;
-    padding:13px 0;
-    text-align:center;
-}
 .textbox{
     width:100%;
     overflow:hidden;
     font-size: 20px ;
     padding:8px 0;
     margin:8px 0;
-    border-bottom: 1px solid;
-    border-bottom-color: black ;
+   border-bottom: 1px solid;
+    border-bottom-color: white ; 
 }
 .textbox i{
     width:26px;
    float:left;
-    color:red;
-    text-align: center;
+    color:white;
+   
 }
 .textbox input{
     border:none;
     outline:none;
     background: white;
     font-size: 18px;
-    color:black;
-    width:310px;
+    color:white;
     float:left;
+    background-color:transparent;
     margin: 0 10px;
 }
 .loginbtn{
     text-align:center;
-    margin:0px;
+    margin:0 10px;
 }
 .btn{
     text-align:center;
     color:white;
-    width:60%;
     background: #e60000;
-    border:2px solid;
-    border-color: black;
-    padding:5px;
+    padding:5px 15px;
     font-size: 18px;
     cursor: pointer;
     margin:12px 0px;
     border-radius:7px;
 }
 .btn:hover{
-  transform:scale(1.1);
   background:#ff1a1a
 }
 .signup{
@@ -226,14 +142,75 @@ transform:scale(1.01);
     outline:none;
     background: white;
     font-size: 19px;
-    width:86%;
     float:left;
     margin: 0 10px;
 
 }
-  </style>
+.center{
+  padding:10px;
+  margin:auto;
+    border-radius:7px;
+    background-color:#2F4F4F;
+
+}
+.filter{
+  padding:10px;
+  margin:0px 20px;
+  width:15vw;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+#sidebar {
+  position:absolute;
+  top:0px;
+  right:-220px;
+  width:220px;
+  height:100%;
+  background:rgba(0,0,0,0);
+  transition:all 300ms linear;
+}
+#sidebar.active {
+  right:0px;
+  height:100vh;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   background-color:white;
+}
+#sidebar .toggle-btn {
+  position:absolute;
+  right:240px;
+  top:10px;
+}
+#sidebar .toggle-btn span {
+  display:block;
+  width:30px;
+  height:5px;
+  background:white;
+  margin:5px 0px;
+  cursor:pointer;
+}
+#sidebar div.list div.item  {
+  padding:15px 10px;
+  font-weight: bold;
+  border-bottom:1px solid black;
+  color:blue;
+  text-transform:uppercase;
+  font-size:14px;
+}
+#sidebar div.list div.item:hover {
+transform:scale(1.01);
+}
+.results{
+
+}
+::placeholder{
+  color:white;
+}
+.flights:hover{
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+</style>
 </head>
 <body>
+{% load static %}
 <div class="wrap">
   <nav>
     <div class="logo">
@@ -241,7 +218,7 @@ transform:scale(1.01);
     </div>
     <div id="navbar">
     <ul>
-      <li><a href="#" class="active"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
+      <li><a href="http://127.0.0.1:8000/login/{{userId}}/{{email}}"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
       <li><a href="http://127.0.0.1:8000/login/{{userId}}/{{email}}/flights"><i class="fa fa-plane" aria-hidden="true" style="padding-right:10px;"></i>Flights</a></li>
       <li><a href="#"><i class="fa fa-train" aria-hidden="true" style="padding-right:10px;" class="icon"></i>Trains</a></li>
       <li><a href="#"><i class="fa fa-bus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Buses</a></li>
@@ -249,7 +226,7 @@ transform:scale(1.01);
      
       </ul>
       </div>
-      <div id="side-navbar">
+       <div id="side-navbar">
       <div id="sidebar">
     <div class="toggle-btn" onclick="toggleSidebar(this)">
       <span></span>
@@ -257,16 +234,71 @@ transform:scale(1.01);
       <span></span>
     </div>  
     <div class="list">
-      <div class="item"><i class="fa fa-user-circle fa-4x" style="color:red;" ></i>{{firstname}} {{lastname}}</div>
+      <div class="item" style="color:black;padding:6px;"><i class="fa fa-user-circle fa-4x" style="color:red;" ></i>{{firstname}} {{lastname}}</div>
       <div class="item"><i class="fa fa-credit-card-alt" style="color:red;padding-right:10px;"></i><i class="fa fa-inr" style="color:white;padding-right:5px;"></i>{{wallet}}</div>
-      <div class="item"><a   href="http://127.0.0.1:8000/login/{{userId}}/{{email}}/profile" style="text-decoration:none;color:white;" ><i class="fa fa-user" style="padding-right:10px;color:red"></i>profile</a></div>
-      <div class="item"><a  href="http://127.0.0.1:8000/login/{{userId}}/{{email}}/changepassword" style="text-decoration:none;color:white;"><i class="fa fa-key" style="padding-right:10px;color:red"></i>change password</a></div>
-      <div class="item"><a href="http://127.0.0.1:8000/login/{{userId}}/{{email}}/mybookings" style="text-decoration:none;color:white;"><i class="fa fa-suitcase" style="padding-right:10px;color:red"></i>My bookings</a></div>
-      <div class="item" ><a  href="{% url 'auth-login' %}" style="text-decoration:none;color:white;"><i class="fa fa-sign-out" style="padding-right:10px;color:red"></i>log out</a></div>
+      <div class="item"><a   href="http://127.0.0.1:8000/login/{{userId}}/{{email}}/profile" style="text-decoration:none;" ><i class="fa fa-user" style="padding-right:10px;color:red"></i>profile</a></div>
+      <div class="item"><a  href="http://127.0.0.1:8000/login/{{userId}}/{{email}}/changepassword" style="text-decoration:none;"><i class="fa fa-key" style="padding-right:10px;color:red"></i>change password</a></div>
+      <div class="item"><a href="#" style="text-decoration:none;"><i class="fa fa-suitcase" style="padding-right:10px;color:red"></i>My bookings</a></div>
+      <div class="item" ><a  href="{% url 'auth-login' %}" style="text-decoration:none;"><i class="fa fa-sign-out" style="padding-right:10px;color:red"></i>log out</a></div>
     </div>
   </div>
-  </nav>
+      </nav>
+      </div>
+      <br><br><br>
+      <h3 style="text-align:center;padding:20px;margin:10px;">My bookings</h3>
+      <br><br><br>
+{% if bookings %}
+<table style="width:80vw;margin:auto;">
+{% for booking in bookings%}
+<tr>
+<td>
+<div class="bookings" style="background-color:white;border-radius:7px;margin:15px;">
+<table>
+<tr>
+<td style="padding:10px 30px;">
+<img src="{% static booking.image %}" height="70">
+</td>
+<td style="padding:5px 30px;width:20vw;">
+<h6>{{booking.company}}</h6>
+</td>
+<td style="padding:5px 30px;width:20vw;">
+<h6>{{booking.from_p}} - {{booking.to_p}}</h6>
+</td>
+<td style="padding:5px 30px;width:20vw;">
+<h6>{{booking.time_from}} - {{booking.time_to}}</h6>
+</td>
+<td style="padding:5px 30px;width:20vw;">
+<h6><i class="fa fa-inr"></i>{{booking.price_per_person}}</h6>
+</td>
+</tr>
+<tr>
+<td style="padding:5px 30px;width:10vw;">
+</td>
+<td style="padding:5px 30px;width:40vw;">
+<h6>booking date:<strong>{{booking.date_of_booking}}</strong></h6>
+</td>
+<td style="padding:5px 30px;width:20vw;">
+<h6>total passengers:<strong>{{booking.no_of_passengers}}</strong></h6>
+</td>
+<td style="padding:5px 30px;width:22vw;">
+<h6>total price:<i class="fa fa-inr"></i><strong>{{booking.total_price}}</strong></h6>
+</td>
+<td style="padding:5px 30px;width:10vw;">
+<div class="loginbtn">
+             <input class="btn" type="submit" name="" value="Details" onclick="window.location.href='http://127.0.0.1:8000/login/{{userId}}/{{email}}/flights/book/?c1={{flight.date_pk}}&c2={{passengers}}'">
+        </div>
+</td>
+</tr>
+</table>
 </div>
+</td>
+</tr>
+{% endfor %}
+</table>
+{% else %}
+<h4>You have not done any bookings yet</h4>
+{% endif %}
+
 {% if messages %}
         {% for message in messages %}
          {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
@@ -274,21 +306,11 @@ transform:scale(1.01);
         {% endfor %}
 
     {% endif %}
-  <script>
+
+ <script>
   function toggleSidebar(ref){
     document.getElementById("sidebar").classList.toggle('active');
   }
- 
-var d1 = new Date();
-var y1= d1.getFullYear();
-var m1 = d1.getMonth()+1;
-if(m1<10)
-    m1="0"+m1;
-var dt1 = d1.getDate();
-if(dt1<10)
-dt1 = "0"+dt1;
-var d2 = y1+"-"+m1+"-"+dt1;
-document.getElementById('d1').value=d2;
-</script>
-</body>
+ </script>
+</body>   
 </html>

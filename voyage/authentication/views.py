@@ -298,8 +298,8 @@ def Flights_Search(request, userId, email):
                     'company': row[n][1],
                     'from_p': row[n][2],
                     'to_p': row[n][3],
-                    'time_from': row[n][4],
-                    'time_to': row[n][5],
+                    'time_from': row[n][4].strftime("%H:%M"),
+                    'time_to': row[n][5].strftime("%H:%M"),
                     'price': row[n][6],
                     'available': row[n][7],
                     'image':"authentication\{}.png".format(row[n][1])
@@ -362,8 +362,8 @@ def Flights_Search(request, userId, email):
                     'company': row[n][1],
                     'from_p': row[n][2],
                     'to_p': row[n][3],
-                    'time_from': row[n][4],
-                    'time_to': row[n][5],
+                    'time_from': row[n][4].strftime("%H:%M"),
+                    'time_to': row[n][5].strftime("%H:%M"),
                     'price': row[n][6],
                     'available': row[n][7],
                     'image':"authentication\{}.png".format(row[n][1])
@@ -470,8 +470,8 @@ def Flights_Book(request, userId, email):
       company=row[0][0]
       from_p=row[0][1]
       to_p=row[0][2]
-      time_from=row[0][3]
-      time_to=row[0][4]
+      time_from=row[0][3].strftime("%H:%M")
+      time_to=row[0][4].strftime("%H:%M")
       price=row[0][5]
       available=row[0][6]
       date_from=row[0][7]
@@ -500,4 +500,59 @@ def Flights_Book(request, userId, email):
          messages.success(request, 'No.of passengers excede available no.of seats!')
          return redirect('http://127.0.0.1:8000/login/{}/{}/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(userId, email, from_p, to_p, date_from, passengers))
 
+
+
+def My_Bookings(request,userId,email):
+    cursor = connection.cursor()
+    cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
+    user = cursor.fetchall()
+    firstname = user[0][0]
+    lastname = user[0][1]
+    wallet = user[0][2]
+    cursor.execute("""SELECT Booking_ID,Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p
+    FROM ticket JOIN users ON ticket.User_ID=users.userID JOIN date_pk ON ticket.Date_PK=date_pk.Date_PK JOIN flight_specific ON flight_specific.KID=date_pk.KID JOIN flight ON flight_specific.Flight_No=flight.Flight_No
+    JOIN route ON route.RID=flight_specific.RID WHERE userID=%s ORDER BY Date_of_booking DESC""",[userId])
+    row = cursor.fetchall()
+    a = cursor.rowcount
+    if cursor.rowcount!=0:
+        bookings = []
+        for n in range(a):
+            bookings.append({
+                'booking_id':row[n][0],
+                'date_of_booking':row[n][1],
+                'no_of_passengers':row[n][2],
+                'price_per_person':row[n][3],
+                'total_price':row[n][3]*row[n][2],
+                'company':row[n][4],
+                'time_from':row[n][5].strftime("%H:%M"),
+                'time_to':row[n][6].strftime("%H:%M"),
+                'from_p':row[n][7],
+                'to_p':row[n][8],
+                'image':"authentication\{}.png".format(row[n][4])
+            })
+        data={
+            'bookings':bookings,
+            'userId':userId,
+            'email':email,
+            'firstname':firstname,
+            'lastname':lastname,
+            'wallet':wallet
+        
+        }
+        
+        return render(request,'authentication/my_bookings.html',data)
+    else:
+        data={
+            'bookings':None,
+            'userId':userId,
+            'email':email,
+            'firstname':firstname,
+            'lastname':lastname,
+            'wallet':wallet
+        }
+        return render(request,'authentication/my_bookings.html',data)
 # Create your views here.
+
+
+# def Booking_Details(request,userId,email,bookingId):
+
