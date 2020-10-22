@@ -410,14 +410,18 @@ transform:scale(1.01);
 {% endif %}
 </tr>
 </table>
+{% if messages %}
+        {% for message in messages %}
+         {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
 
+        {% endfor %}
+
+    {% endif %}
 
  <script>
   function toggleSidebar(ref){
     document.getElementById("sidebar").classList.toggle('active');
   }
-
-  
-  </script>
+ </script>
 </body>   
 </html>

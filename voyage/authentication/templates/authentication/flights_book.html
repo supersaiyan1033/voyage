@@ -256,7 +256,7 @@ td{
 <label for="ticket_price">fare per person:</label>
 </td>
 <td valign="middle">
-<i class="fa fa-inr"></i>&nbsp&nbsp<strong>3999</strong>
+<i class="fa fa-inr"></i>&nbsp&nbsp<strong>{{price}}</strong>
 </td>
 </tr>
 <tr>
@@ -264,7 +264,7 @@ td{
 <label for="passengers">no of passengers:</label>
 </td>
 <td>&nbsp&nbsp
-<strong>4</strong>
+<strong>{{no_of_passengers}}</strong>
 </td>
 </tr>
 <tr>
@@ -272,7 +272,7 @@ td{
 <label for="total_price"><strong>Total fare:</strong></label>
 </td>
 <td>
-<i class="fa fa-inr"></i>&nbsp&nbsp<strong>15996</strong>
+<i class="fa fa-inr"></i>&nbsp&nbsp<strong>{{total_fare}}</strong>
 </td>
 </tr>
  </table>
@@ -289,20 +289,20 @@ td{
 <i class="fa fa-plane fa-3x" style="padding:20px;"></i>
 </td>
 <td style="padding:5px 30px;">
-<h6>AirIndigo</h6>
+<h6>{{company}}</h6>
 </td>
 <td style="padding:5px 30px;">
-<h6>Delhi- Mumbai</h6>
+<h6>{{from_p}}- {{to_p}}</h6>
 </td>
 
 <td style="padding:5px 30px;">
-<h5>12:00-15:00</h6>
+<h5>{{time_from}}-{{time_to}}</h6>
 </td>
 <td style="padding:5px 30px;">
-<h6>available:12</h6>
+<h6>available:{{available}}</h6>
 </td>
 <td style="padding:5px 30px;">
-<h6><i class="fa fa-inr"></i>3999</h6>
+<h6><i class="fa fa-inr"></i>{{price}}</h6>
 </td>
 </tr>
 <tr>
@@ -316,6 +316,7 @@ td{
 <tr>
 <div class="passengers">
 <form method="POST">
+{% csrf_token %}
 <table style="margin:auto;">
 {% for p in passengers %}
 <tr>
@@ -338,6 +339,9 @@ td{
 </td>
 </tr>
 {% endfor %}
+<div class="loginbtn">
+  <input class="btn" type="submit" name="" value="Confirm and Book" >
+</div>
 </form>
 </div>
 </tr>
@@ -347,9 +351,6 @@ td{
 </tr>
 </table>
 <br>
-<div class="loginbtn">
-             <input class="btn" type="submit" name="" value="Confirm and Book" onclick="window.location.href='http://127.0.0.1:8000/login/{{userId}}/{{email}}/flights/book/?c1={{flights.date_pk}}&c2={{passengers}}'">
-        </div>
  <script>
   function toggleSidebar(ref){
     document.getElementById("sidebar").classList.toggle('active');
