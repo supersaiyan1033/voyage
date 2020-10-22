@@ -210,6 +210,7 @@ td{
   <title>Flights booking</title>
 </head>
 <body>
+{% load static %}
 <div class="wrap">
   <nav>
     <div class="logo">
@@ -285,8 +286,8 @@ td{
 <table>
 <tr>
 <td style="padding:5px 30px;">
-{% comment %} <img src= "authentication/images/spicejet.png" height="70"> {% endcomment %}
-<i class="fa fa-plane fa-3x" style="padding:20px;"></i>
+ <img src= "{% static image %}" height="70">
+{% comment %} <i class="fa fa-plane fa-3x" style="padding:20px;"></i> {% endcomment %}
 </td>
 <td style="padding:5px 30px;">
 <h6>{{company}}</h6>
@@ -339,8 +340,18 @@ td{
 </td>
 </tr>
 {% endfor %}
+<tr>
+<td style="padding:5px 30px;">
+<hr>
+</td>
+<td style="padding:5px 30px;">
 <div class="loginbtn">
-  <input class="btn" type="submit" name="" value="Confirm and Book" >
+  <input class="btn" type="submit" name="" value="Confirm and Book" > 
+  </td>
+  <td style="padding:5px 30px;">
+  <hr>
+  </td>
+</tr>
 </div>
 </form>
 </div>

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
  <meta charset="UTF-8">
+ <title>Flight search</title>
   <link href="https://fonts.googleapis.com/css2?family=Piedra&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -207,7 +208,6 @@ transform:scale(1.01);
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 </style>
-  <title>Flights booking</title>
 </head>
 <body>
 {% load static %}
@@ -340,8 +340,8 @@ transform:scale(1.01);
 <output>{{maxm_price}}</output>&nbsp<i class="fa fa-inr"></i>
 {% else %}
 <label for="pricerange">maximum price:</label><br>
-<input type="range" value="10000" min="10000" max="40999" oninput="this.nextElementSibling.value = this.value" name="maxm_price">
-<output>10000</output>&nbsp<i class="fa fa-inr"></i>
+<input type="range" value="40999" min="10000" max="40999" oninput="this.nextElementSibling.value = this.value" name="maxm_price">
+<output>40999</output>&nbsp<i class="fa fa-inr"></i>
 {% endif %}
 
 <div class="loginbtn">
@@ -354,33 +354,33 @@ transform:scale(1.01);
 {% if flights %}
 <td style="text-align:right;padding-left:50px;vertical-align:text-top;align:left;">
 <div class="results" style="border-left-style:solid;float:right;margin:auto;border-color:grey; margin:4px, 4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; text-align:justify; ">
-{% for flights in flights %}
+{% for flight in flights %}
 <div class="flights" style="background-color:white;border-radius:7px;margin:20px;padding:20px;">
 <table>
 <tr>
-<td style="padding:5px 30px;">
-<i class="fa fa-plane fa-3x" style="color:red;"></i>
-{% comment %} <img src= "{% static 'authentication/images/SpiceJet.png' %}" height="70"> {% endcomment %}
+<td style="padding:5px 30px;width:6vw">
+
+ <img src= "{% static flight.image %}" height="70"> 
 </td>
-<td style="padding:5px 30px;">
-<h6>{{flights.company}}</h6>
+<td style="padding:5px 30px;width:6vw;">
+<h6>{{flight.company}}</h6>
 </td>
-<td style="padding:5px 30px;">
-<h6>{{flights.from_p}} - {{flights.to_p}}</h6>
+<td style="padding:5px 30px;width:15vw;">
+<h6>{{flight.from_p}} - {{flight.to_p}}</h6>
 </td>
 
-<td style="padding:5px 30px;">
-<h5>{{flights.time_from}}-{{flights.time_to}}</h6>
+<td style="padding:5px 30px;width:20vw;">
+<h6>{{flight.time_from}} - {{flight.time_to}}</h6>
 </td>
-<td style="padding:5px 30px;">
-<h6>available:{{flights.available}}</h6>
+<td style="padding:5px 30px;width:10vw;">
+<h6>Available:{{flight.available}}</h6>
 </td>
-<td style="padding:5px 30px;">
-<h6><i class="fa fa-inr"></i>&nbsp&nbsp{{flights.price}}</h6>
+<td style="padding:5px 30px;width:8vw">
+<h6><i class="fa fa-inr"></i>&nbsp&nbsp{{flight.price}}</h6>
 </td>
-<td style="padding:5px 30px;">
+<td style="padding:5px 30px;width:5vw;">
 <div class="loginbtn">
-             <input class="btn" type="submit" name="" value="Book" onclick="window.location.href='http://127.0.0.1:8000/login/{{userId}}/{{email}}/flights/book/?c1={{flights.date_pk}}&c2={{passengers}}'">
+             <input class="btn" type="submit" name="" value="Book" onclick="window.location.href='http://127.0.0.1:8000/login/{{userId}}/{{email}}/flights/book/?c1={{flight.date_pk}}&c2={{passengers}}'">
         </div>
 </td>
 </tr>

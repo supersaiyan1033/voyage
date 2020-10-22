@@ -301,7 +301,8 @@ def Flights_Search(request, userId, email):
                     'time_from': row[n][4],
                     'time_to': row[n][5],
                     'price': row[n][6],
-                    'available': row[n][7]
+                    'available': row[n][7],
+                    'image':"authentication\{}.png".format(row[n][1])
                 })
 
                 data = {
@@ -364,7 +365,8 @@ def Flights_Search(request, userId, email):
                     'time_from': row[n][4],
                     'time_to': row[n][5],
                     'price': row[n][6],
-                    'available': row[n][7]
+                    'available': row[n][7],
+                    'image':"authentication\{}.png".format(row[n][1])
                 })
                 data = {
                     'userId': userId,
@@ -489,7 +491,8 @@ def Flights_Book(request, userId, email):
             'no_of_passengers': passengers,
             'total_fare': passengers*price,
             'passengers': range(1, passengers+1),
-            'date_pk':date_pk
+            'date_pk':date_pk,
+            'image':"authentication\{}.png".format(company)
         }        
       if passengers<=available:
          return render(request, 'authentication/flights_book.html', data)        
