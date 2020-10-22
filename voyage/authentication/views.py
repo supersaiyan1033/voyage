@@ -554,5 +554,47 @@ def My_Bookings(request,userId,email):
 # Create your views here.
 
 
-# def Booking_Details(request,userId,email,bookingId):
+def Booking_Details(request,userId,email,bookingId):
+    cursor = connection.cursor()
+    cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
+    user = cursor.fetchall()
+    firstname = user[0][0]
+    lastname = user[0][1]
+    wallet = user[0][2]
+    cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,passenger.Gender,Age,Seat_no
+    FROM ticket JOIN users ON ticket.User_ID=users.userID JOIN date_pk ON ticket.Date_PK=date_pk.Date_PK JOIN flight_specific ON flight_specific.KID=date_pk.KID JOIN flight ON flight_specific.Flight_No=flight.Flight_No
+    JOIN route ON route.RID=flight_specific.RID JOIN passenger ON passenger.Booking_ID=ticket.Booking_ID JOIN transaction ON transaction.booking_ID = ticket.Booking_ID WHERE userID=%s AND ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
+    row = cursor.fetchall()
+    a = cursor.rowcount
+    no_of_passengers = a
+    passengers=[]
+    for n in range(a):
+        passengers.append({
+            'name':row[n][9],
+            'gender':row[n][10],
+            'age':row[n][11],
+            'seat_no':row[n][12],
+            'no':n+1
+        })
+    data={
+        'passengers':passengers,
+        'date_of_booking':row[0][0],
+        'no_of_passengers':row[0][1],
+        'price_per_person':row[0][2],
+        'total_price':row[0][2]*row[0][1],
+        'company':row[0][3],
+        'time_from':row[0][4].strftime("%H:%M"),
+        'time_to':row[0][5].strftime("%H:%M"),
+        'from_p':row[0][6],
+        'to_p':row[0][7],
+        'transactionId':row[0][8],
+        'image':"authentication\{}.png".format(row[0][3]),
+        'firstname':firstname,
+        'lastname':lastname,
+        'wallet':wallet,
+        'email':email,
+        'userId':userId
+    }
+    return render(request,'authentication/booking_details.html',data)
+
 

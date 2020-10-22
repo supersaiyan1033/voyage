@@ -238,67 +238,90 @@ transform:scale(1.01);
       <div class="item"><i class="fa fa-credit-card-alt" style="color:red;padding-right:10px;"></i><i class="fa fa-inr" style="color:white;padding-right:5px;"></i>{{wallet}}</div>
       <div class="item"><a   href="http://127.0.0.1:8000/login/{{userId}}/{{email}}/profile" style="text-decoration:none;" ><i class="fa fa-user" style="padding-right:10px;color:red"></i>profile</a></div>
       <div class="item"><a  href="http://127.0.0.1:8000/login/{{userId}}/{{email}}/changepassword" style="text-decoration:none;"><i class="fa fa-key" style="padding-right:10px;color:red"></i>change password</a></div>
-      <div class="item"><a href="#" style="text-decoration:none;"><i class="fa fa-suitcase" style="padding-right:10px;color:red"></i>My bookings</a></div>
+      <div class="item"><a href="http://127.0.0.1:8000/login/{{userId}}/{{email}}/mybookings" style="text-decoration:none;"><i class="fa fa-suitcase" style="padding-right:10px;color:red"></i>My bookings</a></div>
       <div class="item" ><a  href="{% url 'auth-login' %}" style="text-decoration:none;"><i class="fa fa-sign-out" style="padding-right:10px;color:red"></i>log out</a></div>
     </div>
   </div>
       </nav>
       </div>
       <br><br><br>
-      <h3 style="text-align:center;padding:20px;margin:10px;">My bookings</h3>
+      <h3 style="text-align:center;padding:20px;margin:10px;">Booking details:</h3>
       <br><br><br>
-{% if bookings %}
-<table style="width:80vw;margin:auto;">
-{% for booking in bookings%}
-<tr>
-<td>
-<div class="bookings" style="background-color:white;border-radius:7px;margin:15px;">
+<div class="bookingdetails" style="background_color:white;border-radius:10px;margin:auto;width:80vw;z-index:9999">
 <table>
 <tr>
 <td style="padding:10px 30px;">
-<img src="{% static booking.image %}" height="70">
+<img src="{% static image %}" height="70">
 </td>
 <td style="padding:5px 30px;width:20vw;">
-<h6>{{booking.company}}</h6>
+<h6>{{company}}</h6>
 </td>
 <td style="padding:5px 30px;width:20vw;">
-<h6>{{booking.from_p}} - {{booking.to_p}}</h6>
+<h6>{{from_p}} - {{to_p}}</h6>
 </td>
 <td style="padding:5px 30px;width:20vw;">
-<h6>{{booking.time_from}} - {{booking.time_to}}</h6>
+<h6>{{time_from}} - {{time_to}}</h6>
 </td>
 <td style="padding:5px 30px;width:20vw;">
-<h6><i class="fa fa-inr"></i>{{booking.price_per_person}}</h6>
+<h6><i class="fa fa-inr"></i>{{price_per_person}}</h6>
 </td>
 </tr>
 <tr>
 <td style="padding:5px 30px;width:10vw;">
-</td>
-<td style="padding:5px 30px;width:40vw;">
-<h6>booked at:<strong>{{booking.date_of_booking}}</strong></h6>
-</td>
-<td style="padding:5px 30px;width:20vw;">
-<h6>total passengers:<strong>{{booking.no_of_passengers}}</strong></h6>
-</td>
-<td style="padding:5px 30px;width:22vw;">
-<h6>total price:<i class="fa fa-inr"></i><strong>{{booking.total_price}}</strong></h6>
+<h6>status:<strong>booked</strong>
 </td>
 <td style="padding:5px 30px;width:10vw;">
-<div class="loginbtn">
-             <input class="btn" type="submit" name="" value="Details" onclick="window.location.href='http://127.0.0.1:8000/login/{{userId}}/{{email}}/mybookings/{{booking.booking_id}}/details'">
-        </div>
+<h6>transactionId:<strong>{{transactionId}}
+</td>
+<td style="padding:5px 30px;width:40vw;">
+<h6>booked at:<strong>{{date_of_booking}}</strong></h6>
+</td>
+<td style="padding:5px 30px;width:20vw;">
+<h6>total passengers:<strong>{{no_of_passengers}}</strong></h6>
+</td>
+<td style="padding:5px 30px;width:22vw;">
+<h6>total price:<i class="fa fa-inr"></i><strong>{{total_price}}</strong></h6>
 </td>
 </tr>
-</table>
-</div>
+<tr>
+<th style="padding:5px 30px;width:10vw;">
+S.NO
+</th>
+<th style="padding:5px 30px;width:10vw;">
+Name
+</th>
+<th style="padding:5px 30px;width:40vw;">
+age
+</th>
+<th style="padding:5px 30px;width:20vw;">
+gender
+</th>
+<th style="padding:5px 30px;width:2vw;">
+seat no
+</th>
+</tr>
+{% for p in passengers %}
+<tr>
+<td style="padding:5px 30px;width:10vw;">
+{{p.no}}
+</td>
+<td style="padding:5px 30px;width:10vw;">
+{{p.name}}
+</td>
+<td style="padding:5px 30px;width:40vw;">
+{{p.age}}
+</td>
+<td style="padding:5px 30px;width:20vw;">
+{{p.gender}}
+</td>
+<td style="padding:5px 30px;width:2vw;">
+{{p.seat_no}}
 </td>
 </tr>
 {% endfor %}
 </table>
-{% else %}
-<h4>You have not done any bookings yet</h4>
-{% endif %}
 
+</div>
 {% if messages %}
         {% for message in messages %}
          {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
