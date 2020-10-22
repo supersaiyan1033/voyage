@@ -33,3 +33,6 @@ voyage/authentication/__pycache__/admin.cpython-38.pyc
 voyage/authentication/__pycache__/models.cpython-38.pyc
 voyage/authentication/__pycache__/views.cpython-38.pyc
 voyage/voyage/__pycache__/urls.cpython-38.pyc
+voyage/voyage/__pycache__/urls.cpython-38.pyc
+voyage/voyage/__pycache__/settings.cpython-38.pyc
+voyage/authentication/__pycache__/views.cpython-38.pyc
