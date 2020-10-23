@@ -12,14 +12,21 @@ from datetime import datetime
 
 
 def Home(request):
-    return render(request, 'authentication/home.html')
+    if request.session.get('email')!=None:
+        email = request.session.get('email')
+        userId = request.session.get('userId')
+        url = "login/{}/{}".format(userId,email)
+        return redirect(url)
+    else:    
+      return render(request, 'authentication/home.html')
 
 
 def Log_In(request):
+    request.session.flush()
+    request.session.clear_expired()
     if request.method == "POST":
         email = request.POST.get('email')
         password = request.POST.get('password')
-
         cursor = connection.cursor()
         cursor.execute("""SELECT * FROM users WHERE email= %s""", [email])
         row = cursor.fetchall()
@@ -40,6 +47,8 @@ def Log_In(request):
             print(dbpassword)
             if bcrypt.checkpw(password.encode('utf8'), dbpassword.encode('utf8')):
                 messages.success(request, 'Login successful!!')
+                request.session['email'] = email
+                request.session['userId'] = row[0][7]
                 url = "{}/{}".format(data["userId"], data["email"])
                 return redirect(url)
             else:
