@@ -282,19 +282,15 @@ def Flights_Search(request, userId, email):
         minm_price = int(request.POST.get("minm_price"))
         maxm_price = int(request.POST.get("maxm_price"))
         print(minm_price, type(minm_price), maxm_price, type(maxm_price))
-        error_type_1 = None
-        error_type_2 = None
         cursor = connection.cursor()
         if len(companies) != 0:
             cursor.execute("""select Date_Pk,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant
              FROM date_pk JOIN flight_specific ON date_pk.KID=flight_specific.KID JOIN route ON route.RID=flight_specific.RID JOIN flight ON flight.Flight_No=flight_specific.Flight_No
              WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s  AND Company IN %s""", (date, from_p, to_p, minm_price, maxm_price, companies))
-            error_type_1 = 1
         else:
             cursor.execute("""select Date_Pk,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant
              FROM date_pk JOIN flight_specific ON date_pk.KID=flight_specific.KID JOIN route ON route.RID=flight_specific.RID JOIN flight ON flight.Flight_No=flight_specific.Flight_No
              WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s """, (date, from_p, to_p, minm_price, maxm_price))
-            error_type_2 = 1
         a = cursor.rowcount
         companies = list(companies)
         row = cursor.fetchall()
@@ -351,8 +347,6 @@ def Flights_Search(request, userId, email):
                 'maxm_price': maxm_price,
                 'companies': companies,
                 'unchecked': unchecked,
-                'error_type_1': error_type_1,
-                'error_type_2': error_type_2
 
             }
             return render(request, 'authentication/flights_search.html', data)
@@ -502,12 +496,16 @@ def Flights_Book(request, userId, email):
             'passengers': range(1, passengers+1),
             'date_pk':date_pk,
             'image':"authentication\{}.png".format(company)
-        }        
-      if passengers<=available:
-         return render(request, 'authentication/flights_book.html', data)        
+        }     
+      if passengers>0:  
+          if passengers<=available:
+              return render(request, 'authentication/flights_book.html', data)        
+          else:
+              messages.success(request, 'No.of passengers excede available no.of seats!')
+              return redirect('http://127.0.0.1:8000/login/{}/{}/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(userId, email, from_p, to_p, date_from, passengers))
       else:
-         messages.success(request, 'No.of passengers excede available no.of seats!')
-         return redirect('http://127.0.0.1:8000/login/{}/{}/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(userId, email, from_p, to_p, date_from, passengers))
+          messages.success(request, 'please select valid number of passengers!')
+          return redirect('http://127.0.0.1:8000/login/{}/{}/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(userId, email, from_p, to_p, date_from, passengers))
 
 
 

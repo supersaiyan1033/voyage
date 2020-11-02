@@ -389,22 +389,10 @@ transform:scale(1.01);
 {% endfor %}
 </div>
 </td>
-{% elif error_type_1 %}
-<td valign="middle" style="padding-left:50px;align:center;" >
-<div class="results" style="border-left-style:solid;margin:auto;border-color:grey; margin:4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; ">
-<h2 style="text-align:center;padding:20px;margin:10px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="margin-right:10px;color:red;"></i>Flights are not available  for the Selected Route and Date for the Selected Airline</h2>
-</div>
-</td>
-{% elif error_type_2 %}
-<td valign="middle" style="padding-left:50px;align:center;" >
-  <div class="results" style="border-left-style:solid;margin:auto;border-color:grey; margin:4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; ">
-  <h2 style="text-align:center;padding:20px;margin:10px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="margin-right:10px;color:red;"></i>Flights are not available for the Selected Route and Date for the Selected Price Range</h2>
-  </div>
-  </td>
 {% else %}
 <td valign="middle" style="padding-left:50px;align:center;" >
   <div class="results" style="border-left-style:solid;margin:auto;border-color:grey; margin:4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; ">
-  <h2 style="text-align:center;padding:20px;margin:10px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="margin-right:10px;color:red;"></i>Flights are not available  for the Selected Route and Date</h2>
+  <h2 style="text-align:center;padding:20px;margin:10px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="margin-right:10px;color:red;"></i>No Flights are  available  for your search</h2>
   </div>
   </td>
 {% endif %}
