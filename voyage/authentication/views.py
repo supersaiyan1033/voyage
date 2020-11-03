@@ -93,6 +93,7 @@ def Sign_Up(request):
 
 
 def user(request, userId, email):
+ if request.session.get('email')!=None:
     cursor = connection.cursor()
     cursor.execute("""SELECT * FROM users WHERE email= %s""", [email])
     row = cursor.fetchall()
@@ -111,9 +112,12 @@ def user(request, userId, email):
     }
 
     return render(request, 'authentication/user.html', data)
+ else:
+     return render(request,'authentication/error.html')
 
 
 def Profile(request, userId, email):
+ if request.session.get('email')!=None:
     cursor = connection.cursor()
     cursor.execute("""SELECT * FROM users WHERE email= %s""", [email])
     row = cursor.fetchall()
@@ -151,9 +155,12 @@ def Profile(request, userId, email):
             return render(request, 'authentication/profile.html', data)
     else:
         return render(request, "authentication/profile.html", data)
+ else:
+     return render(request,'authentication/error.html')
 
 
 def ChangePassword(request, userId, email):
+ if request.session.get('email')!=None:
     cursor = connection.cursor()
     cursor.execute("""SELECT * FROM users WHERE email= %s """, [email])
     row = cursor.fetchall()
@@ -180,10 +187,12 @@ def ChangePassword(request, userId, email):
 
     else:
         return render(request, 'authentication/changepassword.html')
+ else:
+     return render(request,'authentication/error.html')
 
 
 def Flights(request, userId, email):
-
+ if request.session.get('email')!=None:
     if request.method == "POST":
         from_p = request.POST.get("startfrom")
         to_p = request.POST.get("destination")
@@ -225,10 +234,12 @@ def Flights(request, userId, email):
             'to_p_list': to_p_list
         }
         return render(request, 'authentication/flights.html', data)
+ else:
+     return render(request,'authentication/error.html')
 
 
 def Flights_Search(request, userId, email):
-
+ if request.session.get('email')!=None:
     cursor = connection.cursor()
     cursor.execute("SELECT DISTINCT from_p FROM route")
     a = cursor.rowcount
@@ -402,9 +413,12 @@ def Flights_Search(request, userId, email):
                 'to_p_list': to_p_list
             }
             return render(request, 'authentication/flights_search.html', data)
+ else:
+     return render(request,'authentication/error.html')
 
 
-def Flights_Book(request, userId, email):   
+def Flights_Book(request, userId, email): 
+ if request.session.get('email')!=None:  
    if request.method == "POST":
       date_pk=request.GET.get("c1")
       date_pk=int(date_pk)
@@ -506,10 +520,13 @@ def Flights_Book(request, userId, email):
       else:
           messages.success(request, 'please select valid number of passengers!')
           return redirect('http://127.0.0.1:8000/login/{}/{}/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(userId, email, from_p, to_p, date_from, passengers))
+ else:
+     return render(request,'authentication/error.html')
 
 
 
 def My_Bookings(request,userId,email):
+ if request.session.get('email')!=None:
     cursor = connection.cursor()
     cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
     user = cursor.fetchall()
@@ -558,10 +575,13 @@ def My_Bookings(request,userId,email):
             'wallet':wallet
         }
         return render(request,'authentication/my_bookings.html',data)
+ else:
+     return render(request,'authentication/error.html')
 # Create your views here.
 
 
 def Booking_Details(request,userId,email,bookingId):
+ if request.session.get('email')!=None:
     cursor = connection.cursor()
     cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
     user = cursor.fetchall()
@@ -603,5 +623,7 @@ def Booking_Details(request,userId,email,bookingId):
         'userId':userId
     }
     return render(request,'authentication/booking_details.html',data)
+ else:
+     return render(request,'authentication/error.html')
 
 
