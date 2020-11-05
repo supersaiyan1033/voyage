@@ -17,7 +17,7 @@ def Home(request):
         userId = request.session.get('userId')
         url = "login/{}/{}".format(userId,email)
         return redirect(url)
-    else:    
+    else:
       return render(request, 'authentication/home.html')
 
 
@@ -417,8 +417,8 @@ def Flights_Search(request, userId, email):
      return render(request,'authentication/error.html')
 
 
-def Flights_Book(request, userId, email): 
- if request.session.get('email')!=None:  
+def Flights_Book(request, userId, email):
+ if request.session.get('email')!=None:
    if request.method == "POST":
       date_pk=request.GET.get("c1")
       date_pk=int(date_pk)
@@ -454,14 +454,14 @@ def Flights_Book(request, userId, email):
          cursor.execute("""SELECT no_of_seats_vacant,Total_seats FROM date_pk WHERE Date_PK=%s""", [date_pk])
          row = cursor.fetchall()
          vacant = row[0][0]
-         total = row[0][1]    
+         total = row[0][1]
          for n in range(1,passengers+1):
             name = request.POST.get('name{}'.format(n))
             age = request.POST.get('age{}'.format(n))
             gender = request.POST.get('gender{}'.format(n))
             seat = total-vacant+n
             cursor = connection.cursor()
-            cursor.execute("""INSERT INTO passenger(Name,Gender,Age,Booking_ID,Seat_no) VALUES(%s,%s,%s,%s,%s)""",(name, gender, age, booking_id, seat))                                       
+            cursor.execute("""INSERT INTO passenger(Name,Gender,Age,Booking_ID,Seat_no) VALUES(%s,%s,%s,%s,%s)""",(name, gender, age, booking_id, seat))
          no_of_seats_vacant = vacant-passengers
          cursor = connection.cursor()
          cursor.execute("""UPDATE date_pk SET no_of_seats_vacant=%s WHERE Date_PK=%s""",(no_of_seats_vacant,date_pk))
@@ -469,7 +469,7 @@ def Flights_Book(request, userId, email):
          return redirect("http://127.0.0.1:8000/login/{}/{}".format(userId,email))
       else:
           messages.success(request,"No Sufficient Money For Transaction In Wallet!")
-          return redirect("http://127.0.0.1:8000/login/{}/{}/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}".format(userId, email, from_p, to_p,date_from,passengers))         
+          return redirect("http://127.0.0.1:8000/login/{}/{}/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}".format(userId, email, from_p, to_p,date_from,passengers))
    else:
       date_pk=request.GET.get("c1")
       date_pk=int(date_pk)
@@ -510,10 +510,10 @@ def Flights_Book(request, userId, email):
             'passengers': range(1, passengers+1),
             'date_pk':date_pk,
             'image':"authentication\{}.png".format(company)
-        }     
-      if passengers>0:  
+        }
+      if passengers>0:
           if passengers<=available:
-              return render(request, 'authentication/flights_book.html', data)        
+              return render(request, 'authentication/flights_book.html', data)
           else:
               messages.success(request, 'No.of passengers excede available no.of seats!')
               return redirect('http://127.0.0.1:8000/login/{}/{}/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(userId, email, from_p, to_p, date_from, passengers))
@@ -561,9 +561,9 @@ def My_Bookings(request,userId,email):
             'firstname':firstname,
             'lastname':lastname,
             'wallet':wallet
-        
+
         }
-        
+
         return render(request,'authentication/my_bookings.html',data)
     else:
         data={
@@ -627,3 +627,48 @@ def Booking_Details(request,userId,email,bookingId):
      return render(request,'authentication/error.html')
 
 
+def Buses(request, userId, email):
+ if request.session.get('email')!=None:
+    if request.method == "POST":
+        from_p = request.POST.get("startfrom")
+        to_p = request.POST.get("destination")
+        date = request.POST.get("dateOfTravel")
+        passengers = request.POST.get("travellers")
+        return redirect('http://127.0.0.1:8000/login/{}/{}/buses/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(userId, email, from_p, to_p, date, passengers))
+
+    else:
+
+        cursor = connection.cursor()
+        cursor.execute(
+            """SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
+        row = cursor.fetchall()
+        firstname = row[0][0]
+        lastname = row[0][1]
+        wallet = row[0][2]
+
+        cursor = connection.cursor()
+        cursor.execute("SELECT DISTINCT from_p FROM route")
+        a = cursor.rowcount
+        row = cursor.fetchall()
+        from_p_list = []
+        for n in range(a):
+            from_p_list.append(row[n][0])
+
+        cursor.execute("SELECT DISTINCT to_p FROM route")
+        a = cursor.rowcount
+        row = cursor.fetchall()
+        to_p_list = []
+        for n in range(a):
+            to_p_list.append(row[n][0])
+        data = {
+            'userId': userId,
+            'email': email,
+            'firstname': firstname,
+            'lastname': lastname,
+            'wallet': wallet,
+            'from_p_list': from_p_list,
+            'to_p_list': to_p_list
+        }
+        return render(request, 'authentication/buses.html', data)
+ else:
+     return render(request,'authentication/error.html')

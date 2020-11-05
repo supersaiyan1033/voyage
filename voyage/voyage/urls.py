@@ -31,9 +31,11 @@ urlpatterns = [
     path('login/<userId>/<email>/flights/search/',views.Flights_Search,name='flights_search'),
     path('login/<userId>/<email>/flights/book/',views.Flights_Book,name='flights_book'),
     path('login/<userId>/<email>/mybookings',views.My_Bookings,name='my_bookings'),
-    path('login/<userId>/<email>/mybookings/<bookingId>/details',views.Booking_Details,name="booking_details")
+    path('login/<userId>/<email>/mybookings/<bookingId>/details',views.Booking_Details,name="booking_details"),
+
+    path('login/<userId>/<email>/buses',views.Buses,name='buses')
 
 
 
-   
+
 ]
