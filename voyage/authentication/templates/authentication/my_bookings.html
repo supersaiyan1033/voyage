@@ -256,7 +256,7 @@ transform:scale(1.01);
 <table>
 <tr>
 <td style="padding:10px 30px;">
-<img src="{% static booking.image %}" height="70">
+<i class="{{booking.image}}" style="padding:20px;"></i>
 </td>
 <td style="padding:5px 30px;width:20vw;">
 <h6>{{booking.company}}</h6>
@@ -285,7 +285,7 @@ transform:scale(1.01);
 </td>
 <td style="padding:5px 30px;width:10vw;">
 <div class="loginbtn">
-             <input class="btn" type="submit" name="" value="Details" onclick="window.location.href='http://127.0.0.1:8000/login/{{userId}}/{{email}}/mybookings/{{booking.booking_id}}/details'">
+             <input class="btn" type="submit" name="" value="Details" onclick="window.location.href='http://127.0.0.1:8000/login/{{userId}}/{{email}}/mybookings/{{booking.type}}/{{booking.booking_id}}/details'">
         </div>
 </td>
 </tr>
