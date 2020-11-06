@@ -301,30 +301,7 @@ transform:scale(1.01);
 {% csrf_token %}
 <h4>Apply filters:</h4>
 <hr>
-{% if companies %}
 
-<label for="comapny">company:</label><br>
-{% for company in companies%}
- <input type="checkbox"  name="{{company}}" value="{{company}}" checked>
-  <label for="vehicle1">{{company}}</label><br>
-{% endfor %}
-  {% for uncheck in unchecked %}
-  <input type="checkbox"  name="{{uncheck}}" value="{{uncheck}}">
-  <label for="vehicle2">{{uncheck}}</label><br>
-  {% endfor %}
-{% else%}
-  <input type="checkbox"  name="Orange Travels" value="Orange Travels" >
-  <label for="vehicle1">Orange Travels</label><br>
-  <input type="checkbox"  name="Amaravathi" value="Amaravathi" >
-  <label for="vehicle1">Amaravathi</label><br>
-  <input type="checkbox" id="company2" name="Deluxe" value="Deluxe" >
-  <label for="vehicle2">Deluxe</label><br>
-  <input type="checkbox" id="company3" name="Chalo" value="Chalo" >
-  <label for="vehicle3">Chalo</label><br>
-  <input type="checkbox" id="company4" name="AICTSL" value="AICTSL" >
-  <label for="vehicle2">AICTSL</label><br>
-  {% endif %}
-<hr>
 {% if minm_price %}
 <label for="pricerange">minimumm price:</label><br>
  <input type="range" value="{{minm_price}}" min="0" max="999" oninput="this.nextElementSibling.value = this.value" name="minm_price">
