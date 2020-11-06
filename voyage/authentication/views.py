@@ -307,7 +307,7 @@ def Flights_Search(request, userId, email):
              FROM flight_schedule JOIN flight_specific ON flight_schedule.Flight_No=flight_specific.Flight_No JOIN route ON route.RID=flight_specific.RID JOIN flight ON flight.Flight_ID=flight_specific.Flight_ID
              WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s """, (date, from_p, to_p, minm_price, maxm_price))
         a = cursor.rowcount
-        companies = list(companies)
+        # companies = list(companies)
         row = cursor.fetchall()
         if cursor.rowcount != 0:
             flights = []
@@ -340,8 +340,8 @@ def Flights_Search(request, userId, email):
                     'to_p_list': to_p_list,
                     'minm_price': minm_price,
                     'maxm_price': maxm_price,
-                    'companies': companies,
-                    'unchecked': unchecked,
+                    # 'companies': companies,
+                    # 'unchecked': unchecked,
                 }
             return render(request, 'authentication/flights_search.html', data)
         else:
@@ -360,8 +360,8 @@ def Flights_Search(request, userId, email):
                 'to_p_list': to_p_list,
                 'minm_price': minm_price,
                 'maxm_price': maxm_price,
-                'companies': companies,
-                'unchecked': unchecked,
+                # 'companies': companies,
+                # 'unchecked': unchecked,
 
             }
             return render(request, 'authentication/flights_search.html', data)
@@ -643,7 +643,7 @@ def Buses_Search(request, userId, email):
         FROM bus_schedule JOIN bus_specific ON bus_schedule.Bus_No=bus_specific.Bus_No JOIN route ON route.RID=bus_specific.RID JOIN bus ON bus.Bus_ID=bus_specific.Bus_ID
         WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s """, (date, from_p, to_p, minm_price, maxm_price))
         a = cursor.rowcount
-        companies = list(companies)
+        # companies = list(companies)
         row = cursor.fetchall()
         if cursor.rowcount != 0:
             buses = []
@@ -676,8 +676,8 @@ def Buses_Search(request, userId, email):
                     'to_p_list': to_p_list,
                     'minm_price': minm_price,
                     'maxm_price': maxm_price,
-                    'companies': companies,
-                    'unchecked': unchecked,
+                    # 'companies': companies,
+                    # 'unchecked': unchecked,
                 }
             return render(request, 'authentication/buses_search.html', data)
         else:
@@ -696,8 +696,8 @@ def Buses_Search(request, userId, email):
                 'to_p_list': to_p_list,
                 'minm_price': minm_price,
                 'maxm_price': maxm_price,
-                'companies': companies,
-                'unchecked': unchecked,
+                # 'companies': companies,
+                # 'unchecked': unchecked,
 
             }
             return render(request, 'authentication/buses_search.html', data)
