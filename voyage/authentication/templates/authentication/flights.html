@@ -242,9 +242,9 @@ transform:scale(1.01);
     <ul>
       <li><a href="http://127.0.0.1:8000/login/{{userId}}/{{email}}"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
       <li><a href="http://127.0.0.1:8000/login/{{userId}}/{{email}}/flights" class="active"><i class="fa fa-plane" aria-hidden="true" style="padding-right:10px;"></i>Flights</a></li>
-      <li><a href="#"><i class="fa fa-train" aria-hidden="true" style="padding-right:10px;" class="icon"></i>Trains</a></li>
+      {% comment %} <li><a href="#"><i class="fa fa-train" aria-hidden="true" style="padding-right:10px;" class="icon"></i>Trains</a></li> {% endcomment %}
       <li><a href="http://127.0.0.1:8000/login/{{userId}}/{{email}}/buses"><i class="fa fa-bus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Buses</a></li>
-      <li><a href="#"><i class="fa fa-suitcase" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Trips</a></li>
+      {% comment %} <li><a href="#"><i class="fa fa-suitcase" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Trips</a></li> {% endcomment %}
      
       </ul>
       </div>
@@ -298,7 +298,7 @@ transform:scale(1.01);
         </div>
         <div class="textbox" >
             <i class="fa fa-calendar" aria-hidden="true"></i>
-            <input type="date" placeholder="Date of Travel" id="d1" name="dateOfTravel" value="" required >
+            <input type="date" placeholder="Date of Travel" id="d1" name="dateOfTravel" value="" min=today() required >
         </div>
         <div class="textbox" >
             <i class="fa fa-users" aria-hidden="true"></i>
@@ -314,6 +314,18 @@ transform:scale(1.01);
     document.getElementById("sidebar").classList.toggle('active');
   }
  
+today(){
+var d1 = new Date();
+var y1= d1.getFullYear();
+var m1 = d1.getMonth()+1;
+if(m1<10)
+    m1="0"+m1;
+var dt1 = d1.getDate();
+if(dt1<10)
+dt1 = "0"+dt1;
+var d2 = y1+"-"+m1+"-"+dt1;
+return d2;
+}
 var d1 = new Date();
 var y1= d1.getFullYear();
 var m1 = d1.getMonth()+1;
