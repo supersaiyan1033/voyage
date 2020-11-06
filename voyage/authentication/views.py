@@ -304,8 +304,8 @@ def Flights_Search(request, userId, email):
         #      WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s  AND Company IN %s""", (date, from_p, to_p, minm_price, maxm_price, companies))
         # else:
         cursor.execute("""select FSID,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant
-             FROM flight_schedule JOIN flight_specific ON flight_schedule.Flight_No=flight_specific.Flight_No JOIN route ON route.RID=flight_specific.RID JOIN flight ON flight.Flight_ID=flight_specific.Flight_ID
-             WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s """, (date, from_p, to_p, minm_price, maxm_price))
+             FROM flight_schedule JOIN flight_details ON flight_schedule.Flight_No=flight_details.Flight_No JOIN route ON route.RID=flight_details.RID JOIN flight ON flight.Flight_ID=flight_details.Flight_ID
+             WHERE no_of_seats_vacant>0 AND date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s """, (date, from_p, to_p, minm_price, maxm_price))
         a = cursor.rowcount
         # companies = list(companies)
         row = cursor.fetchall()
@@ -368,8 +368,8 @@ def Flights_Search(request, userId, email):
     else:
         cursor = connection.cursor()
         cursor.execute("""select FSID,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant
-        FROM flight_schedule JOIN flight_specific ON flight_schedule.Flight_No=flight_specific.Flight_No JOIN route ON route.RID=flight_specific.RID JOIN flight ON flight.Flight_ID=flight_specific.Flight_ID
-        WHERE date_from=%s AND from_p=%s AND to_p=%s""", (date, from_p, to_p))
+        FROM flight_schedule JOIN flight_details ON flight_schedule.Flight_No=flight_details.Flight_No JOIN route ON route.RID=flight_details.RID JOIN flight ON flight.Flight_ID=flight_details.Flight_ID
+        WHERE no_of_seats_vacant>0 AND date_from=%s AND from_p=%s AND to_p=%s""", (date, from_p, to_p))
         a = cursor.rowcount
         row = cursor.fetchall()
         if cursor.rowcount != 0:
@@ -433,7 +433,7 @@ def Flights_Book(request, userId, email):
       row = cursor.fetchall()
       wallet = row[0][0]
       cursor = connection.cursor()
-      cursor.execute("""SELECT Price,from_p,to_p,date_from FROM flight_schedule JOIN flight_specific ON flight_schedule.Flight_No=flight_specific.Flight_No JOIN route ON flight_specific.RID=route.RID WHERE FSID=%s""", [flight_schedule])
+      cursor.execute("""SELECT Price,from_p,to_p,date_from FROM flight_schedule JOIN flight_details ON flight_schedule.Flight_No=flight_details.Flight_No JOIN route ON flight_details.RID=route.RID WHERE FSID=%s""", [flight_schedule])
       row = cursor.fetchall()
       total_fare = (row[0][0])*passengers
       from_p = row[0][1]
@@ -447,13 +447,13 @@ def Flights_Book(request, userId, email):
          cursor = connection.cursor()
          now=datetime.now()
          date_time=now.strftime("%Y-%m-%d %H:%M:%S")
-         cursor.execute("""INSERT INTO ticket(User_ID,Date_of_booking,FSID,No_of_passengers) VALUES(%s,%s,%s,%s)""",(userId,date_time,flight_schedule,passengers))
+         cursor.execute("""INSERT INTO flight_ticket(User_ID,Date_of_booking,FSID,No_of_passengers,status) VALUES(%s,%s,%s,%s,%s)""",(userId,date_time,flight_schedule,passengers,'booked'))
          cursor = connection.cursor()
-         cursor.execute("""SELECT Booking_ID FROM ticket WHERE User_ID=%s and Date_of_booking=%s""", (userId,date_time))
+         cursor.execute("""SELECT Booking_ID FROM flight_ticket WHERE User_ID=%s and Date_of_booking=%s""", (userId,date_time))
          row = cursor.fetchall()
          booking_id = row[0][0]
          cursor = connection.cursor()
-         cursor.execute("""INSERT INTO transaction(booking_ID) VALUES(%s)""",[booking_id])
+         cursor.execute("""INSERT INTO flight_transaction(booking_ID,description) VALUES(%s,%s)""",[booking_id,"payment"])
          cursor = connection.cursor()
          cursor.execute("""SELECT no_of_seats_vacant,Total_seats FROM flight_schedule WHERE FSID=%s""", [flight_schedule])
          row = cursor.fetchall()
@@ -465,7 +465,7 @@ def Flights_Book(request, userId, email):
             gender = request.POST.get('gender{}'.format(n))
             seat = total-vacant+n
             cursor = connection.cursor()
-            cursor.execute("""INSERT INTO passenger(Name,Gender,Age,Booking_ID,Seat_no) VALUES(%s,%s,%s,%s,%s)""",(name, gender, age, booking_id, seat))
+            cursor.execute("""INSERT INTO flight_passenger(Name,Gender,Age,Booking_ID,Seat_no) VALUES(%s,%s,%s,%s,%s)""",(name, gender, age, booking_id, seat))
          no_of_seats_vacant = vacant-passengers
          cursor = connection.cursor()
          cursor.execute("""UPDATE flight_schedule SET no_of_seats_vacant=%s WHERE FSID=%s""",(no_of_seats_vacant,flight_schedule))
@@ -486,7 +486,7 @@ def Flights_Book(request, userId, email):
       lastname=row[0][1]
       wallet=row[0][2]
       cursor=connection.cursor()
-      cursor.execute("""SELECT Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant,date_from FROM flight_schedule JOIN flight_specific ON flight_schedule.Flight_No=flight_specific.Flight_No JOIN route ON route.RID=flight_specific.RID JOIN flight ON flight.Flight_ID=flight_specific.Flight_ID WHERE FSID=%s""", [flight_schedule])
+      cursor.execute("""SELECT Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant,date_from FROM flight_schedule JOIN flight_details ON flight_schedule.Flight_No=flight_details.Flight_No JOIN route ON route.RID=flight_details.RID JOIN flight ON flight.Flight_ID=flight_details.Flight_ID WHERE FSID=%s""", [flight_schedule])
       row=cursor.fetchall()
       company=row[0][0]
       from_p=row[0][1]
@@ -640,8 +640,8 @@ def Buses_Search(request, userId, email):
         #      WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s  AND Company IN %s""", (date, from_p, to_p, minm_price, maxm_price, companies))
         # else:
         cursor.execute("""select BSID,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant
-        FROM bus_schedule JOIN bus_specific ON bus_schedule.Bus_No=bus_specific.Bus_No JOIN route ON route.RID=bus_specific.RID JOIN bus ON bus.Bus_ID=bus_specific.Bus_ID
-        WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s """, (date, from_p, to_p, minm_price, maxm_price))
+        FROM bus_schedule JOIN bus_details ON bus_schedule.Bus_No=bus_details.Bus_No JOIN route ON route.RID=bus_details.RID JOIN bus ON bus.Bus_ID=bus_details.Bus_ID
+        WHERE no_of_seats_vacant>0 AND date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s """, (date, from_p, to_p, minm_price, maxm_price))
         a = cursor.rowcount
         # companies = list(companies)
         row = cursor.fetchall()
@@ -704,8 +704,8 @@ def Buses_Search(request, userId, email):
     else:
         cursor = connection.cursor()
         cursor.execute("""select BSID,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant
-        FROM bus_schedule JOIN bus_specific ON bus_schedule.Bus_No=bus_specific.Bus_No JOIN route ON route.RID=bus_specific.RID JOIN bus ON bus.Bus_ID=bus_specific.Bus_ID
-        WHERE date_from=%s AND from_p=%s AND to_p=%s""", (date, from_p, to_p))
+        FROM bus_schedule JOIN bus_details ON bus_schedule.Bus_No=bus_details.Bus_No JOIN route ON route.RID=bus_details.RID JOIN bus ON bus.Bus_ID=bus_details.Bus_ID
+        WHERE no_of_seats_vacant>0 AND date_from=%s AND from_p=%s AND to_p=%s""", (date, from_p, to_p))
         a = cursor.rowcount
         row = cursor.fetchall()
         if cursor.rowcount != 0:
@@ -771,7 +771,7 @@ def Buses_Book(request, userId, email):
       row = cursor.fetchall()
       wallet = row[0][0]
       cursor = connection.cursor()
-      cursor.execute("""SELECT Price,from_p,to_p,date_from FROM bus_schedule JOIN bus_specific ON bus_schedule.Bus_No=bus_specific.Bus_No JOIN route ON bus_specific.RID=route.RID WHERE BSID=%s""", [bus_schedule])
+      cursor.execute("""SELECT Price,from_p,to_p,date_from FROM bus_schedule JOIN bus_details ON bus_schedule.Bus_No=bus_details.Bus_No JOIN route ON bus_details.RID=route.RID WHERE BSID=%s""", [bus_schedule])
       row = cursor.fetchall()
       total_fare = (row[0][0])*passengers
       from_p = row[0][1]
@@ -785,14 +785,14 @@ def Buses_Book(request, userId, email):
          cursor = connection.cursor()
          now=datetime.now()
          date_time=now.strftime("%Y-%m-%d %H:%M:%S")
-         cursor.execute("""INSERT INTO ticket_b(User_ID,Date_of_booking,BSID,No_of_passengers) VALUES(%s,%s,%s,%s)""",(userId,date_time,bus_schedule,passengers))
+         cursor.execute("""INSERT INTO bus_ticket(User_ID,Date_of_booking,BSID,No_of_passengers,status) VALUES(%s,%s,%s,%s,%s)""",(userId,date_time,bus_schedule,passengers,'booked'))
          cursor = connection.cursor()
-         cursor.execute("""SELECT Booking_ID FROM ticket_b WHERE User_ID=%s and Date_of_booking=%s""", (userId,date_time))
+         cursor.execute("""SELECT Booking_ID FROM bus_ticket WHERE User_ID=%s and Date_of_booking=%s""", (userId,date_time))
          row = cursor.fetchall()
          
          booking_id = row[0][0]
          cursor = connection.cursor()
-         cursor.execute("""INSERT INTO transaction_b(booking_ID) VALUES(%s)""",[booking_id])
+         cursor.execute("""INSERT INTO bus_transaction(booking_ID,description) VALUES(%s,%s)""",[booking_id,"payment"])
          cursor = connection.cursor()
          cursor.execute("""SELECT no_of_seats_vacant,Total_seats FROM bus_schedule WHERE BSID=%s""", [bus_schedule])
          row = cursor.fetchall()
@@ -804,7 +804,7 @@ def Buses_Book(request, userId, email):
             gender = request.POST.get('gender{}'.format(n))
             seat = total-vacant+n
             cursor = connection.cursor()
-            cursor.execute("""INSERT INTO passenger_b(Name,Gender,Age,Booking_ID,Seat_no) VALUES(%s,%s,%s,%s,%s)""",(name, gender, age, booking_id, seat))
+            cursor.execute("""INSERT INTO bus_passenger(Name,Gender,Age,Booking_ID,Seat_no) VALUES(%s,%s,%s,%s,%s)""",(name, gender, age, booking_id, seat))
          no_of_seats_vacant = vacant-passengers
          cursor = connection.cursor()
          cursor.execute("""UPDATE bus_schedule SET no_of_seats_vacant=%s WHERE BSID=%s""",(no_of_seats_vacant,bus_schedule))
@@ -825,7 +825,7 @@ def Buses_Book(request, userId, email):
       lastname=row[0][1]
       wallet=row[0][2]
       cursor=connection.cursor()
-      cursor.execute("""SELECT Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant,date_from FROM bus_schedule JOIN bus_specific ON bus_schedule.Bus_No=bus_specific.Bus_No JOIN route ON route.RID=bus_specific.RID JOIN bus ON bus.Bus_ID=bus_specific.Bus_ID WHERE BSID=%s""", [bus_schedule])
+      cursor.execute("""SELECT Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant,date_from FROM bus_schedule JOIN bus_details ON bus_schedule.Bus_No=bus_details.Bus_No JOIN route ON route.RID=bus_details.RID JOIN bus ON bus.Bus_ID=bus_details.Bus_ID WHERE BSID=%s""", [bus_schedule])
       row=cursor.fetchall()
       company=row[0][0]
       from_p=row[0][1]
@@ -879,8 +879,8 @@ def My_Bookings(request,userId,email):
     lastname = user[0][1]
     wallet = user[0][2]
     cursor.execute("""SELECT Booking_ID,Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p
-    FROM ticket_b JOIN users ON ticket_b.User_ID=users.userID JOIN bus_schedule ON ticket_b.BSID=bus_schedule.BSID JOIN bus_specific ON bus_specific.Bus_No=bus_schedule.Bus_No JOIN bus ON bus_specific.Bus_ID=Bus.Bus_ID
-    JOIN route ON route.RID=bus_specific.RID WHERE userID=%s ORDER BY Date_of_booking DESC""",[userId])
+    FROM bus_ticket JOIN users ON bus_ticket.User_ID=users.userID JOIN bus_schedule ON bus_ticket.BSID=bus_schedule.BSID JOIN bus_details ON bus_details.Bus_No=bus_schedule.Bus_No JOIN bus ON bus_details.Bus_ID=Bus.Bus_ID
+    JOIN route ON route.RID=bus_details.RID WHERE userID=%s ORDER BY Date_of_booking DESC""",[userId])
     row = cursor.fetchall()
     a = cursor.rowcount
     bus_bookings = []
@@ -901,8 +901,8 @@ def My_Bookings(request,userId,email):
         })
 
     cursor.execute("""SELECT Booking_ID,Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p
-    FROM ticket JOIN users ON ticket.User_ID=users.userID JOIN flight_schedule ON ticket.FSID=flight_schedule.FSID JOIN flight_specific ON flight_specific.Flight_No=flight_schedule.Flight_No JOIN flight ON flight_specific.Flight_ID=flight.Flight_ID
-    JOIN route ON route.RID=flight_specific.RID WHERE userID=%s ORDER BY Date_of_booking DESC""",[userId])
+    FROM flight_ticket JOIN users ON flight_ticket.User_ID=users.userID JOIN flight_schedule ON flight_ticket.FSID=flight_schedule.FSID JOIN flight_details ON flight_details.Flight_No=flight_schedule.Flight_No JOIN flight ON flight_details.Flight_ID=flight.Flight_ID
+    JOIN route ON route.RID=flight_details.RID WHERE userID=%s ORDER BY Date_of_booking DESC""",[userId])
     row = cursor.fetchall()
     a = cursor.rowcount
    
@@ -963,9 +963,9 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
     lastname = user[0][1]
     wallet = user[0][2]
     if type_of_transport =='flight':
-     cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,passenger.Gender,Age,Seat_no
-     FROM ticket JOIN users ON ticket.User_ID=users.userID JOIN flight_schedule ON ticket.FSID=flight_schedule.FSID JOIN flight_specific ON flight_specific.Flight_No=flight_schedule.Flight_No JOIN flight ON flight_specific.Flight_ID=flight.Flight_ID
-     JOIN route ON route.RID=flight_specific.RID JOIN passenger ON passenger.Booking_ID=ticket.Booking_ID JOIN transaction ON transaction.booking_ID = ticket.Booking_ID WHERE userID=%s AND ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
+     cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,flight_passenger.Gender,Age,Seat_no
+     FROM flight_ticket JOIN users ON flight_ticket.User_ID=users.userID JOIN flight_schedule ON flight_ticket.FSID=flight_schedule.FSID JOIN flight_details ON flight_details.Flight_No=flight_schedule.Flight_No JOIN flight ON flight_details.Flight_ID=flight.Flight_ID
+     JOIN route ON route.RID=flight_details.RID JOIN flight_passenger ON flight_passenger.Booking_ID=flight_ticket.Booking_ID JOIN flight_transaction ON flight_transaction.booking_ID = flight_ticket.Booking_ID WHERE userID=%s AND flight_ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
      row = cursor.fetchall()
      a = cursor.rowcount
      no_of_passengers = a
@@ -999,9 +999,9 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
      }
      return render(request,'authentication/booking_details.html',data)
     elif type_of_transport =='bus':
-     cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,passenger_b.Gender,Age,Seat_no
-     FROM ticket_b JOIN users ON ticket_b.User_ID=users.userID JOIN bus_schedule ON ticket_b.BSID=bus_schedule.BSID JOIN bus_specific ON bus_specific.Bus_No=bus_schedule.Bus_No JOIN bus ON bus_specific.Bus_ID=bus.Bus_ID
-     JOIN route ON route.RID=bus_specific.RID JOIN passenger_b ON passenger_b.Booking_ID=ticket_b.Booking_ID JOIN transaction_b ON transaction_b.booking_ID = ticket_b.Booking_ID WHERE userID=%s AND ticket_b.Booking_ID=%s""",(int(userId),int(bookingId)) )
+     cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,bus_passenger.Gender,Age,Seat_no
+     FROM bus_ticket JOIN users ON bus_ticket.User_ID=users.userID JOIN bus_schedule ON bus_ticket.BSID=bus_schedule.BSID JOIN bus_details ON bus_details.Bus_No=bus_schedule.Bus_No JOIN bus ON bus_details.Bus_ID=bus.Bus_ID
+     JOIN route ON route.RID=bus_details.RID JOIN bus_passenger ON bus_passenger.Booking_ID=bus_ticket.Booking_ID JOIN bus_transaction ON bus_transaction.booking_ID = bus_ticket.Booking_ID WHERE userID=%s AND bus_ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
      row = cursor.fetchall()
      a = cursor.rowcount
      no_of_passengers = a
