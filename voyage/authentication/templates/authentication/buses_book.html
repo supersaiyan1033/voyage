@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
  <meta charset="UTF-8">
- <title>Flight search</title>
   <link href="https://fonts.googleapis.com/css2?family=Piedra&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -204,10 +203,11 @@ transform:scale(1.01);
 ::placeholder{
   color:white;
 }
-.flights:hover{
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+td{
+    padding:8px;
 }
 </style>
+  <title>Buses booking</title>
 </head>
 <body>
 {% load static %}
@@ -219,9 +219,9 @@ transform:scale(1.01);
     <div id="navbar">
     <ul>
       <li><a href="http://127.0.0.1:8000/login/{{userId}}/{{email}}"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
-      <li><a href="http://127.0.0.1:8000/login/{{userId}}/{{email}}/flights" class="active"><i class="fa fa-plane" aria-hidden="true" style="padding-right:10px;"></i>Flights</a></li>
+      <li><a href="http://127.0.0.1:8000/login/{{userId}}/{{email}}/flights"><i class="fa fa-plane" aria-hidden="true" style="padding-right:10px;"></i>Flights</a></li>
       <li><a href="#"><i class="fa fa-train" aria-hidden="true" style="padding-right:10px;" class="icon"></i>Trains</a></li>
-      <li><a href="#"><i class="fa fa-bus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Buses</a></li>
+      <li><a href="http://127.0.0.1:8000/login/{{userId}}/{{email}}/buses"><i class="fa fa-bus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Buses</a></li>
       <li><a href="#"><i class="fa fa-suitcase" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Trips</a></li>
      
       </ul>
@@ -244,172 +244,130 @@ transform:scale(1.01);
   </div>
       </nav>
       </div>
-      <br><br><br>
-<table class="center">
-<tr>
-  <form method="GET">
-<td style="padding:10px 20px;">
- <div class="textbox" >
-         
-             <i class="fa fa-circle-o"></i>
-            <input list="startingpoints" name="startfrom" value="{{from_p}}" placeholder="Starting point">
-  <datalist id="startingpoints">
-    {% for from_p_list in from_p_list %}
-    <option value="{{from_p_list}}">{{from_p_list}}</option>
-    {% endfor %}
-  </datalist>
-           
-        </div>
-</td>
-<td style="padding:10px 20px;">
-<div class="textbox">
-         <i class="fa fa-map-marker"></i>
-              <input list="destinations" name="destination" value="{{to_p}}" placeholder="Destination point">
-  <datalist id="destinations">
-            {% for to_p_list in to_p_list %}
-             <option value="{{to_p_list}}">{{to_p_list}}</option>
-            {% endfor %}
-  </datalist>
-        </div>
-</td>
-<td style="padding:10px 20px;">
- <div class="textbox" >
-            <i class="fa fa-calendar" aria-hidden="true"></i>
-            <input type="date" placeholder="Date of Travel" id="d1" name="dateOfTravel" value="{{date}}" required >
-        </div>
-</td>
-<td style="padding:10px 20px;">
-<div class="textbox" >
-            <i class="fa fa-users" aria-hidden="true"></i>
-            <input type="text" placeholder="No of travellers" name="travellers" value="{{passengers}}" autocomplete="off" required>
-        </div>
-</td>
-<td>
-<div class="loginbtn">
-           <input class="btn" type="submit" name="" value="Search">
-        </div>
-</td>
-</form>
-</tr>
-</table>
-<hr>
+      <br><br><br><br><br>
 <table style="width=100vw;">
 <tr>
-<td valign="top" style="align:right;">
-<div class="filter" style="background-color:white;">
-<form method="POST">
-{% csrf_token %}
-<h4>Apply filters:</h4>
+<td valign="top" style="align:right;margin:auto;">
+<div class="filter" style="background-color:white;width:20vw;">
+<h4>Booking Summary:</h4>
 <hr>
-{% if companies %}
-
-<label for="comapny">company:</label><br>
-{% for company in companies%}
- <input type="checkbox"  name="{{company}}" value="{{company}}" checked>
-  <label for="vehicle1">{{company}}</label><br>
-{% endfor %}
-  {% for uncheck in unchecked %}
-  <input type="checkbox"  name="{{uncheck}}" value="{{uncheck}}">
-  <label for="vehicle2">{{uncheck}}</label><br>
-  {% endfor %}
-{% else%}
-  <input type="checkbox"  name="Indigo" value="Indigo" >
-  <label for="vehicle1">Indigo</label><br>
-  <input type="checkbox"  name="AirAsia" value="AirAsia" >
-  <label for="vehicle1">AirAsia</label><br>
-  <input type="checkbox" id="company2" name="AirIndia" value="AirIndia" >
-  <label for="vehicle2">AirIndia</label><br>
-  <input type="checkbox" id="company3" name="SpiceJet" value="SpiceJet" >
-  <label for="vehicle3">SpiceJet</label><br>
-  <input type="checkbox" id="company4" name="TruJet" value="TruJet" >
-  <label for="vehicle2">TrueJet</label><br>
-  {% endif %}
-<hr>
-{% if minm_price %}
-<label for="pricerange">minimumm price:</label><br>
- <input type="range" value="{{minm_price}}" min="0" max="9999" oninput="this.nextElementSibling.value = this.value" name="minm_price">
-<output>{{minm_price}}</output>&nbsp<i class="fa fa-inr"></i>
-{% else %}
-<label for="pricerange">minimumm price:</label><br>
- <input type="range" value="0" min="0" max="9999" oninput="this.nextElementSibling.value = this.value" name="minm_price">
-<output>0</output>&nbsp<i class="fa fa-inr"></i>
-{%  endif %}
-{% if maxm_price %}
-<label for="pricerange">maximum price:</label><br>
-<input type="range" value="{{maxm_price}}" min="10000" max="40999" oninput="this.nextElementSibling.value = this.value" name="maxm_price">
-<output>{{maxm_price}}</output>&nbsp<i class="fa fa-inr"></i>
-{% else %}
-<label for="pricerange">maximum price:</label><br>
-<input type="range" value="40999" min="10000" max="40999" oninput="this.nextElementSibling.value = this.value" name="maxm_price">
-<output>40999</output>&nbsp<i class="fa fa-inr"></i>
-{% endif %}
-
-<div class="loginbtn">
-           <input class="btn" type="submit" name="" value="Apply" style="background-color:#3392FF;">
-        </div>
-</form>
-</div>
-</td>
-
-{% if flights %}
-<td style="text-align:right;padding-left:50px;vertical-align:text-top;align:left;">
-<div class="results" style="border-left-style:solid;float:right;margin:auto;border-color:grey; margin:4px, 4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; text-align:justify; ">
-{% for flight in flights %}
-<div class="flights" style="background-color:white;border-radius:7px;margin:20px;padding:20px;">
 <table>
 <tr>
-<td style="padding:5px 30px;width:6vw">
-<i class="{{flight.image}}" style="padding:20px;"></i>
- {% comment %} <img src= "{% static flight.image %}" height="70">  {% endcomment %}
+<td valign="middle">
+<label for="ticket_price">fare per person:</label>
 </td>
-<td style="padding:5px 30px;width:6vw;">
-<h6>{{flight.company}}</h6>
-</td>
-<td style="padding:5px 30px;width:15vw;">
-<h6>{{flight.from_p}} - {{flight.to_p}}</h6>
-</td>
-
-<td style="padding:5px 30px;width:20vw;">
-<h6>{{flight.time_from}} - {{flight.time_to}}</h6>
-</td>
-<td style="padding:5px 30px;width:10vw;">
-<h6>Available:{{flight.available}}</h6>
-</td>
-<td style="padding:5px 30px;width:8vw">
-<h6><i class="fa fa-inr"></i>&nbsp&nbsp{{flight.price}}</h6>
-</td>
-<td style="padding:5px 30px;width:5vw;">
-<div class="loginbtn">
-             <input class="btn" type="submit" name="" value="Book" onclick="window.location.href='http://127.0.0.1:8000/login/{{userId}}/{{email}}/flights/book/?c1={{flight.flight_schedule}}&c2={{passengers}}'">
-        </div>
+<td valign="middle">
+<i class="fa fa-inr"></i>&nbsp&nbsp<strong>{{price}}</strong>
 </td>
 </tr>
-</table>
-</div>
+<tr>
+<td>
+<label for="passengers">no of passengers:</label>
+</td>
+<td>&nbsp&nbsp
+<strong>{{no_of_passengers}}</strong>
+</td>
+</tr>
+<tr>
+<td>
+<label for="total_price"><strong>Total fare:</strong></label>
+</td>
+<td>
+<i class="fa fa-inr"></i>&nbsp&nbsp<strong>{{total_fare}}</strong>
+</td>
+</tr>
+ </table>
+</td>
+
+
+<td style="text-align:right;padding-left:50px;vertical-align:text-top;align:left;">
+<div class="results" style="border-left-style:solid;float:right;margin:auto;border-color:grey; margin:4px, 4px; padding:4px;  ">
+<div class="flights" style="background-color:white;border-radius:7px;margin:20px;padding-top:20px;padding-bottom:20px;">
+<table>
+<tr>
+ <td style="padding:5px 30px;">
+ {% comment %} <img src= "{% static image %}" height="70"> {% endcomment %}
+<i class="{{image}}" style="padding:20px;"></i>
+</td> 
+<td style="padding:5px 30px;">
+<h6>{{company}}</h6>
+</td>
+<td style="padding:5px 30px;">
+<h6>{{from_p}}- {{to_p}}</h6>
+</td>
+
+<td style="padding:5px 30px;">
+<h5>{{time_from}}-{{time_to}}</h6>
+</td>
+<td style="padding:5px 30px;">
+<h6>available:{{available}}</h6>
+</td>
+<td style="padding:5px 30px;">
+<h6><i class="fa fa-inr"></i>{{price}}</h6>
+</td>
+</tr>
+<tr>
+<br>
+{% comment %} <td style="padding:20px 30px;"> {% endcomment %}
+<h4 style="text-align:center;"><i class=" fa fa-users" style="padding:10px;"></i>Add passengers</h4>
+<br>
+<br>
+{% comment %} </td> {% endcomment %}
+</tr>
+<tr>
+<div class="passengers">
+<form method="POST">
+{% csrf_token %}
+<table style="margin:auto;">
+{% for p in passengers %}
+<tr>
+<td style="padding:5px 30px;">
+{{p}}
+</td>
+<td >
+ <input class="form-control" type="text" value="" name="name{{p}}" placeholder="full name" required >
+</td>
+<td style="padding:5px 30px;">
+ <input class="form-control" type="number" value="" name="age{{p}}" placeholder="age" required>
+</td>
+<td style="padding:5px 30px;">
+  <select id="Gender" class="form-control" name="gender{{p}}"  required >
+             <option value="" selected disabled="true">Select gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="others">Others</option>    
+ </select>
+</td>
+</tr>
 {% endfor %}
+<tr>
+<td style="padding:5px 30px;">
+<hr>
+</td>
+<td style="padding:5px 30px;">
+<div class="loginbtn">
+  <input class="btn" type="submit" name="" value="Confirm and Book" > 
+  </td>
+  <td style="padding:5px 30px;">
+  <hr>
+  </td>
+</tr>
+</div>
+</form>
+</div>
+</tr>
+</div>
 </div>
 </td>
-{% else %}
-<td valign="middle" style="padding-left:50px;align:center;" >
-  <div class="results" style="border-left-style:solid;margin:auto;border-color:grey; margin:4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; ">
-  <h2 style="text-align:center;padding:20px;margin:10px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="margin-right:10px;color:red;"></i>No Flights are  available  for your search</h2>
-  </div>
-  </td>
-{% endif %}
 </tr>
 </table>
-{% if messages %}
-        {% for message in messages %}
-         {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
-
-        {% endfor %}
-
-    {% endif %}
-
+<br>
  <script>
   function toggleSidebar(ref){
     document.getElementById("sidebar").classList.toggle('active');
   }
- </script>
+
+  
+  </script>
 </body>   
 </html>

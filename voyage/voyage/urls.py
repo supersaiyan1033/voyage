@@ -20,6 +20,7 @@ from authentication import views
 
 
 urlpatterns = [
+    # authentication urls
     path('admin/', admin.site.urls),
     path('',views.Home,name='home'),
     path('login/',views.Log_In,name='auth-login'),
@@ -27,13 +28,24 @@ urlpatterns = [
     path('login/<userId>/<email>/profile',views.Profile,name='profile'),
     path('login/<userId>/<email>',views.user,name='user'),
     path('login/<userId>/<email>/changepassword',views.ChangePassword, name="changepassword"),
+
+    #flights views urls
     path('login/<userId>/<email>/flights',views.Flights,name='flights'),
     path('login/<userId>/<email>/flights/search/',views.Flights_Search,name='flights_search'),
     path('login/<userId>/<email>/flights/book/',views.Flights_Book,name='flights_book'),
-    path('login/<userId>/<email>/mybookings',views.My_Bookings,name='my_bookings'),
-    path('login/<userId>/<email>/mybookings/<bookingId>/details',views.Booking_Details,name="booking_details"),
+  
 
-    path('login/<userId>/<email>/buses',views.Buses,name='buses')
+
+    #buses views urls
+    path('login/<userId>/<email>/buses',views.Buses,name='buses'),
+    path('login/<userId>/<email>/buses/search/',views.Buses_Search,name='buses_search'),
+    path('login/<userId>/<email>/buses/book/',views.Buses_Book,name='buses_book'),
+ 
+
+    #bookings views urls
+    path('login/<userId>/<email>/mybookings',views.My_Bookings,name='my_bookings'),
+    path('login/<userId>/<email>/mybookings/<type_of_transport>/<bookingId>/details',views.Booking_Details,name="booking_details"),
+
 
 
 
