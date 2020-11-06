@@ -568,8 +568,8 @@ CREATE TABLE `passenger_b` (
   `Passenger_ID` int NOT NULL,
   `Seat_no` int NOT NULL,
   PRIMARY KEY (`Passenger_ID`),
-  KEY `b_B_idx` (`Booking_ID`),
-  CONSTRAINT `b_B` FOREIGN KEY (`Booking_ID`) REFERENCES `ticket_b` (`Booking_ID`)
+  KEY `B_b_idx` (`Booking_ID`),
+  CONSTRAINT `B_b` FOREIGN KEY (`Booking_ID`) REFERENCES `ticket_b` (`Booking_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -668,7 +668,7 @@ DROP TABLE IF EXISTS `ticket_b`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ticket_b` (
-  `Booking_ID` int NOT NULL,
+  `Booking_ID` int NOT NULL AUTO_INCREMENT,
   `User_ID` int DEFAULT NULL,
   `Date_of_booking` date DEFAULT NULL,
   `BSID` int DEFAULT NULL,
@@ -775,12 +775,12 @@ DROP TABLE IF EXISTS `transaction_b`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `transaction_b` (
-  `Transaction_ID` int NOT NULL,
+  `Transaction_ID` int NOT NULL AUTO_INCREMENT,
   `booking_ID` int DEFAULT NULL,
   `Payment_Method` varchar(45) NOT NULL DEFAULT 'wallet',
   PRIMARY KEY (`Transaction_ID`),
-  KEY `Bus_bus_idx` (`booking_ID`),
-  CONSTRAINT `Bus_bus` FOREIGN KEY (`booking_ID`) REFERENCES `ticket_b` (`Booking_ID`)
+  KEY `bus_bus_idx` (`booking_ID`),
+  CONSTRAINT `bus_bus` FOREIGN KEY (`booking_ID`) REFERENCES `ticket_b` (`Booking_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -836,4 +836,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-06  9:22:13
+-- Dump completed on 2020-11-06 12:08:26
