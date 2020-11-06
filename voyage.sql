@@ -344,7 +344,7 @@ CREATE TABLE `bus_transaction` (
   `Transaction_ID` int NOT NULL AUTO_INCREMENT,
   `booking_ID` int DEFAULT NULL,
   `description` varchar(45) NOT NULL,
-  `price` int NOT NULL,
+  `amount` int NOT NULL,
   PRIMARY KEY (`Transaction_ID`),
   KEY `bus_bus_idx` (`booking_ID`),
   CONSTRAINT `bus_bus` FOREIGN KEY (`booking_ID`) REFERENCES `bus_ticket` (`Booking_ID`)
@@ -469,7 +469,7 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
-INSERT INTO `django_session` VALUES ('18xcdochbo44b4ha294eoj4hficef4et','eyJlbWFpbCI6InNAZ21haWwuY29tIiwidXNlcklkIjo2fQ:1kb5In:56BKj-OnjAr8FC7LSwoU7NN2j6bi4TLs_LXjL3DvOdk','2020-11-06 17:46:49.374812');
+INSERT INTO `django_session` VALUES ('kc2v98hitmzl8h4cfo8hmpabajj1ami6','eyJlbWFpbCI6InNAZ21haWwuY29tIiwidXNlcklkIjo2fQ:1kb6d5:88Ql-k4c1BleahFBcb9PcNkgtF04RzchZc7xS8TFp0s','2020-11-06 19:11:51.295440');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -635,7 +635,7 @@ CREATE TABLE `flight_transaction` (
   `Transaction_ID` int NOT NULL AUTO_INCREMENT,
   `booking_ID` int DEFAULT NULL,
   `description` varchar(45) NOT NULL,
-  `price` int NOT NULL,
+  `amount` int NOT NULL,
   PRIMARY KEY (`Transaction_ID`),
   KEY `booking_ID_idx` (`booking_ID`),
   CONSTRAINT `bookings_ID` FOREIGN KEY (`booking_ID`) REFERENCES `flight_ticket` (`Booking_ID`)
@@ -721,4 +721,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-06 23:54:17
+-- Dump completed on 2020-11-07  0:17:29
