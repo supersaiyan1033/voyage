@@ -878,7 +878,7 @@ def My_Bookings(request,userId,email):
     firstname = user[0][0]
     lastname = user[0][1]
     wallet = user[0][2]
-    cursor.execute("""SELECT Booking_ID,Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p
+    cursor.execute("""SELECT Booking_ID,Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,status
     FROM bus_ticket JOIN users ON bus_ticket.User_ID=users.userID JOIN bus_schedule ON bus_ticket.BSID=bus_schedule.BSID JOIN bus_details ON bus_details.Bus_No=bus_schedule.Bus_No JOIN bus ON bus_details.Bus_ID=Bus.Bus_ID
     JOIN route ON route.RID=bus_details.RID WHERE userID=%s ORDER BY Date_of_booking DESC""",[userId])
     row = cursor.fetchall()
@@ -896,11 +896,12 @@ def My_Bookings(request,userId,email):
                 'time_to':row[n][6].strftime("%H:%M"),
                 'from_p':row[n][7],
                 'to_p':row[n][8],
+                'status':row[n][9],
                 'image':'fa fa-bus fa-3x',
                 'type':'bus'
         })
 
-    cursor.execute("""SELECT Booking_ID,Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p
+    cursor.execute("""SELECT Booking_ID,Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,status
     FROM flight_ticket JOIN users ON flight_ticket.User_ID=users.userID JOIN flight_schedule ON flight_ticket.FSID=flight_schedule.FSID JOIN flight_details ON flight_details.Flight_No=flight_schedule.Flight_No JOIN flight ON flight_details.Flight_ID=flight.Flight_ID
     JOIN route ON route.RID=flight_details.RID WHERE userID=%s ORDER BY Date_of_booking DESC""",[userId])
     row = cursor.fetchall()
@@ -919,6 +920,7 @@ def My_Bookings(request,userId,email):
                 'time_to':row[n][6].strftime("%H:%M"),
                 'from_p':row[n][7],
                 'to_p':row[n][8],
+                'status':row[n][9],
                 'image':'fa fa-plane fa-3x',
                 'type':'flight'
             })
@@ -963,7 +965,7 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
     lastname = user[0][1]
     wallet = user[0][2]
     if type_of_transport =='flight':
-     cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,flight_passenger.Gender,Age,Seat_no
+     cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,flight_passenger.Gender,Age,Seat_no,status
      FROM flight_ticket JOIN users ON flight_ticket.User_ID=users.userID JOIN flight_schedule ON flight_ticket.FSID=flight_schedule.FSID JOIN flight_details ON flight_details.Flight_No=flight_schedule.Flight_No JOIN flight ON flight_details.Flight_ID=flight.Flight_ID
      JOIN route ON route.RID=flight_details.RID JOIN flight_passenger ON flight_passenger.Booking_ID=flight_ticket.Booking_ID JOIN flight_transaction ON flight_transaction.booking_ID = flight_ticket.Booking_ID WHERE userID=%s AND flight_ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
      row = cursor.fetchall()
@@ -995,11 +997,12 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
         'lastname':lastname,
         'wallet':wallet,
         'email':email,
-        'userId':userId
+        'userId':userId,
+        'status':row[0][13]
      }
      return render(request,'authentication/booking_details.html',data)
     elif type_of_transport =='bus':
-     cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,bus_passenger.Gender,Age,Seat_no
+     cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,bus_passenger.Gender,Age,Seat_no,status
      FROM bus_ticket JOIN users ON bus_ticket.User_ID=users.userID JOIN bus_schedule ON bus_ticket.BSID=bus_schedule.BSID JOIN bus_details ON bus_details.Bus_No=bus_schedule.Bus_No JOIN bus ON bus_details.Bus_ID=bus.Bus_ID
      JOIN route ON route.RID=bus_details.RID JOIN bus_passenger ON bus_passenger.Booking_ID=bus_ticket.Booking_ID JOIN bus_transaction ON bus_transaction.booking_ID = bus_ticket.Booking_ID WHERE userID=%s AND bus_ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
      row = cursor.fetchall()
@@ -1031,7 +1034,8 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
         'lastname':lastname,
         'wallet':wallet,
         'email':email,
-        'userId':userId
+        'userId':userId,
+        'status':row[0][13]
      }
      return render(request,'authentication/booking_details.html',data)
 
