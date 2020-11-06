@@ -453,7 +453,7 @@ def Flights_Book(request, userId, email):
          row = cursor.fetchall()
          booking_id = row[0][0]
          cursor = connection.cursor()
-         cursor.execute("""INSERT INTO flight_transaction(booking_ID,description) VALUES(%s,%s)""",[booking_id,"payment"])
+         cursor.execute("""INSERT INTO flight_transaction(booking_ID,description,amount) VALUES(%s,%s,%s)""",[booking_id,"payment",total_fare])
          cursor = connection.cursor()
          cursor.execute("""SELECT no_of_seats_vacant,Total_seats FROM flight_schedule WHERE FSID=%s""", [flight_schedule])
          row = cursor.fetchall()
@@ -792,7 +792,7 @@ def Buses_Book(request, userId, email):
          
          booking_id = row[0][0]
          cursor = connection.cursor()
-         cursor.execute("""INSERT INTO bus_transaction(booking_ID,description) VALUES(%s,%s)""",[booking_id,"payment"])
+         cursor.execute("""INSERT INTO bus_transaction(booking_ID,description,amount) VALUES(%s,%s,%s)""",[booking_id,"payment",total_fare])
          cursor = connection.cursor()
          cursor.execute("""SELECT no_of_seats_vacant,Total_seats FROM bus_schedule WHERE BSID=%s""", [bus_schedule])
          row = cursor.fetchall()
