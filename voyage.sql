@@ -193,9 +193,9 @@ DROP TABLE IF EXISTS `bus`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `bus` (
   `Bus_ID` int NOT NULL,
-  `Bus_Company` varchar(45) NOT NULL,
-  `Seat_capacity` varchar(45) NOT NULL,
+  `Company` varchar(45) NOT NULL,
   `Bus_Type` varchar(45) NOT NULL DEFAULT 'Non-AC',
+  `seat_Capacity` int NOT NULL,
   PRIMARY KEY (`Bus_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -206,7 +206,7 @@ CREATE TABLE `bus` (
 
 LOCK TABLES `bus` WRITE;
 /*!40000 ALTER TABLE `bus` DISABLE KEYS */;
-INSERT INTO `bus` VALUES (1,'Orange Travels','100','AC'),(2,'Amaravathi','80','AC'),(3,'Deluxe','55','Non-AC'),(4,'Chalo','70','AC'),(5,'AICTSL','45','Non-AC');
+INSERT INTO `bus` VALUES (1,'Orange Travels','AC',100),(2,'Amaravathi','AC',80),(3,'Deluxe','Non-AC',55),(4,'Chalo','AC',70),(5,'AICTSL','Non-AC',45);
 /*!40000 ALTER TABLE `bus` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -219,10 +219,10 @@ DROP TABLE IF EXISTS `bus_schedule`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `bus_schedule` (
   `Bus_No` int NOT NULL,
-  `Date_From` date NOT NULL,
-  `Date_To` date NOT NULL,
-  `No_Of_Seats_Vacant` int DEFAULT NULL,
-  `Total_Seats` int NOT NULL,
+  `date_from` date NOT NULL,
+  `date_to` date NOT NULL,
+  `no_of_seats_vacant` int DEFAULT NULL,
+  `Total_seats` int NOT NULL,
   `BSID` int NOT NULL,
   PRIMARY KEY (`BSID`),
   KEY `Buses_No_idx` (`Bus_No`),
@@ -249,8 +249,8 @@ DROP TABLE IF EXISTS `bus_specific`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `bus_specific` (
   `Bus_ID` int NOT NULL,
-  `Time_from` time NOT NULL,
-  `Time_to` time NOT NULL,
+  `Time_From` time NOT NULL,
+  `Time_To` time NOT NULL,
   `Price` int NOT NULL,
   `Bus_No` int NOT NULL,
   `RID` int NOT NULL,
@@ -380,7 +380,7 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
-INSERT INTO `django_session` VALUES ('cj6nlxcy7j8hjujq4namp5dkcns4bvxh','eyJlbWFpbCI6Indhc2QiLCJ1c2VySWQiOjR9:1kaidv:zHqVaDbyicFe7MPkjT85DpjRbIxjZlPCv3Wol79i_5Y','2020-11-05 17:35:07.449613');
+INSERT INTO `django_session` VALUES ('4vmpqoeneyasd2gqo9sapxv4j0ubfzej','eyJlbWFpbCI6Indhc2QiLCJ1c2VySWQiOjR9:1kajCR:IqzXYxCNWTenexvnbSlXQooBrSU7ys2pEYm3sZwxHhI','2020-11-05 18:10:47.737304');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -437,7 +437,7 @@ CREATE TABLE `flight_schedule` (
 
 LOCK TABLES `flight_schedule` WRITE;
 /*!40000 ALTER TABLE `flight_schedule` DISABLE KEYS */;
-INSERT INTO `flight_schedule` VALUES (1,'2020-10-22','2020-10-22',100,100,1),(2,'2020-10-22','2020-10-22',195,200,2),(3,'2020-10-22','2020-10-22',150,150,3),(4,'2020-10-22','2020-10-22',200,200,4),(5,'2020-10-22','2020-10-22',100,100,5),(6,'2020-10-22','2020-10-22',50,50,6),(7,'2020-10-22','2020-10-22',150,150,7),(8,'2020-10-22','2020-10-22',100,100,8),(9,'2020-10-22','2020-10-22',100,100,9),(10,'2020-10-22','2020-10-22',150,150,10),(11,'2020-10-22','2020-10-22',50,50,11),(12,'2020-10-22','2020-10-22',50,50,12);
+INSERT INTO `flight_schedule` VALUES (1,'2020-10-22','2020-10-22',100,100,1),(2,'2020-10-22','2020-10-22',194,200,2),(3,'2020-10-22','2020-10-22',150,150,3),(4,'2020-10-22','2020-10-22',200,200,4),(5,'2020-10-22','2020-10-22',100,100,5),(6,'2020-10-22','2020-10-22',50,50,6),(7,'2020-10-22','2020-10-22',150,150,7),(8,'2020-10-22','2020-10-22',100,100,8),(9,'2020-10-22','2020-10-22',100,100,9),(10,'2020-10-22','2020-10-22',150,150,10),(11,'2020-10-22','2020-10-22',50,50,11),(12,'2020-10-22','2020-10-22',50,50,12);
 /*!40000 ALTER TABLE `flight_schedule` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -540,7 +540,7 @@ CREATE TABLE `passenger` (
   PRIMARY KEY (`Passenger_ID`),
   KEY `Booking_Id_idx` (`Booking_ID`),
   CONSTRAINT `Booking_Id` FOREIGN KEY (`Booking_ID`) REFERENCES `ticket` (`Booking_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -549,8 +549,37 @@ CREATE TABLE `passenger` (
 
 LOCK TABLES `passenger` WRITE;
 /*!40000 ALTER TABLE `passenger` DISABLE KEYS */;
-INSERT INTO `passenger` VALUES ('Mr. REVANTH THOTA','Male',18,13,2,1),('Nitin','others',18,13,3,2),('Sairam','Male',18,13,4,3),('Nitin','Male',18,14,5,4),('Aakash','Male',18,14,6,5);
+INSERT INTO `passenger` VALUES ('Mr. REVANTH THOTA','Male',18,13,2,1),('Nitin','others',18,13,3,2),('Sairam','Male',18,13,4,3),('Nitin','Male',18,14,5,4),('Aakash','Male',18,14,6,5),('Nitin','Male',18,15,7,6);
 /*!40000 ALTER TABLE `passenger` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `passenger_b`
+--
+
+DROP TABLE IF EXISTS `passenger_b`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `passenger_b` (
+  `Name` varchar(45) NOT NULL,
+  `Gender` varchar(45) NOT NULL,
+  `Age` int NOT NULL,
+  `Booking_ID` int NOT NULL,
+  `Passenger_ID` int NOT NULL,
+  `Seat_no` int NOT NULL,
+  PRIMARY KEY (`Passenger_ID`),
+  KEY `b_B_idx` (`Booking_ID`),
+  CONSTRAINT `b_B` FOREIGN KEY (`Booking_ID`) REFERENCES `ticket_b` (`Booking_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `passenger_b`
+--
+
+LOCK TABLES `passenger_b` WRITE;
+/*!40000 ALTER TABLE `passenger_b` DISABLE KEYS */;
+/*!40000 ALTER TABLE `passenger_b` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -611,14 +640,14 @@ CREATE TABLE `ticket` (
   `Booking_ID` int NOT NULL AUTO_INCREMENT,
   `User_ID` int DEFAULT NULL,
   `Date_of_booking` datetime DEFAULT NULL,
-  `FSID` int NOT NULL,
+  `FSID` int DEFAULT NULL,
   `No_of_passengers` int DEFAULT NULL,
   PRIMARY KEY (`Booking_ID`),
   KEY `User_ID_idx` (`User_ID`),
   KEY `Date_PK_idx` (`FSID`),
   CONSTRAINT `FSID` FOREIGN KEY (`FSID`) REFERENCES `flight_schedule` (`FSID`),
   CONSTRAINT `User_ID` FOREIGN KEY (`User_ID`) REFERENCES `users` (`userID`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -627,8 +656,38 @@ CREATE TABLE `ticket` (
 
 LOCK TABLES `ticket` WRITE;
 /*!40000 ALTER TABLE `ticket` DISABLE KEYS */;
-INSERT INTO `ticket` VALUES (13,4,'2020-10-22 18:43:03',2,3),(14,4,'2020-10-25 14:35:45',2,2);
+INSERT INTO `ticket` VALUES (13,4,'2020-10-22 18:43:03',2,3),(14,4,'2020-10-25 14:35:45',2,2),(15,4,'2020-11-05 23:08:28',2,1),(16,4,'2020-11-05 23:08:28',NULL,3);
 /*!40000 ALTER TABLE `ticket` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ticket_b`
+--
+
+DROP TABLE IF EXISTS `ticket_b`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ticket_b` (
+  `Booking_ID` int NOT NULL,
+  `User_ID` int DEFAULT NULL,
+  `Date_of_booking` date DEFAULT NULL,
+  `BSID` int DEFAULT NULL,
+  `No_of_passengers` int DEFAULT NULL,
+  PRIMARY KEY (`Booking_ID`),
+  KEY `user_b_idx` (`User_ID`),
+  KEY `bs_b_idx` (`BSID`),
+  CONSTRAINT `bs_b` FOREIGN KEY (`BSID`) REFERENCES `bus_schedule` (`BSID`),
+  CONSTRAINT `user_b` FOREIGN KEY (`User_ID`) REFERENCES `users` (`userID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ticket_b`
+--
+
+LOCK TABLES `ticket_b` WRITE;
+/*!40000 ALTER TABLE `ticket_b` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ticket_b` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -695,7 +754,7 @@ CREATE TABLE `transaction` (
   PRIMARY KEY (`Transaction_ID`),
   KEY `booking_ID_idx` (`booking_ID`),
   CONSTRAINT `bookings_ID` FOREIGN KEY (`booking_ID`) REFERENCES `ticket` (`Booking_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -704,8 +763,34 @@ CREATE TABLE `transaction` (
 
 LOCK TABLES `transaction` WRITE;
 /*!40000 ALTER TABLE `transaction` DISABLE KEYS */;
-INSERT INTO `transaction` VALUES (2,13,'Wallet'),(3,14,'Wallet');
+INSERT INTO `transaction` VALUES (2,13,'Wallet'),(3,14,'Wallet'),(4,15,'Wallet');
 /*!40000 ALTER TABLE `transaction` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `transaction_b`
+--
+
+DROP TABLE IF EXISTS `transaction_b`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `transaction_b` (
+  `Transaction_ID` int NOT NULL,
+  `booking_ID` int DEFAULT NULL,
+  `Payment_Method` varchar(45) NOT NULL DEFAULT 'wallet',
+  PRIMARY KEY (`Transaction_ID`),
+  KEY `Bus_bus_idx` (`booking_ID`),
+  CONSTRAINT `Bus_bus` FOREIGN KEY (`booking_ID`) REFERENCES `ticket_b` (`Booking_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `transaction_b`
+--
+
+LOCK TABLES `transaction_b` WRITE;
+/*!40000 ALTER TABLE `transaction_b` DISABLE KEYS */;
+/*!40000 ALTER TABLE `transaction_b` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -738,7 +823,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('Revanth','Thota','M','flat no cs-3 myhome complex beside srr college vijayawada','9502974806','thotarevanth347@gmail.com','$2b$12$D.pj4DL8e96K8i69CvIP6u9FgpTSOAhmjgj4gM7pBQWtmtLZtKani',1,'2001-12-11',10000),('REVANTH','THOTA','M','Flat no:CS3,My Home Complex,Beside SRR College, Machavaram, Vijayawada.','9502974806','wasd','$2b$12$D.pj4DL8e96K8i69CvIP6u9FgpTSOAhmjgj4gM7pBQWtmtLZtKani',4,'2001-12-11',12505),('sumanth','Thota','Male','Flat no:CS3,My Home Complex,Beside SRR College, Machavaram, Vijayawada.','9502974806','sumu','$2b$12$D.pj4DL8e96K8i69CvIP6u9FgpTSOAhmjgj4gM7pBQWtmtLZtKani',5,'2004-07-07',10000);
+INSERT INTO `users` VALUES ('Revanth','Thota','M','flat no cs-3 myhome complex beside srr college vijayawada','9502974806','thotarevanth347@gmail.com','$2b$12$D.pj4DL8e96K8i69CvIP6u9FgpTSOAhmjgj4gM7pBQWtmtLZtKani',1,'2001-12-11',10000),('REVANTH','THOTA','M','Flat no:CS3,My Home Complex,Beside SRR College, Machavaram, Vijayawada.','9502974806','wasd','$2b$12$D.pj4DL8e96K8i69CvIP6u9FgpTSOAhmjgj4gM7pBQWtmtLZtKani',4,'2001-12-11',9006),('sumanth','Thota','Male','Flat no:CS3,My Home Complex,Beside SRR College, Machavaram, Vijayawada.','9502974806','sumu','$2b$12$D.pj4DL8e96K8i69CvIP6u9FgpTSOAhmjgj4gM7pBQWtmtLZtKani',5,'2004-07-07',10000);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -751,4 +836,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-05 22:42:31
+-- Dump completed on 2020-11-06  9:22:13
