@@ -565,7 +565,7 @@ CREATE TABLE `passenger_b` (
   `Gender` varchar(45) NOT NULL,
   `Age` int NOT NULL,
   `Booking_ID` int NOT NULL,
-  `Passenger_ID` int NOT NULL,
+  `Passenger_ID` int NOT NULL AUTO_INCREMENT,
   `Seat_no` int NOT NULL,
   PRIMARY KEY (`Passenger_ID`),
   KEY `B_b_idx` (`Booking_ID`),
@@ -669,10 +669,10 @@ DROP TABLE IF EXISTS `ticket_b`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ticket_b` (
   `Booking_ID` int NOT NULL AUTO_INCREMENT,
-  `User_ID` int DEFAULT NULL,
-  `Date_of_booking` date DEFAULT NULL,
-  `BSID` int DEFAULT NULL,
-  `No_of_passengers` int DEFAULT NULL,
+  `User_ID` int NOT NULL,
+  `Date_of_booking` datetime NOT NULL,
+  `BSID` int NOT NULL,
+  `No_of_passengers` int NOT NULL,
   PRIMARY KEY (`Booking_ID`),
   KEY `user_b_idx` (`User_ID`),
   KEY `bs_b_idx` (`BSID`),
@@ -836,4 +836,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-06 12:08:26
+-- Dump completed on 2020-11-06 15:43:29
