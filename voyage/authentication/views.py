@@ -276,38 +276,38 @@ def Flights_Search(request, userId, email):
         from_p = request.GET.get('startfrom')
         to_p = request.GET.get('destination')
         date = request.GET.get('dateOfTravel')
-        # Indigo = request.POST.get('Indigo')
-        # AirAsia = request.POST.get('AirAsia')
-        # SpiceJet = request.POST.get('SpiceJet')
-        # TruJet = request.POST.get('TruJet')
-        # AirIndia = request.POST.get('AirIndia')
-        # total = ['AirAsia', 'Indigo', 'SpiceJet', 'TruJet', 'AirIndia']
-        # temp = [Indigo, AirAsia, SpiceJet, TruJet, AirIndia]
-        # unchecked = []
-        # print(temp)
-        # for company in temp:
-        #     if company != None:
-        #         companies.append(company)
+        Indigo = request.POST.get('Indigo')
+        AirAsia = request.POST.get('AirAsia')
+        SpiceJet = request.POST.get('SpiceJet')
+        TruJet = request.POST.get('TruJet')
+        AirIndia = request.POST.get('AirIndia')
+        total = ['AirAsia', 'Indigo', 'SpiceJet', 'TruJet', 'AirIndia']
+        temp = [Indigo, AirAsia, SpiceJet, TruJet, AirIndia]
+        unchecked = []
+        print(temp)
+        for company in temp:
+            if company != None:
+                companies.append(company)
 
-        # unchecked = [i for i in total +
-        #              companies if i not in total or i not in companies]
-        # companies = tuple(companies)
-        # print(companies)
+        unchecked = [i for i in total +
+                     companies if i not in total or i not in companies]
+        companies = tuple(companies)
+        print(companies)
         passengers = int(request.GET.get('travellers'))
         minm_price = int(request.POST.get("minm_price"))
         maxm_price = int(request.POST.get("maxm_price"))
         print(minm_price, type(minm_price), maxm_price, type(maxm_price))
         cursor = connection.cursor()
-        # if len(companies) != 0:
-        #     cursor.execute("""select FSID,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant
-        #      FROM flight_schedule JOIN flight_specific ON flight_schedule.Flight_No=flight_specific.Flight_No JOIN route ON route.RID=flight_specific.RID JOIN flight ON flight.Flight_ID=flight_specific.Flight_ID
-        #      WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s  AND Company IN %s""", (date, from_p, to_p, minm_price, maxm_price, companies))
-        # else:
-        cursor.execute("""select FSID,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant
+        if len(companies) != 0:
+            cursor.execute("""select FSID,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant
+             FROM flight_schedule JOIN flight_specific ON flight_schedule.Flight_No=flight_specific.Flight_No JOIN route ON route.RID=flight_specific.RID JOIN flight ON flight.Flight_ID=flight_specific.Flight_ID
+             WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s  AND Company IN %s""", (date, from_p, to_p, minm_price, maxm_price, companies))
+        else:
+            cursor.execute("""select FSID,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant
              FROM flight_schedule JOIN flight_specific ON flight_schedule.Flight_No=flight_specific.Flight_No JOIN route ON route.RID=flight_specific.RID JOIN flight ON flight.Flight_ID=flight_specific.Flight_ID
              WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s """, (date, from_p, to_p, minm_price, maxm_price))
         a = cursor.rowcount
-        # companies = list(companies)
+        companies = list(companies)
         row = cursor.fetchall()
         if cursor.rowcount != 0:
             flights = []
@@ -340,8 +340,8 @@ def Flights_Search(request, userId, email):
                     'to_p_list': to_p_list,
                     'minm_price': minm_price,
                     'maxm_price': maxm_price,
-                    # 'companies': companies,
-                    # 'unchecked': unchecked,
+                    'companies': companies,
+                    'unchecked': unchecked,
                 }
             return render(request, 'authentication/flights_search.html', data)
         else:
@@ -360,8 +360,8 @@ def Flights_Search(request, userId, email):
                 'to_p_list': to_p_list,
                 'minm_price': minm_price,
                 'maxm_price': maxm_price,
-                # 'companies': companies,
-                # 'unchecked': unchecked,
+                'companies': companies,
+                'unchecked': unchecked,
 
             }
             return render(request, 'authentication/flights_search.html', data)
@@ -612,38 +612,38 @@ def Buses_Search(request, userId, email):
         to_p = request.GET.get('destination')
         date = request.GET.get('dateOfTravel')
         #bus companies 
-        # Orange_Travels = request.POST.get('Orange Travels')
-        # Amaravathi = request.POST.get('Amaravathi')
-        # Deluxe = request.POST.get('Deluxe')
-        # Chalo = request.POST.get('Chalo')
-        # Aictsl = request.POST.get('AICTSL')
-        # total = ['Orange Travels', 'Amaravathi', 'Deluxe', 'Chalo', 'AICTSL']
-        # temp = [Orange_Travels, Amaravathi, Deluxe, Chalo, Aictsl]
-        # unchecked = []
-        # print(temp)
-        # for company in temp:
-        #     if company != None:
-        #         companies.append(company)
+        Orange_Travels = request.POST.get('Orange Travels')
+        Amaravathi = request.POST.get('Amaravathi')
+        Deluxe = request.POST.get('Deluxe')
+        Chalo = request.POST.get('Chalo')
+        Aictsl = request.POST.get('AICTSL')
+        total = ['Orange Travels', 'Amaravathi', 'Deluxe', 'Chalo', 'AICTSL']
+        temp = [Orange_Travels, Amaravathi, Deluxe, Chalo, Aictsl]
+        unchecked = []
+        print(temp)
+        for company in temp:
+            if company != None:
+                companies.append(company)
 
-        # unchecked = [i for i in total +
-        #              companies if i not in total or i not in companies]
-        # companies = tuple(companies)
-        # print(companies)
+        unchecked = [i for i in total +
+                     companies if i not in total or i not in companies]
+        companies = tuple(companies)
+        print(companies)
         passengers = int(request.GET.get('travellers'))
         minm_price = int(request.POST.get("minm_price"))
         maxm_price = int(request.POST.get("maxm_price"))
         print(minm_price, type(minm_price), maxm_price, type(maxm_price))
         cursor = connection.cursor()
-        # if len(companies) != 0:
-        #     cursor.execute("""select BSID,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant
-        #      FROM flight_schedule JOIN bus_specific ON bus_schedule.Bus_No=bus_specific.Bus_No JOIN route ON route.RID=bus_specific.RID JOIN bus ON bus.Bus_ID=bus_specific.Bus_ID
-        #      WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s  AND Company IN %s""", (date, from_p, to_p, minm_price, maxm_price, companies))
-        # else:
-        cursor.execute("""select BSID,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant
-        FROM bus_schedule JOIN bus_specific ON bus_schedule.Bus_No=bus_specific.Bus_No JOIN route ON route.RID=bus_specific.RID JOIN bus ON bus.Bus_ID=bus_specific.Bus_ID
-        WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s """, (date, from_p, to_p, minm_price, maxm_price))
+        if len(companies) != 0:
+            cursor.execute("""select BSID,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant
+             FROM flight_schedule JOIN bus_specific ON bus_schedule.Bus_No=bus_specific.Bus_No JOIN route ON route.RID=bus_specific.RID JOIN bus ON bus.Bus_ID=bus_specific.Bus_ID
+             WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s  AND Company IN %s""", (date, from_p, to_p, minm_price, maxm_price, companies))
+        else:
+            cursor.execute("""select BSID,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant
+             FROM bus_schedule JOIN bus_specific ON bus_schedule.Bus_No=bus_specific.Bus_No JOIN route ON route.RID=bus_specific.RID JOIN bus ON bus.Bus_ID=bus_specific.Bus_ID
+             WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s """, (date, from_p, to_p, minm_price, maxm_price))
         a = cursor.rowcount
-        # companies = list(companies)
+        companies = list(companies)
         row = cursor.fetchall()
         if cursor.rowcount != 0:
             buses = []
@@ -676,8 +676,8 @@ def Buses_Search(request, userId, email):
                     'to_p_list': to_p_list,
                     'minm_price': minm_price,
                     'maxm_price': maxm_price,
-                    # 'companies': companies,
-                    # 'unchecked': unchecked,
+                    'companies': companies,
+                    'unchecked': unchecked,
                 }
             return render(request, 'authentication/buses_search.html', data)
         else:
@@ -696,8 +696,8 @@ def Buses_Search(request, userId, email):
                 'to_p_list': to_p_list,
                 'minm_price': minm_price,
                 'maxm_price': maxm_price,
-                # 'companies': companies,
-                # 'unchecked': unchecked,
+                'companies': companies,
+                'unchecked': unchecked,
 
             }
             return render(request, 'authentication/buses_search.html', data)
