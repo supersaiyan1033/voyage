@@ -497,7 +497,7 @@ def Flights_Book(request, userId, email):
          row = cursor.fetchall()
          booking_id = row[0][0]
          cursor = connection.cursor()
-         cursor.execute("""INSERT INTO flight_transaction(booking_ID,description,amount) VALUES(%s,%s,%s)""",[booking_id,"payment",total_fare])
+         cursor.execute("""INSERT INTO flight_transaction(booking_ID,description,amount) VALUES(%s,%s,%s)""",(booking_id,"payment",total_fare))
          cursor = connection.cursor()
          cursor.execute("""SELECT no_of_seats_vacant,Total_seats FROM flight_schedule WHERE FSID=%s""", [flight_schedule])
          row = cursor.fetchall()
@@ -836,7 +836,7 @@ def Buses_Book(request, userId, email):
          
          booking_id = row[0][0]
          cursor = connection.cursor()
-         cursor.execute("""INSERT INTO bus_transaction(booking_ID,description,amount) VALUES(%s,%s,%s)""",[booking_id,"payment",total_fare])
+         cursor.execute("""INSERT INTO bus_transaction(booking_ID,description,amount) VALUES(%s,%s,%s)""",(booking_id,"payment",total_fare))
          cursor = connection.cursor()
          cursor.execute("""SELECT no_of_seats_vacant,Total_seats FROM bus_schedule WHERE BSID=%s""", [bus_schedule])
          row = cursor.fetchall()
@@ -1002,29 +1002,112 @@ def My_Bookings(request,userId,email):
 
 def Booking_Details(request,userId,email,type_of_transport,bookingId):
  if request.session.get('email')!=None:
-    cursor = connection.cursor()
-    cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
-    user = cursor.fetchall()
-    firstname = user[0][0]
-    lastname = user[0][1]
-    wallet = user[0][2]
-    if type_of_transport =='flight':
-     cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,flight_passenger.Gender,Age,Seat_no,status
-     FROM flight_ticket JOIN users ON flight_ticket.User_ID=users.userID JOIN flight_schedule ON flight_ticket.FSID=flight_schedule.FSID JOIN flight_details ON flight_details.Flight_No=flight_schedule.Flight_No JOIN flight ON flight_details.Flight_ID=flight.Flight_ID
-     JOIN route ON route.RID=flight_details.RID JOIN flight_passenger ON flight_passenger.Booking_ID=flight_ticket.Booking_ID JOIN flight_transaction ON flight_transaction.booking_ID = flight_ticket.Booking_ID WHERE userID=%s AND flight_ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
-     row = cursor.fetchall()
-     a = cursor.rowcount
-     no_of_passengers = a
-     passengers=[]
-     for n in range(a):
-        passengers.append({
+    if request.method=="POST":
+        if type_of_transport=='flight':
+            cursor = connection.cursor()
+            cursor.execute("""SELECT No_of_passengers,Price,flight_ticket.FSID,no_of_seats_vacant,date_from,Time_From FROM  flight_ticket JOIN flight_schedule ON flight_ticket.FSID=flight_schedule.FSID JOIN flight_details ON flight_schedule.Flight_No=flight_details.Flight_No WHERE Booking_ID=%s""", [bookingId])
+            row=cursor.fetchall()
+            no_of_passengers=row[0][0]
+            price=row[0][1]
+            fsid=row[0][2]
+            no_of_seats_vacant=row[0][3]
+            date_from=row[0][4]
+            time_from=row[0][5]
+            date_from=date_from.strftime("%Y-%m-%d")
+            # print(date_from)
+            time_from=time_from.strftime("%H:%M:%S")
+            # print(time_from)
+            date_time=date_from+" "+time_from
+            # print(date_time)
+            now=datetime.now()
+            Date_Time=now.strftime("%Y-%m-%d %H:%M:%S")
+            if Date_Time<date_time:
+                no_of_seats_vacant=no_of_seats_vacant+no_of_passengers
+                cursor = connection.cursor()
+                cursor.execute("""UPDATE flight_schedule SET no_of_seats_vacant=%s WHERE FSID=%s""",(no_of_seats_vacant,fsid))
+                cursor = connection.cursor()
+                cursor.execute("""UPDATE flight_ticket SET status=%s WHERE Booking_ID=%s""",("Cancelled",bookingId))
+                cursor = connection.cursor()
+                cursor.execute("""SELECT wallet FROM users WHERE userID=%s""",[userId])
+                row=cursor.fetchall()
+                wallet=row[0][0]
+                wallet=wallet + (price*no_of_passengers)
+                cursor = connection.cursor()
+                cursor.execute("""UPDATE users SET wallet=%s WHERE userID=%s""",(wallet,userId))
+                cursor = connection.cursor()
+                cursor.execute("""INSERT INTO flight_transaction(booking_ID,description,amount) VALUES(%s,%s,%s)""",(bookingId,"refund",(price*no_of_passengers)))
+                messages.success(request, 'Ticket Cancelled Successfully!')
+                return redirect("http://127.0.0.1:8000/login/{}/{}".format(userId,email))
+            else:
+                messages.success(request, 'Ticket Cannot Be Cancelled!') 
+                return redirect("http://127.0.0.1:8000/login/{}/{}".format(userId,email))
+        else:
+            cursor = connection.cursor()
+            cursor.execute("""SELECT No_of_passengers,Price,bus_ticket.BSID,no_of_seats_vacant,date_from,Time_From FROM  bus_ticket JOIN bus_schedule ON bus_ticket.BSID=bus_schedule.BSID JOIN bus_details ON bus_schedule.Bus_No=bus_details.Bus_No WHERE Booking_ID=%s""", [bookingId])
+            row=cursor.fetchall()
+            no_of_passengers=row[0][0]
+            price=row[0][1]
+            bsid=row[0][2]
+            no_of_seats_vacant=row[0][3]
+            date_from=row[0][4]
+            time_from=row[0][5]
+            date_from=date_from.strftime("%Y-%m-%d")
+            # print(date_from)
+            time_from=time_from.strftime("%H:%M:%S")
+            # print(time_from)
+            date_time=date_from+" "+time_from
+            # print(date_time)
+            now=datetime.now()
+            Date_Time=now.strftime("%Y-%m-%d %H:%M:%S")
+            if Date_Time<date_time:
+                no_of_seats_vacant=no_of_seats_vacant+no_of_passengers
+                cursor = connection.cursor()
+                cursor.execute("""UPDATE bus_schedule SET no_of_seats_vacant=%s WHERE BSID=%s""",(no_of_seats_vacant,bsid))
+                cursor = connection.cursor()
+                cursor.execute("""UPDATE bus_ticket SET status=%s WHERE Booking_ID=%s""",("Cancelled",bookingId))
+                cursor = connection.cursor()
+                cursor.execute("""SELECT wallet FROM users WHERE userID=%s""",[userId])
+                row=cursor.fetchall()
+                wallet=row[0][0]
+                wallet=wallet + (price*no_of_passengers)
+                cursor = connection.cursor()
+                cursor.execute("""UPDATE users SET wallet=%s WHERE userID=%s""",(wallet,userId))
+                cursor = connection.cursor()
+                cursor.execute("""INSERT INTO bus_transaction(booking_ID,description,amount) VALUES(%s,%s,%s)""",(bookingId,"refund",(price*no_of_passengers)))
+                messages.success(request, 'Ticket Cancelled Successfully!')
+                return redirect("http://127.0.0.1:8000/login/{}/{}".format(userId,email))
+            else:
+                messages.success(request, 'Ticket Cannot Be Cancelled!')
+                return redirect("http://127.0.0.1:8000/login/{}/{}".format(userId,email))      
+    else:    
+        cursor = connection.cursor()
+        cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
+        user = cursor.fetchall()
+        firstname = user[0][0]
+        lastname = user[0][1]
+        wallet = user[0][2]
+        if type_of_transport =='flight':
+        
+            cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,flight_passenger.Gender,Age,Seat_no,status
+            FROM flight_ticket JOIN users ON flight_ticket.User_ID=users.userID JOIN flight_schedule ON flight_ticket.FSID=flight_schedule.FSID JOIN flight_details ON flight_details.Flight_No=flight_schedule.Flight_No JOIN flight ON flight_details.Flight_ID=flight.Flight_ID
+            JOIN route ON route.RID=flight_details.RID JOIN flight_passenger ON flight_passenger.Booking_ID=flight_ticket.Booking_ID JOIN flight_transaction ON flight_transaction.booking_ID = flight_ticket.Booking_ID WHERE userID=%s AND flight_ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
+            row = cursor.fetchall()
+            a = cursor.rowcount
+            no_of_passengers = a
+            passengers=[]
+            if row[0][13]=="booked":
+                status_code=1
+            else:
+                status_code=None
+            for n in range(a):
+                passengers.append({
             'name':row[n][9],
             'gender':row[n][10],
             'age':row[n][11],
             'seat_no':row[n][12],
             'no':n+1
-        })
-     data={
+                })
+            data={
         'passengers':passengers,
         'date_of_booking':row[0][0],
         'no_of_passengers':row[0][1],
@@ -1043,27 +1126,33 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
         'email':email,
         'userId':userId,
         'status':row[0][13],
+        'status_code':status_code,
         'type':'flight',
         'booking_Id':bookingId
-     }
-     return render(request,'authentication/booking_details.html',data)
-    elif type_of_transport =='bus':
-     cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,bus_passenger.Gender,Age,Seat_no,status
-     FROM bus_ticket JOIN users ON bus_ticket.User_ID=users.userID JOIN bus_schedule ON bus_ticket.BSID=bus_schedule.BSID JOIN bus_details ON bus_details.Bus_No=bus_schedule.Bus_No JOIN bus ON bus_details.Bus_ID=bus.Bus_ID
-     JOIN route ON route.RID=bus_details.RID JOIN bus_passenger ON bus_passenger.Booking_ID=bus_ticket.Booking_ID JOIN bus_transaction ON bus_transaction.booking_ID = bus_ticket.Booking_ID WHERE userID=%s AND bus_ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
-     row = cursor.fetchall()
-     a = cursor.rowcount
-     no_of_passengers = a
-     passengers=[]
-     for n in range(a):
-        passengers.append({
+            }
+            return render(request,'authentication/booking_details.html',data)
+        elif type_of_transport =='bus':
+        
+            cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,bus_passenger.Gender,Age,Seat_no,status
+            FROM bus_ticket JOIN users ON bus_ticket.User_ID=users.userID JOIN bus_schedule ON bus_ticket.BSID=bus_schedule.BSID JOIN bus_details ON bus_details.Bus_No=bus_schedule.Bus_No JOIN bus ON bus_details.Bus_ID=bus.Bus_ID
+            JOIN route ON route.RID=bus_details.RID JOIN bus_passenger ON bus_passenger.Booking_ID=bus_ticket.Booking_ID JOIN bus_transaction ON bus_transaction.booking_ID = bus_ticket.Booking_ID WHERE userID=%s AND bus_ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
+            row = cursor.fetchall()
+            a = cursor.rowcount
+            no_of_passengers = a
+            passengers=[]
+            if row[0][13]=="booked":
+                status_code=1
+            else:
+                status_code=None
+            for n in range(a):
+                passengers.append({
             'name':row[n][9],
             'gender':row[n][10],
             'age':row[n][11],
             'seat_no':row[n][12],
             'no':n+1
-        })
-     data={
+                })
+            data={
         'passengers':passengers,
         'date_of_booking':row[0][0],
         'no_of_passengers':row[0][1],
@@ -1082,11 +1171,11 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
         'email':email,
         'userId':userId,
         'status':row[0][13],
+        'status_code':status_code,
         'type':'bus',
         'booking_Id':bookingId
-
-     }
-     return render(request,'authentication/booking_details.html',data)
+            }
+            return render(request,'authentication/booking_details.html',data)
 
  else:
      return render(request,'authentication/error.html')
