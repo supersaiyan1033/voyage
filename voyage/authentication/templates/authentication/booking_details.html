@@ -268,7 +268,7 @@ transform:scale(1.01);
 </tr>
 <tr>
 <td style="padding:5px 30px;width:10vw;">
-<h6>status:<strong>{{status}}</strong>
+<h6>status:<strong>booked</strong>
 </td>
 <td style="padding:5px 30px;width:10vw;">
 <h6>transactionId:<strong>{{transactionId}}
@@ -320,7 +320,12 @@ seat no
 </tr>
 {% endfor %}
 </table>
-
+<br>
+<br>
+<br>
+<div class="loginbtn">
+             <input class="btn" type="submit" name="" value="View ticket" onclick="window.location.href='http://127.0.0.1:8000/login/{{userId}}/{{email}}/mybookings/{{type}}/{{booking_Id}}/details/pdf'">
+        </div>
 </div>
 {% if messages %}
         {% for message in messages %}

@@ -9,6 +9,11 @@ import hashlib
 import sys
 import base64
 from datetime import datetime
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+import smtplib
+from django.core.mail import send_mail
 def myFunc(e):
   return e['date_of_booking']
 
@@ -193,7 +198,46 @@ def ChangePassword(request, userId, email):
  else:
      return render(request,'authentication/error.html')
 
+
+def Forgot_Password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        cursor = connection.cursor()
+        cursor.execute("""SELECT * FROM users WHERE email= %s""", [email] )
+        if cursor.rowcount==1:
+            send_mail(subject='reset password request',message='click on the below link to reset your password.Note that this link will only be active for 10minutes.',from_email='cse190001033@iiti.ac.in',recipient_list=[email],fail_silently=False,
+            html_message="<h1> click on the below link to reset your password.Note that this link will only be active for 10minutes.</h1><br><a href='http://127.0.0.1:8000/login/forgotpassword/{}/resetpassword'>to reset your password click here</a>".format(email))
+            request.session['link_is_active'] = True
+            messages.success(request,'rest link sent to the entered mail please check your inbox!!')
+            return render(request,'authentication/forgotpassword.html')
+        else:
+            messages.success(request,'account with the entered email doesnt exist')
+            return render(request,'authentication/forgotpassword.html')
+    else:
+        return render(request,'authentication/forgotpassword.html')
 # authentication views ends here flights part begins.
+
+def Reset_Password(request,email):
+    if request.session.get('link_is_active'):
+        if request.method=='POST':
+            newpassword = request.POST.get('newpassword')
+            confirmpassword = request.POST.get('confirmpassword')
+            if newpassword == confirmpassword:
+                cursor = connection.cursor()
+                dbPassword = bcrypt.hashpw(newpassword.encode(
+                    'utf8'), bcrypt.gensalt(rounds=12))
+                cursor.execute(
+                    """UPDATE users SET password=%s WHERE email=%s""", (dbPassword, email))
+                messages.success(request, 'Password changed successfully!')
+                return redirect('http://127.0.0.1:8000/login')
+            else:
+                messages.success('both fileds must be the same!!')
+                return render(request,'authentication/reset_password.html')
+                 
+        else:
+            return render(request,'authentication/reset_password.html')    
+    else:
+        return render(request,'authentication/error.html')
 
 def Flights(request, userId, email):
  if request.session.get('email')!=None:
@@ -998,7 +1042,9 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
         'wallet':wallet,
         'email':email,
         'userId':userId,
-        'status':row[0][13]
+        'status':row[0][13],
+        'type':'flight',
+        'booking_Id':bookingId
      }
      return render(request,'authentication/booking_details.html',data)
     elif type_of_transport =='bus':
@@ -1035,7 +1081,10 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
         'wallet':wallet,
         'email':email,
         'userId':userId,
-        'status':row[0][13]
+        'status':row[0][13],
+        'type':'bus',
+        'booking_Id':bookingId
+
      }
      return render(request,'authentication/booking_details.html',data)
 
@@ -1043,3 +1092,122 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
      return render(request,'authentication/error.html')
 
 
+def View_ticket_as_PDF(request,userId,email,type_of_transport,bookingId):
+ if request.session.get('email')!=None:
+    if type_of_transport =='flight':
+       template_path = 'authentication/flight_pdf.html'
+       cursor = connection.cursor()
+       cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
+       user = cursor.fetchall()
+       firstname = user[0][0]
+       lastname = user[0][1]
+       wallet = user[0][2]
+       cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,flight_passenger.Gender,Age,Seat_no,status
+       FROM flight_ticket JOIN users ON flight_ticket.User_ID=users.userID JOIN flight_schedule ON flight_ticket.FSID=flight_schedule.FSID JOIN flight_details ON flight_details.Flight_No=flight_schedule.Flight_No JOIN flight ON flight_details.Flight_ID=flight.Flight_ID
+       JOIN route ON route.RID=flight_details.RID JOIN flight_passenger ON flight_passenger.Booking_ID=flight_ticket.Booking_ID JOIN flight_transaction ON flight_transaction.booking_ID = flight_ticket.Booking_ID WHERE userID=%s AND flight_ticket.Booking_ID=%s""",(int(userId),int(bookingId)))
+       row = cursor.fetchall()
+       a = cursor.rowcount
+       no_of_passengers = a
+       passengers=[]
+       for n in range(a):
+           passengers.append({
+            'name':row[n][9],
+            'gender':row[n][10],
+            'age':row[n][11],
+            'seat_no':row[n][12],
+            'no':n+1
+           })
+       data={
+        'passengers':passengers,
+        'date_of_booking':row[0][0],
+        'no_of_passengers':row[0][1],
+        'price_per_person':row[0][2],
+        'total_price':row[0][2]*row[0][1],
+        'company':row[0][3],
+        'time_from':row[0][4].strftime("%H:%M"),
+        'time_to':row[0][5].strftime("%H:%M"),
+        'from_p':row[0][6],
+        'to_p':row[0][7],
+        'transactionId':row[0][8],
+        'image':'fa fa-plane fa-3x',
+        'firstname':firstname,
+        'lastname':lastname,
+        'wallet':wallet,
+        'email':email,
+        'userId':userId,
+        'type':type_of_transport,
+        'booking_id':bookingId,
+        'status':row[0][13]
+        }
+       context = data
+       response = HttpResponse(content_type='application/pdf')
+       response['Content-Disposition'] = 'inline; filename="booking_details.pdf"'
+       template = get_template(template_path)
+       html = template.render(context)
+       pdf = pisa.CreatePDF(html,dest=response)
+        
+       if pdf.err:
+          return HttpResponse('We had some errors <pre>' + html + '</pre>')
+       return response
+    elif type_of_transport=='bus':
+     template_path = 'authentication/bus_pdf.html'
+     cursor = connection.cursor()
+     cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
+     user = cursor.fetchall()
+     firstname = user[0][0]
+     lastname = user[0][1]
+     wallet = user[0][2]
+     cursor = connection.cursor()
+     cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,bus_passenger.Gender,Age,Seat_no,status
+     FROM bus_ticket JOIN users ON bus_ticket.User_ID=users.userID JOIN bus_schedule ON bus_ticket.BSID=bus_schedule.BSID JOIN bus_details ON bus_details.Bus_No=bus_schedule.Bus_No JOIN bus ON bus_details.Bus_ID=bus.Bus_ID
+     JOIN route ON route.RID=bus_details.RID JOIN bus_passenger ON bus_passenger.Booking_ID=bus_ticket.Booking_ID JOIN bus_transaction ON bus_transaction.booking_ID = bus_ticket.Booking_ID WHERE userID=%s AND bus_ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
+     row = cursor.fetchall()
+     a = cursor.rowcount
+     no_of_passengers = a
+     passengers=[]
+     for n in range(a):
+        passengers.append({
+            'name':row[n][9],
+            'gender':row[n][10],
+            'age':row[n][11],
+            'seat_no':row[n][12],
+            'no':n+1
+        })
+     data={
+        'passengers':passengers,
+        'date_of_booking':row[0][0],
+        'no_of_passengers':row[0][1],
+        'price_per_person':row[0][2],
+        'total_price':row[0][2]*row[0][1],
+        'company':row[0][3],
+        'time_from':row[0][4].strftime("%H:%M"),
+        'time_to':row[0][5].strftime("%H:%M"),
+        'from_p':row[0][6],
+        'to_p':row[0][7],
+        'transactionId':row[0][8],
+        'image':'fa fa-bus fa-3x',
+        'firstname':firstname,
+        'lastname':lastname,
+        'wallet':wallet,
+        'email':email,
+        'userId':userId,
+        'status':row[0][13],
+        'type':type_of_transport,
+        'booking_id':bookingId
+     }
+     context = data
+     response = HttpResponse(content_type='application/pdf')
+     response['Content-Disposition'] = 'inline; filename="booking_details.pdf"'
+     template = get_template(template_path)
+     html = template.render(context)
+     pdf = pisa.CreatePDF(html,dest=response)
+        
+     if pdf.err:
+          return HttpResponse('We had some errors <pre>' + html + '</pre>')
+     return response
+     
+
+      
+ else:
+     return render(request,'authentication/error.html')
+    

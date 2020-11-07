@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <title>Booking details</title>
+ 
+<style>
+
+</style>
+</head>
+<body>
+      <h1 style="text-align:center;padding:20px;margin:10px;">Booking details</h1>
+      <br><br><br>
+<div class="bookingdetails" style="background_color:white;border-radius:10px;margin:auto;width:80vw;z-index:9999">
+
+<h1 style="text-align:center;">{{company}} &nbsp &nbsp {{from_p}} - {{to_p}} &nbsp &nbsp {{time_from}} - {{time_to}} &nbsp&nbsp <span><i class="fa fa-inr"></i>{{price_per_person}}</span></h1>
+{% comment %} <br>
+
+<h6>{{from_p}} - {{to_p}}</h6> {% endcomment %}
+{% comment %} <br> {% endcomment %}
+
+{% comment %} <h6>{{time_from}} - {{time_to}}</h6>
+<br>
+<h6><i class="fa fa-inr"></i>{{price_per_person}}</h6>
+<br>
+ {% endcomment %}
+<br>
+
+<h1 style="text-align:center;">status:<strong>booked</strong> &nbsp&nbsp  transactionId:<strong>{{transactionId}}</strong>  &nbsp&nbsp  booked at:<strong>{{date_of_booking}}</strong> &nbsp&nbsptotal passengers:<strong>{{no_of_passengers}}</strong>&nbsp&nbsp total price:<strong>{{total_price}}</strong></h1>
+<br>
+
+{% comment %} <h6>transactionId:<strong>{{transactionId}}
+<br>
+
+<h6>booked at:<strong>{{date_of_booking}}</strong></h6>
+<br> {% endcomment %}
+
+{% comment %} <h6>total passengers:<strong>{{no_of_passengers}}</strong></h6>
+<br>
+
+<h6>total price:<i class="fa fa-inr"></i><strong>{{total_price}}</strong></h6>
+<br> {% endcomment %}
+
+<br>
+<h2 style="text-align:center;">
+p.no &nbsp&nbsp name &nbsp&nbsp age  &nbsp&nbsp gender  &nbsp&nbsp seat_no
+<br>
+<br>
+{% for p in passengers %}
+{{p.no}} &nbsp&nbsp {{p.name}} &nbsp&nbsp {{p.age}}  &nbsp&nbsp {{p.gender}}  &nbsp&nbsp {{p.seat_no}}
+
+<br>
+<br>
+
+
+{% endfor %}
+</h2>
+<br>
+<br>
+<br>
+
+
+<hr>
+<h3 style="text-align:center;">Guidelines</h3>
+<ul>
+<li><h3>You should be atleast an hour early at the airport, and should be carrying your identity prrof such as AADHAR card, voter id or passport.</li>
+<br>
+<li><h3>You must be carrying this ticket with you then only you will be given access in to the flight.</li>
+<br>
+<li><h3>Ticket can only be cancelled 2 days prior to the date of travel or else no amount will be refunded.</li>
+<br>
+<li><h3>If your booking was cancelled online on the Pack your bags website and you have opted for a refund, the balance amount will be credited to your credit/ debit card or bank account in 5 to 7 working days.</li>
+<br>
+<li><h3>Please do not share your personal banking and security details like passwords, CVV, etc. with any third person or party claiming to represent Pack your bags. For any query, please reach out to Pack your bags on our official customer care number </li>
+</div>
+</body>   
+</html>

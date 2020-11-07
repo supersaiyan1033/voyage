@@ -24,6 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.Home,name='home'),
     path('login/',views.Log_In,name='auth-login'),
+    path('login/forgotpassword',views.Forgot_Password,name='forgot_password'),
+    path('login/forgotpassword/<email>/resetpassword',views.Reset_Password,name='reset password'),
     path('signup/',views.Sign_Up,name='auth-signup'),
     path('login/<userId>/<email>/profile',views.Profile,name='profile'),
     path('login/<userId>/<email>',views.user,name='user'),
@@ -33,6 +35,7 @@ urlpatterns = [
     path('login/<userId>/<email>/flights',views.Flights,name='flights'),
     path('login/<userId>/<email>/flights/search/',views.Flights_Search,name='flights_search'),
     path('login/<userId>/<email>/flights/book/',views.Flights_Book,name='flights_book'),
+
   
 
 
@@ -45,6 +48,8 @@ urlpatterns = [
     #bookings views urls
     path('login/<userId>/<email>/mybookings',views.My_Bookings,name='my_bookings'),
     path('login/<userId>/<email>/mybookings/<type_of_transport>/<bookingId>/details',views.Booking_Details,name="booking_details"),
+    path('login/<userId>/<email>/mybookings/<type_of_transport>/<bookingId>/details/pdf',views.View_ticket_as_PDF,name="booking_details_as_PDF"),
+
 
 
 
