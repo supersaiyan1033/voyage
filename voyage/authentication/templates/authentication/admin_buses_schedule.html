@@ -239,7 +239,7 @@ transform:scale(1.01);
  {%csrf_token%}
 <tr>
  <td>
- <input class="form-control" type="number" value="" name="Flight_No" placeholder="Flight no" required > 
+ <input class="form-control" type="number" value="" name="Bus_No" placeholder="Bus no" required > 
  </td>
 <td>
  <input class="form-control" type="date" value="" name="date_from" placeholder="arrival date" required >
@@ -292,11 +292,11 @@ transform:scale(1.01);
 <table>
 <tr>
 <td style="padding:5px 30px;width:6vw">
-<i class="fa fa-plane fa-3x" style="padding:20px;"></i>
+<i class="fa fa-bus fa-3x" style="padding:20px;"></i>
  {% comment %} <img src= "{% static flight.image %}" height="70">  {% endcomment %}
 </td>
 <td style="padding:5px 30px;width:6vw;">
-<h6>flightno:{{schedule.flight_no}}</h6>
+<h6>busno:{{schedule.bus_no}}</h6>
 </td>
 <td style="padding:5px 30px;width:20vw;">
 <h6>{{schedule.date_from}} &nbsp - &nbsp{{schedule.date_to}}</h6>

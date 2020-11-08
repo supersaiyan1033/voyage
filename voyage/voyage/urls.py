@@ -59,6 +59,10 @@ urlpatterns = [
     path('login/admin/<userId>/<email>/flights/schedule',views.Admin_Flights_Schedule,name='admin-flights-schedule'),
 
     path('login/admin/<userId>/<email>/buses',views.Admin_Buses,name='admin-buses'),
+    path('login/admin/<userId>/<email>/buses/list',views.Admin_Buses_List,name='admin-buses-list'),
+    path('login/admin/<userId>/<email>/buses/details',views.Admin_Buses_Details,name='admin-buses-details'),
+    path('login/admin/<userId>/<email>/buses/schedule',views.Admin_Buses_Schedule,name='admin-buses-schedule'),
+
     path('login/admin/<userId>/<email>/routes',views.Admin_Routes,name='admin-routes')
 
 

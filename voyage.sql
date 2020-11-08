@@ -194,6 +194,7 @@ DROP TABLE IF EXISTS `bus`;
 CREATE TABLE `bus` (
   `Bus_ID` int NOT NULL,
   `Company` varchar(45) NOT NULL,
+  `Bus_name` varchar(45) NOT NULL,
   `seat_Capacity` int NOT NULL,
   PRIMARY KEY (`Bus_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -205,7 +206,7 @@ CREATE TABLE `bus` (
 
 LOCK TABLES `bus` WRITE;
 /*!40000 ALTER TABLE `bus` DISABLE KEYS */;
-INSERT INTO `bus` VALUES (1,'Voyage',100),(2,'Voyage',80),(3,'Voyage',55),(4,'Voyage',70),(5,'Voyage',45);
+INSERT INTO `bus` VALUES (1,'Voyage','b1',100),(2,'Voyage','b2',80),(3,'Voyage','b3',55),(4,'Voyage','b4',70),(5,'Voyage','b5',45);
 /*!40000 ALTER TABLE `bus` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -467,7 +468,7 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
-INSERT INTO `django_session` VALUES ('4z18adf5kw8w1jz5ngp8j0um7c5dafhs','eyJlbWFpbCI6InNAZ21haWwuY29tIiwidXNlcklkIjoxMH0:1kbbT2:E9p9aU8Cjl86BdMqlp2x7N9nkPAcYYitOTx_Pai_Sj4','2020-11-08 04:15:52.567963');
+INSERT INTO `django_session` VALUES ('lstsb65sa8d2y29yqmc1tirwp5bufxzf','eyJlbWFpbCI6ImtAZ21haWwuY29tIiwidXNlcklkIjoxMX0:1kbpiU:t7Melvo0EhFbgh2NQgBaP4BsrCWVDUqLM-B64aMemDE','2020-11-08 19:28:46.105574');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -695,7 +696,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`userID`),
   UNIQUE KEY `userID_UNIQUE` (`userID`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -704,7 +705,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('sairam','Kola','Male','warangal','1234554321','s@gmail.com','$2b$12$yNRR3e2fubaRbuZzWK.Gx.DKtzZ1r3bvMYowckhB5whJlet35Lz3W',10,'2020-11-08',97501,'user');
+INSERT INTO `users` VALUES ('sairam','Kola','Male','warangal','1234554321','sairamkola001@gmail.com','$2b$12$CUZyDgprTNv2e9Duib00XOXPyjnAHwNHG7s1wM.8rB.7zYu32OBeW',12,'2020-11-05',100000,'user');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -717,4 +718,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-08  9:56:58
+-- Dump completed on 2020-11-09  0:53:10

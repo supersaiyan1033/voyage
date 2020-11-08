@@ -204,9 +204,7 @@ transform:scale(1.01);
 .results{
 
 }
-::placeholder{
-  color:white;
-}
+
 .flights:hover{
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
@@ -239,24 +237,50 @@ transform:scale(1.01);
  {%csrf_token%}
 <tr>
  <td>
- <input class="form-control" type="number" value="" name="Flight_No" placeholder="Flight no" required > 
+ <input class="form-control" type="text" value="" name="Bus_id" placeholder="Bus ID" required >
+ </td>
+ <td>
+ <input class="form-control" type="text" value="" name="Bus_no" placeholder="Bus No" required >
  </td>
 <td>
- <input class="form-control" type="date" value="" name="date_from" placeholder="arrival date" required >
+
+ <input class="form-control" type="text" value="" name="time_from" placeholder="arrival time" required onfocus="this.type='time'" onfocusout="this.type='text'" >
 </td>
 <td>
- <input class="form-control" type="date" value="" name="date_to" placeholder="departure date" required >
+ <input class="form-control" type="text" value="" name="time_to" placeholder="departure time" required onfocus="this.type='time'" onfocusout="this.type='text'" >
+
+</td>
+<td>
+
+<input list="destinations" name="starting_point" value="" placeholder="Starting point">
+  <datalist id="destinations">
+            {% for from_p in from_p_list %}
+             <option value="{{from_p}}">{{from_p}}</option>
+            {% endfor %}
+  </datalist>
+
+</td>
+<td>
+<input list="destinations" name="destination_point" value="" placeholder="Destination point">
+  <datalist id="destinations">
+            {% for to_p in to_p_list %}
+             <option value="{{to_p}}">{{to_p}}</option>
+            {% endfor %}
+  </datalist>
+</td>
+<td>
+<input class="form-control" type="number" value="" name="price" placeholder="price" required >
 </td>
 <td>
 <div class="loginbtn">
-  <input class="btn" type="submit" name="" value="Add Schedule" >
+  <input class="btn" type="submit" name="" value="Add Bus details" >
 </td>
 </tr>
 </form>
 </table>
 </div style="float:right;">
 <div>
- <h4 style="text-align:center">Details</h3>
+ <h4 style="text-align:center">Buses details</h3>
  <hr> 
 <table style="width=100vw;">
 <tr>
@@ -267,13 +291,12 @@ transform:scale(1.01);
 <h4>Apply filters:</h4>
 <hr>
 
-
-<label for="pricerange">search by arrival date</label><br>
-{% if date_filter %}
-  <input class="form-control" type="date" value="{{date_filter}}" name="date_from" placeholder="arrival date" required >
+{% if bus_no %}
+<label for="pricerange">search by Bus number</label><br>
+  <input class="form-control" type="text" value="{{bus_no}}" name="bus_no" placeholder="bus number" required >
 {% else %}
-<input class="form-control" type="date" value="" name="date_from" placeholder="arrival date" required >
-{% endif %}
+ <input class="form-control" type="text" value="" name="bus_no" placeholder="bus number" required >
+ {% endif %}
 
 
 <div class="loginbtn">
@@ -283,33 +306,37 @@ transform:scale(1.01);
 </div>
 </td>
 
-{% if schedules %}
+{% if buses %}
 <td style="text-align:right;padding-left:50px;vertical-align:text-top;align:left;">
 <div class="results" style="border-left-style:solid;float:right;margin:auto;border-color:grey; margin:4px, 4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; text-align:justify; ">
 
-{% for schedule in schedules %}
+{% for bus in buses %}
 <div class="flights" style="background-color:white;border-radius:7px;margin:20px;padding:6px;">
 <table>
 <tr>
 <td style="padding:5px 30px;width:6vw">
-<i class="fa fa-plane fa-3x" style="padding:20px;"></i>
+<i class="fa fa-bus fa-3x" style="padding:20px;"></i>
  {% comment %} <img src= "{% static flight.image %}" height="70">  {% endcomment %}
 </td>
-<td style="padding:5px 30px;width:6vw;">
-<h6>flightno:{{schedule.flight_no}}</h6>
+<td style="padding:5px 30px;width:10vw;">
+<h6>id:{{bus.id}}</h6>
 </td>
 <td style="padding:5px 30px;width:20vw;">
-<h6>{{schedule.date_from}} &nbsp - &nbsp{{schedule.date_to}}</h6>
+<h6>{{bus.from_time}} - {{bus.to_time}}</h6>
 </td>
 
- <td style="padding:5px 30px;width:10vw;">
-<h6>seats:{{schedule.seats}}</h6>
-</td>
-{% comment %} <td style="padding:5px 30px;width:5vw;">
-<div class="loginbtn">
+ <td style="padding:5px 30px;width:5vw;">
+<h6>bus no:{{bus.no}}</h6>
+</td> 
+<td style="padding:5px 30px;width:15vw;">
+<h6>{{bus.from_p}}-{{bus.to_p}}</h6>
+{% comment %} <div class="loginbtn">
              <input class="btn" type="submit" name="" value="Book" onclick="window.location.href='http://127.0.0.1:8000/login/{{userId}}/{{email}}/flights/book/?c1={{flight.flight_schedule}}&c2={{passengers}}'">
-        </div>
-</td> {% endcomment %}
+        </div> {% endcomment %}
+</td> 
+<td style="padding:5px 30px;width:10vw;">
+<h6>price:{{bus.price}}</h6>
+</td>
 </tr>
 </table>
 </div>
@@ -320,7 +347,7 @@ transform:scale(1.01);
 {% else %}
 <td valign="middle" style="padding-left:50px;align:center;" >
   <div class="results" style="border-left-style:solid;margin:auto;border-color:grey; margin:4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; ">
-  <h2 style="text-align:center;padding:20px;margin:10px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="margin-right:10px;color:red;"></i>No Schedules found</h2>
+  <h2 style="text-align:center;padding:20px;margin:10px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="margin-right:10px;color:red;"></i>No Buses found</h2>
   </div>
   </td>
 {% endif %}
@@ -335,7 +362,6 @@ transform:scale(1.01);
 
     {% endif %}
   <script>
-
 var d1 = new Date();
 var y1= d1.getFullYear();
 var m1 = d1.getMonth()+1;
