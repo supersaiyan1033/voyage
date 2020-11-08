@@ -13,7 +13,7 @@
       <br><br><br>
 <div class="bookingdetails" style="background_color:white;border-radius:10px;margin:auto;width:80vw;z-index:9999">
 
-<h1 style="text-align:center;">{{company}} &nbsp &nbsp {{from_p}} - {{to_p}} &nbsp &nbsp {{time_from}} - {{time_to}} &nbsp&nbsp <span><i class="fa fa-inr"></i>{{price_per_person}}</span></h1>
+<h1 style="text-align:center;">{{company}} &nbsp &nbsp {{from_p}} - {{to_p}} &nbsp &nbsp{{date_from}} {{time_from}} - {{date_to}}{{time_to}} &nbsp&nbsp <span><i class="fa fa-inr"></i>{{price_per_person}}</span></h1>
 {% comment %} <br>
 
 <h6>{{from_p}} - {{to_p}}</h6> {% endcomment %}
@@ -26,7 +26,7 @@
  {% endcomment %}
 <br>
 
-<h1 style="text-align:center;">status:<strong>booked</strong> &nbsp&nbsp  transactionId:<strong>{{transactionId}}</strong>  &nbsp&nbsp  booked at:<strong>{{date_of_booking}}</strong> &nbsp&nbsptotal passengers:<strong>{{no_of_passengers}}</strong>&nbsp&nbsp total price:<strong>{{total_price}}</strong></h1>
+<h1 style="text-align:center;">status:<strong>{{status}}</strong> &nbsp&nbsp  transactionId:<strong>{{transactionId}}</strong>  &nbsp&nbsp  booked at:<strong>{{date_of_booking}}</strong> &nbsp&nbsptotal passengers:<strong>{{no_of_passengers}}</strong>&nbsp&nbsp total price:<strong>{{total_price}}</strong></h1>
 <br>
 
 {% comment %} <h6>transactionId:<strong>{{transactionId}}

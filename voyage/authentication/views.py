@@ -9,6 +9,7 @@ import hashlib
 import sys
 import base64
 from datetime import datetime
+from datetime import date
 from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
@@ -922,7 +923,7 @@ def My_Bookings(request,userId,email):
     firstname = user[0][0]
     lastname = user[0][1]
     wallet = user[0][2]
-    cursor.execute("""SELECT Booking_ID,Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,status
+    cursor.execute("""SELECT Booking_ID,Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,status,date_from,date_to
     FROM bus_ticket JOIN users ON bus_ticket.User_ID=users.userID JOIN bus_schedule ON bus_ticket.BSID=bus_schedule.BSID JOIN bus_details ON bus_details.Bus_No=bus_schedule.Bus_No JOIN bus ON bus_details.Bus_ID=Bus.Bus_ID
     JOIN route ON route.RID=bus_details.RID WHERE userID=%s ORDER BY Date_of_booking DESC""",[userId])
     row = cursor.fetchall()
@@ -941,11 +942,13 @@ def My_Bookings(request,userId,email):
                 'from_p':row[n][7],
                 'to_p':row[n][8],
                 'status':row[n][9],
+                'date_from':row[n][10],
+                'date_to':row[n][11],
                 'image':'fa fa-bus fa-3x',
                 'type':'bus'
         })
 
-    cursor.execute("""SELECT Booking_ID,Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,status
+    cursor.execute("""SELECT Booking_ID,Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,status,date_from,date_to
     FROM flight_ticket JOIN users ON flight_ticket.User_ID=users.userID JOIN flight_schedule ON flight_ticket.FSID=flight_schedule.FSID JOIN flight_details ON flight_details.Flight_No=flight_schedule.Flight_No JOIN flight ON flight_details.Flight_ID=flight.Flight_ID
     JOIN route ON route.RID=flight_details.RID WHERE userID=%s ORDER BY Date_of_booking DESC""",[userId])
     row = cursor.fetchall()
@@ -965,6 +968,8 @@ def My_Bookings(request,userId,email):
                 'from_p':row[n][7],
                 'to_p':row[n][8],
                 'status':row[n][9],
+                'date_from':row[n][10],
+                'date_to':row[n][11],
                 'image':'fa fa-plane fa-3x',
                 'type':'flight'
             })
@@ -1040,7 +1045,7 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
                 return redirect("http://127.0.0.1:8000/login/{}/{}".format(userId,email))
             else:
                 messages.success(request, 'Ticket Cannot Be Cancelled!') 
-                return redirect("http://127.0.0.1:8000/login/{}/{}".format(userId,email))
+                return redirect("http://127.0.0.1:8000/login/{}/{}/mybookings/{}/{}/details".format(userId,email,type_of_transport,bookingId))
         else:
             cursor = connection.cursor()
             cursor.execute("""SELECT No_of_passengers,Price,bus_ticket.BSID,no_of_seats_vacant,date_from,Time_From FROM  bus_ticket JOIN bus_schedule ON bus_ticket.BSID=bus_schedule.BSID JOIN bus_details ON bus_schedule.Bus_No=bus_details.Bus_No WHERE Booking_ID=%s""", [bookingId])
@@ -1078,7 +1083,7 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
                 return redirect("http://127.0.0.1:8000/login/{}/{}".format(userId,email))
             else:
                 messages.success(request, 'Ticket Cannot Be Cancelled!')
-                return redirect("http://127.0.0.1:8000/login/{}/{}".format(userId,email))      
+                return redirect("http://127.0.0.1:8000/login/{}/{}/mybookings/{}/{}/details".format(userId,email,type_of_transport,bookingId))      
     else:    
         cursor = connection.cursor()
         cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
@@ -1088,14 +1093,15 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
         wallet = user[0][2]
         if type_of_transport =='flight':
         
-            cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,flight_passenger.Gender,Age,Seat_no,status
+            cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,flight_passenger.Gender,Age,Seat_no,status,date_from,date_to
             FROM flight_ticket JOIN users ON flight_ticket.User_ID=users.userID JOIN flight_schedule ON flight_ticket.FSID=flight_schedule.FSID JOIN flight_details ON flight_details.Flight_No=flight_schedule.Flight_No JOIN flight ON flight_details.Flight_ID=flight.Flight_ID
             JOIN route ON route.RID=flight_details.RID JOIN flight_passenger ON flight_passenger.Booking_ID=flight_ticket.Booking_ID JOIN flight_transaction ON flight_transaction.booking_ID = flight_ticket.Booking_ID WHERE userID=%s AND flight_ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
             row = cursor.fetchall()
             a = cursor.rowcount
             no_of_passengers = a
             passengers=[]
-            if row[0][13]=="booked":
+            today = date.today()
+            if row[0][13]=="booked" and row[0][15]>= today:
                 status_code=1
             else:
                 status_code=None
@@ -1126,6 +1132,8 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
         'email':email,
         'userId':userId,
         'status':row[0][13],
+        'date_from':row[0][14],
+        'date_to':row[0][15],
         'status_code':status_code,
         'type':'flight',
         'booking_Id':bookingId
@@ -1133,14 +1141,15 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
             return render(request,'authentication/booking_details.html',data)
         elif type_of_transport =='bus':
         
-            cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,bus_passenger.Gender,Age,Seat_no,status
+            cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,bus_passenger.Gender,Age,Seat_no,status,date_from,date_to
             FROM bus_ticket JOIN users ON bus_ticket.User_ID=users.userID JOIN bus_schedule ON bus_ticket.BSID=bus_schedule.BSID JOIN bus_details ON bus_details.Bus_No=bus_schedule.Bus_No JOIN bus ON bus_details.Bus_ID=bus.Bus_ID
             JOIN route ON route.RID=bus_details.RID JOIN bus_passenger ON bus_passenger.Booking_ID=bus_ticket.Booking_ID JOIN bus_transaction ON bus_transaction.booking_ID = bus_ticket.Booking_ID WHERE userID=%s AND bus_ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
             row = cursor.fetchall()
             a = cursor.rowcount
             no_of_passengers = a
+            today = date.today()
             passengers=[]
-            if row[0][13]=="booked":
+            if row[0][13]=="booked" and row[0][15]>=today:
                 status_code=1
             else:
                 status_code=None
@@ -1171,6 +1180,8 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
         'email':email,
         'userId':userId,
         'status':row[0][13],
+        'date_from':row[0][14],
+        'date_to':row[0][15],
         'status_code':status_code,
         'type':'bus',
         'booking_Id':bookingId
@@ -1191,7 +1202,7 @@ def View_ticket_as_PDF(request,userId,email,type_of_transport,bookingId):
        firstname = user[0][0]
        lastname = user[0][1]
        wallet = user[0][2]
-       cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,flight_passenger.Gender,Age,Seat_no,status
+       cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,flight_passenger.Gender,Age,Seat_no,status,date_from,date_to
        FROM flight_ticket JOIN users ON flight_ticket.User_ID=users.userID JOIN flight_schedule ON flight_ticket.FSID=flight_schedule.FSID JOIN flight_details ON flight_details.Flight_No=flight_schedule.Flight_No JOIN flight ON flight_details.Flight_ID=flight.Flight_ID
        JOIN route ON route.RID=flight_details.RID JOIN flight_passenger ON flight_passenger.Booking_ID=flight_ticket.Booking_ID JOIN flight_transaction ON flight_transaction.booking_ID = flight_ticket.Booking_ID WHERE userID=%s AND flight_ticket.Booking_ID=%s""",(int(userId),int(bookingId)))
        row = cursor.fetchall()
@@ -1226,7 +1237,9 @@ def View_ticket_as_PDF(request,userId,email,type_of_transport,bookingId):
         'userId':userId,
         'type':type_of_transport,
         'booking_id':bookingId,
-        'status':row[0][13]
+        'status':row[0][13],
+        'date_from':row[0][14],
+        'date_to':row[0][15]
         }
        context = data
        response = HttpResponse(content_type='application/pdf')
@@ -1247,7 +1260,7 @@ def View_ticket_as_PDF(request,userId,email,type_of_transport,bookingId):
      lastname = user[0][1]
      wallet = user[0][2]
      cursor = connection.cursor()
-     cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,bus_passenger.Gender,Age,Seat_no,status
+     cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,bus_passenger.Gender,Age,Seat_no,status,date_from,date_to
      FROM bus_ticket JOIN users ON bus_ticket.User_ID=users.userID JOIN bus_schedule ON bus_ticket.BSID=bus_schedule.BSID JOIN bus_details ON bus_details.Bus_No=bus_schedule.Bus_No JOIN bus ON bus_details.Bus_ID=bus.Bus_ID
      JOIN route ON route.RID=bus_details.RID JOIN bus_passenger ON bus_passenger.Booking_ID=bus_ticket.Booking_ID JOIN bus_transaction ON bus_transaction.booking_ID = bus_ticket.Booking_ID WHERE userID=%s AND bus_ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
      row = cursor.fetchall()
@@ -1282,7 +1295,9 @@ def View_ticket_as_PDF(request,userId,email,type_of_transport,bookingId):
         'userId':userId,
         'status':row[0][13],
         'type':type_of_transport,
-        'booking_id':bookingId
+        'booking_id':bookingId,
+        'date_from':row[0][14],
+        'date_to':row[0][15]
      }
      context = data
      response = HttpResponse(content_type='application/pdf')
