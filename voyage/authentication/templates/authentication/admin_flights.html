@@ -246,6 +246,57 @@ transform:scale(1.01);
       </div>
   </nav>
 </div>
+<br>
+<br>
+<br>
+<td style="text-align:left;padding-left:50px;vertical-align:text-top;align:left">
+    <div class="results" style="float:left;margin:auto; margin:4px, 4px; padding:4px;  height: 70vh;  text-align:justify; ">
+    <div class="flights"  id ="flights" style="background-color:white;border-radius:7px;margin:20px;padding:20px;">
+    <table>
+    <tr>
+    <td style="padding:5px 30px;width:6vw">
+    <i class="fa fa-plane fa-2x" style="padding:20px;color:black;"></i>
+    </td>
+    <td style="padding:5px 30px;width:20vw;">
+    <div class="loginbtn">
+                 <input class="btn" type="submit" name="" value="Flights" onclick="window.location.href='http://127.0.0.1:8000/login/admin/{{userId}}/{{email}}/flights/list'">
+            </div>
+    </td>
+    </tr>
+    </table>
+    </div>
+    <div class="flights" id="buses" style="background-color:white;border-radius:7px;margin:20px;padding:20px;">
+        <table>
+        <tr>
+        <td style="padding:5px 30px;width:6vw">
+        <i class="fa fa-plane fa-2x" style="padding:20px;"></i>
+        </td>
+        <td style="padding:5px 30px;width:20vw;">
+        <div class="loginbtn">
+                     <input class="btn" type="submit" name="" value="flight details" onclick="window.location.href='http://127.0.0.1:8000/login/admin/{{userId}}/{{email}}/flights/details'">
+                </div>
+        </td>
+        </tr>
+        </table>
+        </div>
+         <div class="flights" id="routes" style="background-color:white;border-radius:7px;margin:20px;padding:20px;">
+        <table>
+        <tr>
+        <td style="padding:5px 30px;width:6vw">
+        <i class="fa fa-plane fa-2x" style="padding:20px;"></i>
+        </td>
+        <td style="padding:5px 30px;width:20vw;">
+        <div class="loginbtn">
+                     <input class="btn" type="submit" name="" value="flight schedule" onclick="window.location.href='http://127.0.0.1:8000/login/admin/{{userId}}/{{email}}/flights/schedule'">
+                </div>
+        </td>
+        </tr>
+        </table>
+        </div>
+    </div>
+    </td>
+    </tr>
+    </table>
 {% if messages %}
         {% for message in messages %}
          {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}

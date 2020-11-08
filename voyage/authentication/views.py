@@ -1388,3 +1388,51 @@ def Admin_Buses(request,userId,email):
             return render(request, 'authentication/admin_buses.html',data)
     else:
         return render(request,'authentication/error.html')
+
+
+
+def Admin_Routes(request,userId,email):
+      if request.session.get('email')!=None:
+        place = request.GET.get('place')
+        cursor = connection.cursor()
+        if place==None:
+         cursor.execute("""SELECT * FROM route""")
+        else:
+         cursor.execute("""SELECT * FROM route WHERE from_p=%s OR to_p=%s""",(place,place))
+        row = cursor.fetchall()
+        routes=[]
+        a = cursor.rowcount
+        if a!=0:
+         for n in range(a):
+             routes.append({
+                 'no':n+1,
+                 'RID':row[n][0],
+                 'from_p':row[n][1],
+                 'to_p':row[n][2]
+             })
+
+         data = {
+            'routes':routes
+         }
+         
+        else:
+            data={
+                'routes':None
+            }
+        if request.method=='POST':
+            start = request.POST.get('from_p')
+            end = request.POST.get('to_p')
+            cursor.execute("""SELECT * FROM route WHERE from_p=%s AND to_p=%s""",(start,end))
+            if cursor.rowcount!=0:
+             messages.success(request,'route already exists!!')
+             return render(request,'authentication/admin_routes.html',data)
+            else:
+                rid = a+1
+                cursor.execute("""INSERT INTO route (RID,from_p,to_p) VALUES (%s,%s,%s)""",(rid,start,end))
+                messages.success(request,'route added successfully')
+                return render(request,'authentication/admin.html')
+        else:
+         return render(request,'authentication/admin_routes.html',data)
+      else:
+         return render(request,'authentication/error.html')
+         

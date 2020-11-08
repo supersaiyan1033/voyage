@@ -54,7 +54,8 @@ urlpatterns = [
 
     #admin views urls
     path('login/admin/<userId>/<email>/flights',views.Admin_Flights,name='admin-flights'),
-    path('login/admin/<userId>/<email>/buses',views.Admin_Buses,name='admin-buses')
+    path('login/admin/<userId>/<email>/buses',views.Admin_Buses,name='admin-buses'),
+    path('login/admin/<userId>/<email>/routes',views.Admin_Routes,name='admin-routes')
 
 
 
