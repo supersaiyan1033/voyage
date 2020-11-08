@@ -31,7 +31,7 @@ urlpatterns = [
     path('login/<userId>/<email>',views.user,name='user'),
     path('login/admin/<userId>/<email>',views.admin,name='admin'),
     path('login/<userId>/<email>/changepassword',views.ChangePassword, name="changepassword"),
-    path('login/admin/<userId>/<email>/changepassword',views.ChangePassword, name="admin-changepassword"),
+    path('login/admin/<userId>/<email>/changepassword',views.Admin_ChangePassword, name="admin-changepassword"),
 
     #flights views urls
     path('login/<userId>/<email>/flights',views.Flights,name='flights'),
@@ -54,8 +54,13 @@ urlpatterns = [
 
     #admin views urls
     path('login/admin/<userId>/<email>/flights',views.Admin_Flights,name='admin-flights'),
+    path('login/admin/<userId>/<email>/flights/list',views.Admin_Flights_List,name='admin-flights-list'),
+    path('login/admin/<userId>/<email>/flights/details',views.Admin_Flights_Details,name='admin-flights-details'),
+    path('login/admin/<userId>/<email>/flights/schedule',views.Admin_Flights_Schedule,name='admin-flights-schedule'),
+
     path('login/admin/<userId>/<email>/buses',views.Admin_Buses,name='admin-buses'),
     path('login/admin/<userId>/<email>/routes',views.Admin_Routes,name='admin-routes')
+
 
 
 

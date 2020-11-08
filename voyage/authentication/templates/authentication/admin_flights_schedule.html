@@ -220,7 +220,7 @@ transform:scale(1.01);
     </div>
     <div id="navbar">
     <ul>
-      <li><a href="http://127.0.0.1:8000/login/admin/{{userId}}/{{email}}" class="active"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
+      <li><a href="http://127.0.0.1:8000/login/aadmin/{{userId}}/{{email}}" class="active"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
       <li><a href="http://127.0.0.1:8000/login/admin/{{userId}}/{{email}}/flights"><i class="fa fa-plane" aria-hidden="true" style="padding-right:10px;"></i>Flights</a></li>
       {% comment %} <li><a href="#"><i class="fa fa-train" aria-hidden="true" style="padding-right:10px;" class="icon"></i>Trains</a></li> {% endcomment %}
       <li><a href="http://127.0.0.1:8000/login/admin/{{userId}}/{{email}}/buses"><i class="fa fa-bus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Buses</a></li>
@@ -254,24 +254,25 @@ transform:scale(1.01);
 <form method="POST">
  {%csrf_token%}
 <tr>
-{% comment %} <td>
- <input class="form-control" type="number" value="" name="RID" placeholder="route ID" required > {% endcomment %}
+ <td>
+ <input class="form-control" type="number" value="" name="Flight_No" placeholder="Flight no" required > 
+ </td>
 <td>
- <input class="form-control" type="text" value="" name="from_p" placeholder="start point" required >
+ <input class="form-control" type="date" value="" name="date_from" placeholder="arrival date" required >
 </td>
 <td>
- <input class="form-control" type="text" value="" name="to_p" placeholder="destination" required >
+ <input class="form-control" type="date" value="" name="date_to" placeholder="departure date" required >
 </td>
 <td>
 <div class="loginbtn">
-  <input class="btn" type="submit" name="" value="Add Route" >
+  <input class="btn" type="submit" name="" value="Add Schedule" >
 </td>
 </tr>
 </form>
 </table>
 </div style="float:right;">
 <div>
- <h4 style="text-align:center">Routes</h3>
+ <h4 style="text-align:center">Details</h3>
  <hr> 
 <table style="width=100vw;">
 <tr>
@@ -283,15 +284,12 @@ transform:scale(1.01);
 <hr>
 
 
-<label for="pricerange">Search by route:</label><br>
-{% if start %}
-  <input class="form-control" type="text" value="{{start}}" name="from_p" placeholder="starting point" required ><br>
-   <input class="form-control" type="text" value="{{end}}" name="to_p" placeholder="destination" required >
-   {% else %}
-   <input class="form-control" type="text" value="" name="from_p" placeholder="starting point" required ><br>
-   <input class="form-control" type="text" value="" name="to_p" placeholder="destination" required >
-{%endif%}
-
+<label for="pricerange">search by arrival date</label><br>
+{% if date_filter %}
+  <input class="form-control" type="date" value="{{date_filter}}" name="date_from" placeholder="arrival date" required >
+{% else %}
+<input class="form-control" type="date" value="" name="date_from" placeholder="arrival date" required >
+{% endif %}
 
 
 <div class="loginbtn">
@@ -301,28 +299,28 @@ transform:scale(1.01);
 </div>
 </td>
 
-{% if routes %}
+{% if schedules %}
 <td style="text-align:right;padding-left:50px;vertical-align:text-top;align:left;">
 <div class="results" style="border-left-style:solid;float:right;margin:auto;border-color:grey; margin:4px, 4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; text-align:justify; ">
 
-{% for route in routes %}
+{% for schedule in schedules %}
 <div class="flights" style="background-color:white;border-radius:7px;margin:20px;padding:6px;">
 <table>
 <tr>
 <td style="padding:5px 30px;width:6vw">
-<i class="fa fa-map-marker fa-3x" style="padding:20px;"></i>
+<i class="fa fa-plane fa-3x" style="padding:20px;"></i>
  {% comment %} <img src= "{% static flight.image %}" height="70">  {% endcomment %}
 </td>
 <td style="padding:5px 30px;width:6vw;">
-<h6>{{route.RID}}</h6>
+<h6>flightno:{{schedule.flight_no}}</h6>
 </td>
-<td style="padding:5px 30px;width:35vw;">
-<h6>{{route.from_p}} &nbsp - &nbsp{{route.to_p}}</h6>
+<td style="padding:5px 30px;width:20vw;">
+<h6>{{schedule.date_from}} &nbsp - &nbsp{{schedule.date_to}}</h6>
 </td>
 
-{% comment %} <td style="padding:5px 30px;width:20vw;">
-<h6>to:{{route.to_p}}</h6>
-</td> {% endcomment %}
+ <td style="padding:5px 30px;width:10vw;">
+<h6>seats:{{schedule.seats}}</h6>
+</td>
 {% comment %} <td style="padding:5px 30px;width:5vw;">
 <div class="loginbtn">
              <input class="btn" type="submit" name="" value="Book" onclick="window.location.href='http://127.0.0.1:8000/login/{{userId}}/{{email}}/flights/book/?c1={{flight.flight_schedule}}&c2={{passengers}}'">
@@ -338,7 +336,7 @@ transform:scale(1.01);
 {% else %}
 <td valign="middle" style="padding-left:50px;align:center;" >
   <div class="results" style="border-left-style:solid;margin:auto;border-color:grey; margin:4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; ">
-  <h2 style="text-align:center;padding:20px;margin:10px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="margin-right:10px;color:red;"></i>No Routes found</h2>
+  <h2 style="text-align:center;padding:20px;margin:10px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="margin-right:10px;color:red;"></i>No Schedules found</h2>
   </div>
   </td>
 {% endif %}
