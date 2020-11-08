@@ -492,7 +492,7 @@ def Flights_Book(request, userId, email):
          cursor = connection.cursor()
          now=datetime.now()
          date_time=now.strftime("%Y-%m-%d %H:%M:%S")
-         cursor.execute("""INSERT INTO flight_ticket(User_ID,Date_of_booking,FSID,No_of_passengers,status) VALUES(%s,%s,%s,%s,%s)""",(userId,date_time,flight_schedule,passengers,'booked'))
+         cursor.execute("""INSERT INTO flight_ticket(User_ID,Date_of_booking,FSID,No_of_passengers,status,amount) VALUES(%s,%s,%s,%s,%s,%s)""",(userId,date_time,flight_schedule,passengers,'booked',total_fare))
          cursor = connection.cursor()
          cursor.execute("""SELECT Booking_ID FROM flight_ticket WHERE User_ID=%s and Date_of_booking=%s""", (userId,date_time))
          row = cursor.fetchall()
@@ -830,7 +830,7 @@ def Buses_Book(request, userId, email):
          cursor = connection.cursor()
          now=datetime.now()
          date_time=now.strftime("%Y-%m-%d %H:%M:%S")
-         cursor.execute("""INSERT INTO bus_ticket(User_ID,Date_of_booking,BSID,No_of_passengers,status) VALUES(%s,%s,%s,%s,%s)""",(userId,date_time,bus_schedule,passengers,'booked'))
+         cursor.execute("""INSERT INTO bus_ticket(User_ID,Date_of_booking,BSID,No_of_passengers,status,amount) VALUES(%s,%s,%s,%s,%s,%s)""",(userId,date_time,bus_schedule,passengers,'booked',total_fare))
          cursor = connection.cursor()
          cursor.execute("""SELECT Booking_ID FROM bus_ticket WHERE User_ID=%s and Date_of_booking=%s""", (userId,date_time))
          row = cursor.fetchall()
@@ -1100,8 +1100,14 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
             a = cursor.rowcount
             no_of_passengers = a
             passengers=[]
-            today = date.today()
-            if row[0][13]=="booked" and row[0][15]>= today:
+            date_from=row[0][14]
+            date_from=date_from.strftime("%Y-%m-%d")
+            time_from=row[0][4]
+            time_from=time_from.strftime("%H:%M")
+            date_time=date_from+" "+time_from
+            now = datetime.now()
+            Date_Time=now.strftime("%Y-%m-%d %H:%M")
+            if row[0][13]=="booked" and Date_Time<date_time:
                 status_code=1
             else:
                 status_code=None
@@ -1147,9 +1153,15 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
             row = cursor.fetchall()
             a = cursor.rowcount
             no_of_passengers = a
-            today = date.today()
             passengers=[]
-            if row[0][13]=="booked" and row[0][15]>=today:
+            date_from=row[0][14]
+            date_from=date_from.strftime("%Y-%m-%d")
+            time_from=row[0][4]
+            time_from=time_from.strftime("%H:%M")
+            date_time=date_from+" "+time_from
+            now = datetime.now()
+            Date_Time=now.strftime("%Y-%m-%d %H:%M")
+            if row[0][13]=="booked" and Date_Time<date_time:
                 status_code=1
             else:
                 status_code=None
