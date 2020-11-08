@@ -29,7 +29,9 @@ urlpatterns = [
     path('signup/',views.Sign_Up,name='auth-signup'),
     path('login/<userId>/<email>/profile',views.Profile,name='profile'),
     path('login/<userId>/<email>',views.user,name='user'),
+    path('login/admin/<userId>/<email>',views.admin,name='admin'),
     path('login/<userId>/<email>/changepassword',views.ChangePassword, name="changepassword"),
+    path('login/admin/<userId>/<email>/changepassword',views.ChangePassword, name="admin-changepassword"),
 
     #flights views urls
     path('login/<userId>/<email>/flights',views.Flights,name='flights'),
@@ -50,7 +52,9 @@ urlpatterns = [
     path('login/<userId>/<email>/mybookings/<type_of_transport>/<bookingId>/details',views.Booking_Details,name="booking_details"),
     path('login/<userId>/<email>/mybookings/<type_of_transport>/<bookingId>/details/pdf',views.View_ticket_as_PDF,name="booking_details_as_PDF"),
 
-
+    #admin views urls
+    path('login/admin/<userId>/<email>/flights',views.Admin_Flights,name='admin-flights'),
+    path('login/admin/<userId>/<email>/buses',views.Admin_Buses,name='admin-buses')
 
 
 

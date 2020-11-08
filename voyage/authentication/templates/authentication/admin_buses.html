@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Piedra&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css">
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
+  <title>User homepage</title>
+  <style>
+    * {
+  margin:0px;
+  padding:0px;
+  box-sizing:border-box;
+  {% comment %} font-family:'ABeeZee', sans-serif; {% endcomment %}
+}
+body{
+    background:url(https://images.unsplash.com/photo-1452421822248-d4c2b47f0c81?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=967&q=80);
+    background-size:cover;
+    height:100%;
+}
+nav{
+width:100%;
+margin:auto;
+position:fixed;
+height:70px;
+background-color:rgba(0,0,0,0);
+z-index:9999;
+}
+nav .logo{
+    float:left;
+    color:#fff;
+    padding-top:18px;
+    padding-bottom:18px;
+    padding-left:20px;
+    padding-right:20px;
+    font-family:'Piedra', cursive;
+    font-weight:bold;
+}
+#navbar ul{
+    text-align:right;
+    margin:0px;
+    padding:0px;
+    display:flex;
+    float:left;
+}
+#navbar ul li{
+    list-style:none;
+    display:inline-block;
+    padding:15px;
+}
+#navbar ul li a{
+    float:left;
+    text-decoration:none;
+    display:inline-block;
+    text-transform:uppercase;
+    color:#fff;
+    font-size:15px;
+    font-family:'ABeeZee', serif;
+    padding:9px 10px;
+    margin-right:8px;
+    position:relative;
+}
+#navbar ul li a:after{
+  background: none repeat scroll 0 0 transparent;
+  content:"";
+  position:absolute;
+  display:block;
+  background:red;
+  bottom:0;
+  height: 2px;
+  left: 50%;
+  transition: width 0.3s ease 0s, left 0.3s ease 0s;
+  width: 0;
+}
+#navbar ul li a:hover:after{
+    color:red;
+    width:100%;
+    left:0;
+    .icon{
+  color:red;
+}
+
+}
+#navbar ul li a.active:after{
+color:red;
+background:red;
+width:100%;
+left:0;
+}
+
+#sidebar {
+  position:absolute;
+  top:0px;
+  right:-220px;
+  width:220px;
+  height:100%;
+  background:rgba(0,0,0,0);
+  transition:all 300ms linear;
+}
+#sidebar.active {
+  right:0px;
+  height:100vh;
+   {% comment %} box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19); {% endcomment %}
+}
+#sidebar .toggle-btn {
+  position:absolute;
+  right:240px;
+  top:10px;
+}
+#sidebar .toggle-btn span {
+  display:block;
+  width:30px;
+  height:5px;
+  background:white;
+  margin:5px 0px;
+  cursor:pointer;
+}
+#sidebar div.list div.item  {
+  padding:15px 10px;
+  font-weight: bold;
+  border-bottom:1px solid #fff;
+  color:white;
+  text-transform:uppercase;
+  font-size:14px;
+}
+#sidebar div.list div.item:hover {
+transform:scale(1.01);
+}
+#part1{
+
+  position:absolute;
+  top:15%;
+  width:50vw;
+  padding:20px;
+  height:20vh;
+  margin:auto;
+  justify-content:center;
+}
+.login-box{
+    width: 400px;
+    border-radius:10px;
+    color:red;
+    background-color:rgba(255,255,255,1);
+    padding:0px 20px;
+    position: absolute;
+    top: 60%;
+    left:20%;
+    transform: translate(-50%,-50%);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.login-box h1{
+
+    font-size:40px;
+    border-bottom: 4px solid;
+    border-bottom-color:black;
+    margin-bottom:50px ;
+    padding:13px 0;
+    text-align:center;
+}
+.textbox{
+    width:100%;
+    overflow:hidden;
+    font-size: 20px ;
+    padding:8px 0;
+    margin:8px 0;
+    border-bottom: 1px solid;
+    border-bottom-color: black ;
+}
+.textbox i{
+    width:26px;
+   float:left;
+    color:red;
+    text-align: center;
+}
+.textbox input{
+    border:none;
+    outline:none;
+    background: white;
+    font-size: 18px;
+    color:black;
+    width:310px;
+    float:left;
+    margin: 0 10px;
+}
+.loginbtn{
+    text-align:center;
+    margin:0px;
+}
+.btn{
+    text-align:center;
+    color:white;
+    width:60%;
+    background: #e60000;
+    border:2px solid;
+    border-color: black;
+    padding:5px;
+    font-size: 18px;
+    cursor: pointer;
+    margin:12px 0px;
+    border-radius:7px;
+}
+.btn:hover{
+  transform:scale(1.1);
+  background:#ff1a1a
+}
+.signup{
+    color:black;
+    padding:20px;
+    font-size: 17px;
+    font-weight: bold;
+    text-align:center;
+}
+.signup:hover{
+    color:#ff1a1a;
+}
+#select{
+    color:black;
+    border:none;
+    outline:none;
+    background: white;
+    font-size: 19px;
+    width:86%;
+    float:left;
+    margin: 0 10px;
+
+}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="logo">
+      <h3><i class="fa fa-suitcase" aria-hidden="true" style="padding:5px 10px;color:red;"></i>PACK YOUR BAGS</h3>
+    </div>
+    <div id="navbar">
+    <ul>
+      <li><a href="http://127.0.0.1:8000/login/admin/{{userId}}/{{email}}" class="active"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
+      </ul>
+      </div>
+  </nav>
+</div>
+{% if messages %}
+        {% for message in messages %}
+         {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
+  <script>
+var d1 = new Date();
+var y1= d1.getFullYear();
+var m1 = d1.getMonth()+1;
+if(m1<10)
+    m1="0"+m1;
+var dt1 = d1.getDate();
+if(dt1<10)
+dt1 = "0"+dt1;
+var d2 = y1+"-"+m1+"-"+dt1;
+document.getElementById('d1').value=d2;
+</script>
+</body>
+</html>

@@ -49,6 +49,7 @@ def Log_In(request):
             'password': row[0][6],
             'userId': row[0][7],
             'DOB': row[0][8],
+            'role':row[0][10]
         }
 
         if cursor.rowcount == 1:
@@ -58,8 +59,12 @@ def Log_In(request):
                 messages.success(request, 'Login successful!!')
                 request.session['email'] = email
                 request.session['userId'] = row[0][7]
-                url = "{}/{}".format(data["userId"], data["email"])
-                return redirect(url)
+                if data["role"]=="admin":
+                    url = "admin/{}/{}".format(data["userId"],data["email"])
+                    return redirect(url)
+                else:
+                    url="{}/{}".format(data["userId"],data["email"])
+                    return redirect(url)
             else:
                 messages.success(
                     request, 'incorrect password please try again!!')
@@ -124,6 +129,29 @@ def user(request, userId, email):
  else:
      return render(request,'authentication/error.html')
 
+def admin(request,userId,email):
+    if request.session.get('email')!=None:
+        cursor = connection.cursor()
+        cursor.execute("""SELECT * FROM users WHERE userID= %s""", [userId])
+        row = cursor.fetchall()
+        dateOfBirth = row[0][8].strftime("%Y-%m-%d")
+        data={
+        'firstname': row[0][0],
+        'lastname': row[0][1],
+        'gender': row[0][2],
+        'address': row[0][3],
+        'mobileno': row[0][4],
+        'email': row[0][5],
+        'password': row[0][6],
+        'userId': row[0][7],
+        'DOB': dateOfBirth,
+        'wallet': row[0][9]     
+        }
+        return render(request, 'authentication/admin.html', data)
+    else:
+        return render(request,'authentication/error.html')
+
+
 
 def Profile(request, userId, email):
  if request.session.get('email')!=None:
@@ -185,7 +213,7 @@ def ChangePassword(request, userId, email):
                 cursor.execute(
                     """UPDATE users SET password=%s WHERE email=%s""", (dbPassword, email))
                 messages.success(request, 'Password changed successfully!')
-                return redirect('http://127.0.0.1:8000/login/{}/{}'.format(userId, email))
+                return redirect('http://127.0.0.1:8000/login/admin/{}/{}'.format(userId, email))
             else:
                 messages.success(
                     request, 'new password and confirm password must be the same!!')
@@ -1327,3 +1355,36 @@ def View_ticket_as_PDF(request,userId,email,type_of_transport,bookingId):
  else:
      return render(request,'authentication/error.html')
     
+def Admin_Flights(request,userId,email):
+    if request.session.get('email')!=None:
+        if request.method=="POST":
+            data={
+                'email':email,
+                'userId':userId
+            }
+            return render(request, 'authentication/admin_flights.html',data) 
+        else:
+            data={
+                'email':email,
+                'userId':userId
+            }
+            return render(request, 'authentication/admin_flights.html',data)
+
+    else:
+        return render(request,'authentication/error.html')
+def Admin_Buses(request,userId,email):
+    if request.session.get('email')!=None:
+        if request.method=="POST":
+            data={
+                'email':email,
+                'userId':userId
+            }
+            return render(request, 'authentication/admin_buses.html',data)
+        else:
+            data={
+                'email':email,
+                'userId':userId
+            }
+            return render(request, 'authentication/admin_buses.html',data)
+    else:
+        return render(request,'authentication/error.html')
