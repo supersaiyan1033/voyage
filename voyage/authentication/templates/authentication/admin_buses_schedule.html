@@ -242,10 +242,10 @@ transform:scale(1.01);
  <input class="form-control" type="number" value="" name="Bus_No" placeholder="Bus no" required > 
  </td>
 <td>
- <input class="form-control" type="date" value="" name="date_from" placeholder="arrival date" required >
+ <input class="form-control" type="text" value="" name="date_from" placeholder="arrival date" required onfocus="this.type='date'" onfocusout="this.type='text'" >
 </td>
 <td>
- <input class="form-control" type="date" value="" name="date_to" placeholder="departure date" required >
+ <input class="form-control" type="text" value="" name="date_to" placeholder="departure date" required  onfocus="this.type='date'" onfocusout="this.type='text'">
 </td>
 <td>
 <div class="loginbtn">
@@ -272,7 +272,7 @@ transform:scale(1.01);
 {% if date_filter %}
   <input class="form-control" type="date" value="{{date_filter}}" name="date_from" placeholder="arrival date" required >
 {% else %}
-<input class="form-control" type="date" value="" name="date_from" placeholder="arrival date" required >
+<input class="form-control" type="text" value="" name="date_from" placeholder="arrival date" required onfocus="this.type='date'" onfocusout="this.type='text'" >
 {% endif %}
 
 

@@ -39,7 +39,9 @@ def Log_In(request):
         cursor = connection.cursor()
         cursor.execute("""SELECT * FROM users WHERE email= %s""", [email])
         row = cursor.fetchall()
-        data = {
+        if cursor.rowcount == 1:
+            dbpassword = row[0][6]
+            data = {
             'firstname': row[0][0],
             'lastname': row[0][1],
             'gender': row[0][2],
@@ -50,11 +52,7 @@ def Log_In(request):
             'userId': row[0][7],
             'DOB': row[0][8],
             'role':row[0][10]
-        }
-
-        if cursor.rowcount == 1:
-            dbpassword = row[0][6]
-            print(dbpassword)
+             }
             if bcrypt.checkpw(password.encode('utf8'), dbpassword.encode('utf8')):
                 messages.success(request, 'Login successful!!')
                 request.session['email'] = email
@@ -1437,9 +1435,9 @@ def Admin_Flights_List(request,userId,email):
             Flight_id = request.POST.get('Flight_id')
             Flight_name = request.POST.get('Flight_name')
             Flight_capacity =request.POST.get('seat_capacity')
-            cursor.execute("""SELECT * FROM flight WHERE Flight_ID=%s AND Flight_name=%s AND seat_Capacity=%s""",(int(Flight_id),Flight_name,int(Flight_capacity)))
+            cursor.execute("""SELECT * FROM flight WHERE Flight_ID=%s""",[int(Flight_id)])
             if cursor.rowcount!=0:
-             messages.success(request,'flight already exists!!')
+             messages.success(request,'flight with the entered flight id already exists!!')
              return render(request,'authentication/admin_flights_list.html',data)
             else:
                 
@@ -1516,15 +1514,20 @@ def Admin_Flights_Details(request,userId,email):
             cursor.execute("""SELECT RID FROM route WHERE from_p =%s AND to_p =%s""",(starting_point,destination_point))
             row = cursor.fetchall()
             if cursor.rowcount==0:
-                messages.success(request,'the entered route does not exist')
-                return render(request,'authentication/admin_flights_details.html')
+                messages.success(request,'the entered route does not exist please add route first!!')
+                return redirect('http://127.0.0.1:8000/login/admin/{}/{}/routes'.format(userId,email))
             else:
               rid = row[0][0]
-              cursor.execute("""SELECT * FROM flight_details WHERE Flight_ID=%s AND Time_From=%s AND Time_To=%s AND Price=%s AND Flight_No=%s AND RID=%s""",(int(Flight_id),time_from,time_to,int(price),int(flight_no),int(row[0][0])))
-              if cursor.rowcount!=0:
-               messages.success(request,'flight details already exists!!')
-               return render(request,'authentication/admin_flights_details.html',data)
+              cursor.execute("""SELECT * FROM flight WHERE Flight_ID=%s""",[Flight_id])
+              if cursor.rowcount==0:
+                  messages.success(request,'flight does not exist please add the flight!!')
+                  return redirect('http://127.0.0.1:8000/login/admin/{}/{}/flights/list'.format(userId,email))
               else:
+               cursor.execute("""SELECT * FROM flight_details WHERE Flight_ID=%s AND Time_From=%s AND Time_To=%s AND Price=%s AND Flight_No=%s AND RID=%s""",(int(Flight_id),time_from,time_to,int(price),int(flight_no),int(row[0][0])))
+               if cursor.rowcount!=0:
+                messages.success(request,'flight details already exists!!')
+                return render(request,'authentication/admin_flights_details.html',data)
+               else:
                 
                 cursor.execute("""INSERT INTO flight_details (Flight_ID,Time_From,Time_To,Price,Flight_No,RID) VALUES (%s,%s,%s,%s,%s,%s)""",(int(Flight_id),time_from,time_to,int(price),int(flight_no),rid))
                 messages.success(request,'flight details added successfully')
@@ -1578,8 +1581,8 @@ def Admin_Flights_Schedule(request,userId,email):
          date_to   = request.POST.get('date_to')
          cursor.execute("""SELECT Time_From,seat_Capacity FROM flight_details JOIN flight_schedule ON flight_details.Flight_No = flight_schedule.Flight_No JOIN flight ON flight.Flight_ID = flight_details.Flight_ID WHERE flight_details.Flight_No =%s""",[flight_no])
          if cursor.rowcount==0:
-             messages.success(request,'flight with the entered flight number does not exist')
-             return redirect('http://127.0.0.1:8000/login/admin/{}/{}/flights/schedule'.format(userId,email))
+             messages.success(request,'flight with the entered flight number does not exist please add flight details first!! ')
+             return redirect('http://127.0.0.1:8000/login/admin/{}/{}/flights/details'.format(userId,email))
          else:
              now = datetime.now()
              now = now.strftime("%Y-%m-%d %H:%M:%S")
@@ -1591,10 +1594,7 @@ def Admin_Flights_Schedule(request,userId,email):
              else:
                row = cursor.fetchall()
                seats=row[0][1]
-               cursor.execute("""SELECT * FROM flight_schedule""")
-               count = cursor.rowcount
-               count = count +1
-               cursor.execute("""INSERT INTO flight_schedule (Flight_No,date_from,date_to,no_of_seats_vacant,Total_seats,FSID) VALUES(%s,%s,%s,%s,%s,%s)""",(flight_no,date_from,date_to,int(seats),int(seats),int(count)))
+               cursor.execute("""INSERT INTO flight_schedule (Flight_No,date_from,date_to,no_of_seats_vacant,Total_seats) VALUES(%s,%s,%s,%s,%s)""",(flight_no,date_from,date_to,int(seats),int(seats)))
                messages.success(request,'flight schedule added successfully')
                return redirect('http://127.0.0.1:8000/login/admin/{}/{}/flights/schedule'.format(userId,email))
      else:
@@ -1661,8 +1661,7 @@ def Admin_Routes(request,userId,email):
              messages.success(request,'route already exists!!')
              return render(request,'authentication/admin_routes.html',data)
             else:
-                rid = a+1
-                cursor.execute("""INSERT INTO route (RID,from_p,to_p) VALUES (%s,%s,%s)""",(rid,start,end))
+                cursor.execute("""INSERT INTO route (from_p,to_p) VALUES (%s,%s)""",(start,end))
                 messages.success(request,'route added successfully')
                 return redirect('http://127.0.0.1:8000/login/admin/{}/{}'.format(userId,email))
         else:
@@ -1708,7 +1707,7 @@ def Admin_Buses_List(request,userId,email):
             Bus_id = request.POST.get('Bus_id')
             Bus_name = request.POST.get('Bus_name')
             Bus_capacity =request.POST.get('seat_capacity')
-            cursor.execute("""SELECT * FROM bus WHERE Bus_ID=%s AND Bus_name=%s AND seat_Capacity=%s""",(int(Bus_id),Bus_name,int(Bus_capacity)))
+            cursor.execute("""SELECT * FROM bus WHERE Bus_ID=%s""",[int(Bus_id)])
             if cursor.rowcount!=0:
              messages.success(request,'bus already exists!!')
              return render(request,'authentication/admin_buses_list.html',data)
@@ -1787,15 +1786,20 @@ def Admin_Buses_Details(request,userId,email):
             cursor.execute("""SELECT RID FROM route WHERE from_p =%s AND to_p =%s""",(starting_point,destination_point))
             row = cursor.fetchall()
             if cursor.rowcount==0:
-                messages.success(request,'the entered route does not exist')
-                return render(request,'authentication/admin_buses_details.html')
+                messages.success(request,'the entered route does not exist, please add route first!!')
+                return redirect('http://127.0.0.1:8000/login/admin/{}/{}/routes'.format(userId,email))
             else:
               rid = row[0][0]
-              cursor.execute("""SELECT * FROM bus_details WHERE Bus_ID=%s AND Time_From=%s AND Time_To=%s AND Price=%s AND Bus_No=%s AND RID=%s""",(int(Bus_id),time_from,time_to,int(price),int(bus_no),int(row[0][0])))
-              if cursor.rowcount!=0:
-               messages.success(request,'bus details already exists!!')
-               return render(request,'authentication/admin_buses_details.html',data)
+              cursor.execute("""SELECT * FROM bus WHERE Bus_ID=%s""",[Bus_id])
+              if cursor.rowcount==0:
+                  messages.success(request,'bus does not exist witht he entered bus id please add bus!!')
+                  return redirect('http://127.0.0.1:8000/login/admin/{}/{}/buses/list'.format(userId,email))
               else:
+               cursor.execute("""SELECT * FROM bus_details WHERE Bus_ID=%s AND Time_From=%s AND Time_To=%s AND Price=%s AND Bus_No=%s AND RID=%s""",(int(Bus_id),time_from,time_to,int(price),int(bus_no),int(row[0][0])))
+               if cursor.rowcount!=0:
+                messages.success(request,'bus details already exists!!')
+                return render(request,'authentication/admin_buses_details.html',data)
+               else:
                 
                 cursor.execute("""INSERT INTO bus_details (Bus_ID,Time_From,Time_To,Price,Bus_No,RID) VALUES (%s,%s,%s,%s,%s,%s)""",(int(Bus_id),time_from,time_to,int(price),int(bus_no),rid))
                 messages.success(request,'bus details added successfully')
@@ -1847,8 +1851,8 @@ def Admin_Buses_Schedule(request,userId,email):
          date_to   = request.POST.get('date_to')
          cursor.execute("""SELECT Time_From,seat_Capacity FROM bus_details JOIN bus_schedule ON bus_details.Bus_No = bus_schedule.Bus_No JOIN bus ON bus.Bus_ID = bus_details.Bus_ID WHERE bus_details.Bus_No =%s""",[bus_no])
          if cursor.rowcount==0:
-             messages.success(request,'bus with the entered bus number does not exist')
-             return redirect('http://127.0.0.1:8000/login/admin/{}/{}/buses/schedule'.format(userId,email))
+             messages.success(request,'bus with the entered bus number does not exist, please add the bus no in the bus details first!!')
+             return redirect('http://127.0.0.1:8000/login/admin/{}/{}/buses/details'.format(userId,email))
          else:
              now = datetime.now()
              now = now.strftime("%Y-%m-%d %H:%M:%S")
@@ -1863,9 +1867,9 @@ def Admin_Buses_Schedule(request,userId,email):
                cursor.execute("""SELECT * FROM bus_schedule""")
                count = cursor.rowcount
                count = count +1
-               cursor.execute("""INSERT INTO bus_schedule (Bus_No,date_from,date_to,no_of_seats_vacant,Total_seats,BSID) VALUES(%s,%s,%s,%s,%s,%s)""",(bus_no,date_from,date_to,int(seats),int(seats),int(count)))
+               cursor.execute("""INSERT INTO bus_schedule (Bus_No,date_from,date_to,no_of_seats_vacant,Total_seats) VALUES(%s,%s,%s,%s,%s)""",(bus_no,date_from,date_to,int(seats),int(seats),))
                messages.success(request,'bus schedule added successfully')
-               return redirect('http://127.0.0.1:8000/login/admin/{}/{}/buses/schedule'.format(userId,email))
+               return redirect('http://127.0.0.1:8000/login/admin/{}/{}'.format(userId,email))
      else:
          return render(request,'authentication/admin_buses_schedule.html',data)
  else:
