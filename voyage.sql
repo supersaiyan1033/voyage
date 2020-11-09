@@ -226,9 +226,9 @@ CREATE TABLE `bus_details` (
   `RID` int NOT NULL,
   PRIMARY KEY (`Bus_No`),
   KEY `Bus_ID_idx` (`Bus_ID`),
-  KEY `route_idx` (`RID`),
+  KEY `RID_idx` (`RID`),
   CONSTRAINT `Bus_ID` FOREIGN KEY (`Bus_ID`) REFERENCES `bus` (`Bus_ID`),
-  CONSTRAINT `route` FOREIGN KEY (`RID`) REFERENCES `route` (`RID`)
+  CONSTRAINT `RID` FOREIGN KEY (`RID`) REFERENCES `route` (`RID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -284,11 +284,11 @@ CREATE TABLE `bus_schedule` (
   `date_to` date NOT NULL,
   `no_of_seats_vacant` int DEFAULT NULL,
   `Total_seats` int NOT NULL,
-  `BSID` int NOT NULL,
+  `BSID` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`BSID`),
   KEY `Buses_No_idx` (`Bus_No`),
   CONSTRAINT `Buses_No` FOREIGN KEY (`Bus_No`) REFERENCES `bus_details` (`Bus_No`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -314,12 +314,12 @@ CREATE TABLE `bus_ticket` (
   `Date_of_booking` datetime NOT NULL,
   `BSID` int NOT NULL,
   `No_of_passengers` int NOT NULL,
-  `status` varchar(45) DEFAULT 'Pending',
+  `status` varchar(45) NOT NULL DEFAULT 'Pending',
   `amount` int NOT NULL,
   PRIMARY KEY (`Booking_ID`),
   KEY `user_b_idx` (`User_ID`),
-  KEY `bs_b_idx` (`BSID`),
-  CONSTRAINT `bs_b` FOREIGN KEY (`BSID`) REFERENCES `bus_schedule` (`BSID`),
+  KEY `Bs_b_idx` (`BSID`),
+  CONSTRAINT `Bs_b` FOREIGN KEY (`BSID`) REFERENCES `bus_schedule` (`BSID`),
   CONSTRAINT `user_b` FOREIGN KEY (`User_ID`) REFERENCES `users` (`userID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -342,7 +342,7 @@ DROP TABLE IF EXISTS `bus_transaction`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `bus_transaction` (
   `Transaction_ID` int NOT NULL AUTO_INCREMENT,
-  `booking_ID` int DEFAULT NULL,
+  `booking_ID` int NOT NULL,
   `description` varchar(45) NOT NULL,
   `amount` int NOT NULL,
   PRIMARY KEY (`Transaction_ID`),
@@ -514,9 +514,9 @@ CREATE TABLE `flight_details` (
   `RID` int NOT NULL,
   PRIMARY KEY (`Flight_No`),
   KEY `Flight_ID_idx` (`Flight_ID`),
-  KEY `RID_idx` (`RID`),
+  KEY `route_idx` (`RID`),
   CONSTRAINT `Flight_No` FOREIGN KEY (`Flight_ID`) REFERENCES `flight` (`Flight_ID`),
-  CONSTRAINT `RID` FOREIGN KEY (`RID`) REFERENCES `route` (`RID`)
+  CONSTRAINT `route` FOREIGN KEY (`RID`) REFERENCES `route` (`RID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -572,12 +572,12 @@ CREATE TABLE `flight_schedule` (
   `date_to` date NOT NULL,
   `no_of_seats_vacant` int DEFAULT NULL,
   `Total_seats` int NOT NULL DEFAULT '40',
-  `FSID` int NOT NULL,
+  `FSID` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`FSID`),
   KEY `ID_idx` (`no_of_seats_vacant`),
   KEY `KID_idx` (`Flight_No`),
   CONSTRAINT `F_No` FOREIGN KEY (`Flight_No`) REFERENCES `flight_details` (`Flight_No`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -599,15 +599,15 @@ DROP TABLE IF EXISTS `flight_ticket`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `flight_ticket` (
   `Booking_ID` int NOT NULL AUTO_INCREMENT,
-  `User_ID` int DEFAULT NULL,
-  `Date_of_booking` datetime DEFAULT NULL,
-  `FSID` int DEFAULT NULL,
-  `No_of_passengers` int DEFAULT NULL,
-  `status` varchar(45) DEFAULT 'Pending',
+  `User_ID` int NOT NULL,
+  `Date_of_booking` datetime NOT NULL,
+  `FSID` int NOT NULL,
+  `No_of_passengers` int NOT NULL,
+  `status` varchar(45) NOT NULL DEFAULT 'Pending',
   `amount` int NOT NULL,
   PRIMARY KEY (`Booking_ID`),
   KEY `User_ID_idx` (`User_ID`),
-  KEY `Date_PK_idx` (`FSID`),
+  KEY `FSID_idx` (`FSID`),
   CONSTRAINT `FSID` FOREIGN KEY (`FSID`) REFERENCES `flight_schedule` (`FSID`),
   CONSTRAINT `User_ID` FOREIGN KEY (`User_ID`) REFERENCES `users` (`userID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -631,7 +631,7 @@ DROP TABLE IF EXISTS `flight_transaction`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `flight_transaction` (
   `Transaction_ID` int NOT NULL AUTO_INCREMENT,
-  `booking_ID` int DEFAULT NULL,
+  `booking_ID` int NOT NULL,
   `description` varchar(45) NOT NULL,
   `amount` int NOT NULL,
   PRIMARY KEY (`Transaction_ID`),
@@ -657,11 +657,11 @@ DROP TABLE IF EXISTS `route`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `route` (
-  `RID` int NOT NULL,
+  `RID` int NOT NULL AUTO_INCREMENT,
   `from_p` varchar(45) DEFAULT NULL,
   `to_p` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`RID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -718,4 +718,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-09  0:53:10
+-- Dump completed on 2020-11-09  9:11:25
