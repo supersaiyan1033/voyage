@@ -94,7 +94,6 @@ body{
 }
 .login {
     color:black;
-    padding:10px;
     text-align:center;
     font-size: 17px;
     font-weight: bold;
@@ -214,7 +213,9 @@ border-radius:7px;
         <div class="loginbtn">
         <input class="btn" type="submit" name="" value="Sign up">
         </div>
+         
         <a class='login' href='{% url "auth-login" %}'><p>Already Have An Account?Login</p> </a>
+         <a class='login' href="{% url 'auth-verify' %}"><p>email verification</p> </a>
     </div>
     </form>
     {% if messages %}

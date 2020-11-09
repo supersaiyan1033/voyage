@@ -41,6 +41,7 @@ def Log_In(request):
         row = cursor.fetchall()
         if cursor.rowcount == 1:
             dbpassword = row[0][6]
+            userId = row[0][7]
             data = {
             'firstname': row[0][0],
             'lastname': row[0][1],
@@ -54,22 +55,36 @@ def Log_In(request):
             'role':row[0][10]
              }
             if bcrypt.checkpw(password.encode('utf8'), dbpassword.encode('utf8')):
-                messages.success(request, 'Login successful!!')
-                request.session['email'] = email
+               
                 request.session['userId'] = row[0][7]
                 if data["role"]=="admin":
+                    messages.success(request, 'Login successful!!')
+                    request.session['email'] = email
                     url = "admin/{}/{}".format(data["userId"],data["email"])
                     return redirect(url)
-                else:
+                elif data["role"]=='user':
+                    messages.success(request, 'Login successful!!')
+                    request.session['email'] = email
                     url="{}/{}".format(data["userId"],data["email"])
                     return redirect(url)
+                else:
+                    send_mail(subject='Verify email',message='click on the below link to Verify your email.Note that this link will only be active for 10minutes. ',from_email='cse190001033@iiti.ac.in',recipient_list=[email],fail_silently=False,
+                    html_message="<h1>click on the below link to Verify your email.Note that this link will only be active for 10minutes.</h1><br><a href='http://127.0.0.1:8000/login/{}/{}/emailverification'>to verify your email click here</a>".format(userId,email))
+                    request.session['email_link_is_active'] = True
+                    messages.success(request,'Your email is not verified a verification link has been sent to your email!!')
+                    return render(request,'authentication/login.html')
             else:
-                messages.success(
-                    request, 'incorrect password please try again!!')
-                return render(request, 'authentication/login.html')
+                if data['role']=='not_verified':
+                    send_mail(subject='Verify email',message='click on the below link to Verify your email.Note that this link will only be active for 10minutes.',from_email='cse190001033@iiti.ac.in',recipient_list=[email],fail_silently=False,
+                    html_message="<h1>click on the below link to Verify your email.Note that this link will only be active for 10minutes.</h1><br><a href='http://127.0.0.1:8000/login/{}/{}/emailverification'>to verify your email click here</a>".format(userId,email))
+                    request.session['email_link_is_active'] = True
+                    messages.success(request,'Your email is not verified a verification link has been sent to your email!!')
+                    return render(request,'authentication/login.html')
+                else:    
+                 messages.success(request, 'incorrect password please try again!!')
+                 return render(request, 'authentication/login.html')
         else:
-            messages.success(
-                request, 'Account does not exist with the entered credentials!! signup to create an account')
+            messages.success(request, 'Account does not exist with the entered credentials!! signup to create an account')
             return render(request, 'authentication/login.html')
     else:
         return render(request, 'authentication/login.html')
@@ -85,23 +100,71 @@ def Sign_Up(request):
         mobileno = request.POST.get('mobileno')
         email = request.POST.get('email')
         password = request.POST.get('password')
-        password = bcrypt.hashpw(password.encode(
-            'utf8'), bcrypt.gensalt(rounds=12))
-
+        password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt(rounds=12))
         cursor = connection.cursor()
         cursor.execute("""SELECT * FROM users WHERE email = %s""", [email])
         row = cursor.fetchall()
         if cursor.rowcount == 0:
-            cursor.execute("""INSERT INTO users (firstname,lastname,gender,address,mobileno,email,password,DOB) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",
-                           (firstname, lastname, gender, address, mobileno, email, password, DOB))
-            messages.success(request, 'Sign Up successful!')
-            return redirect('http://127.0.0.1:8000/login')
+            cursor.execute("""INSERT INTO users (firstname,lastname,gender,address,mobileno,email,password,DOB,Role) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)""",(firstname,lastname,gender,address,mobileno,email,password,DOB,'not_verified'))
+            cursor.execute("""SELECT * FROM users WHERE email = %s""", [email])
+            row = cursor.fetchall()
+            userId= row[0][7]
+            send_mail(subject='Verify email',message='click on the below link to Verify your email.Note that this link will only be active for 10minutes.',from_email='cse190001033@iiti.ac.in',recipient_list=[email],fail_silently=False,
+            html_message="<h1>click on the below link to Verify your email.Note that this link will only be active for 10minutes.</h1><br><a href='http://127.0.0.1:8000/login/{}/{}/emailverification'>to verify your email click here</a>".format(userId,email))
+            request.session['email_link_is_active'] = True
+            messages.success(request,'email verification link sent to your email please check your inbox!!')
+            return render(request,'authentication/signup.html')
         else:
-            messages.success(
-                request, 'User with the entered email already exists!!!')
-            return render(request, 'authentication/signup.html')
+            role = row[0][10]
+            if role!='not_verified':
+             messages.success(
+                request, 'User with the entered email already exists and is verified!!!')
+             return render(request, 'authentication/signup.html')
+            elif role=='not_verified':
+                messages.success(request,'your email is not verified click on the email verification option to verify your email!!')
+                return render(request,'authentication/signup.html')
+
     else:
         return render(request, 'authentication/signup.html')
+
+def Verify_User_by_website(request):
+    if request.method =='POST':
+        email = request.POST.get('email')
+        cursor = connection.cursor()
+        cursor.execute("""SELECT * FROM users WHERE email=%s""",[email])
+        row = cursor.fetchall()
+        if cursor.rowcount!=0:
+         userId = row[0][7]
+         send_mail(subject='Verify email',message='click on the below link to Verify your email.Note that this link will only be active for 10minutes.',from_email='cse190001033@iiti.ac.in',recipient_list=[email],fail_silently=False,
+         html_message="<h1>click on the below link to Verify your email.Note that this link will only be active for 10minutes.</h1><br><a href='http://127.0.0.1:8000/login/{}/{}/emailverification'>to verify your email click here</a>".format(userId,email))
+         request.session['email_link_is_active'] = True
+         messages.success(request,'email verification link sent to your email please check your inbox!!')
+         return redirect('http://127.0.0.1:8000/signup')
+        else:
+            messages.success(request,'Signup before email verification!!')
+            return redirect('http://127.0.0.1:8000/signup')
+    else:
+        return render(request,'authentication/verify_email.html')
+
+
+def Verify_User_by_link(request,userId,email):
+    if request.session.get('email_link_is_active'):
+        cursor = connection.cursor()
+        cursor.execute("""SELECT email,Role FROM users WHERE email=%s""",[email])
+        row = cursor.fetchall()
+        if cursor.rowcount!=0:
+            role = row[0][1]
+            if role=='user':
+             messages.success(request,'your email is already verified!!')
+             return redirect('http://127.0.0.1:8000/login')
+            else:
+                role ='user'
+                cursor.execute("""UPDATE users SET Role=%s WHERE email=%s""",(role,email))
+                messages.success(request,'email verification successful!')
+                return redirect('http://127.0.0.1:8000/login')
+    else:
+        return render(request,'authentication/error.html')
+
 
 
 def user(request, userId, email):
