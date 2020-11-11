@@ -208,14 +208,14 @@ border-radius:7px;
         </div>
         <div class="textbox" >
             <i class="fa fa-lock" aria-hidden="true"></i>
-            <input type="password" placeholder="Password" name="password" value="" autocomplete="off" required>
+            <input type="password" placeholder="Password" name="password" value="" autocomplete="off" required minlength="8">
         </div>
         <div class="loginbtn">
         <input class="btn" type="submit" name="" value="Sign up">
         </div>
          
         <a class='login' href='{% url "auth-login" %}'><p>Already Have An Account?Login</p> </a>
-         <a class='login' href="{% url 'auth-verify' %}"><p>email verification</p> </a>
+         {% comment %} <a class='login' href="{% url 'auth-verify' %}"><p>email verification</p> </a> {% endcomment %}
     </div>
     </form>
     {% if messages %}

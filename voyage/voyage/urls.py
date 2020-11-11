@@ -25,7 +25,6 @@ urlpatterns = [
     path('',views.Home,name='home'),
     path('login/',views.Log_In,name='auth-login'),
     path('login/emailverification',views.Verify_User_by_website,name='auth-verify'),
-    path('login/<userId>/<email>/emailverification',views.Verify_User_by_link,name='auth-verify_by_link'),
     path('login/forgotpassword',views.Forgot_Password,name='forgot_password'),
     path('login/forgotpassword/<email>/resetpassword',views.Reset_Password,name='reset password'),
     path('signup/',views.Sign_Up,name='auth-signup'),
