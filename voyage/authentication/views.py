@@ -15,342 +15,15 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 import smtplib
 from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 from django.utils.crypto import get_random_string
 def myFunc(e):
   return e['date_of_booking']
 
-# authentication views starts here
-
-def Home(request):
-    if request.session.get('email')!=None:
-        email = request.session.get('email')
-        userId = request.session.get('userId')
-        url = "login/{}/{}".format(userId,email)
-        return redirect(url)
-    else:
-      return render(request, 'authentication/home.html')
-
-
-def Log_In(request):
-    request.session.flush()
-    request.session.clear_expired()
-    if request.method == "POST":
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        cursor = connection.cursor()
-        cursor.execute("""SELECT * FROM users WHERE email= %s""", [email])
-        row = cursor.fetchall()
-        if cursor.rowcount == 1:
-            dbpassword = row[0][6]
-            userId = row[0][7]
-            data = {
-            'firstname': row[0][0],
-            'lastname': row[0][1],
-            'gender': row[0][2],
-            'address': row[0][3],
-            'mobileno': row[0][4],
-            'email': row[0][5],
-            'password': row[0][6],
-            'userId': row[0][7],
-            'DOB': row[0][8],
-            'role':row[0][10]
-             }
-            if bcrypt.checkpw(password.encode('utf8'), dbpassword.encode('utf8')):
-               
-                request.session['userId'] = row[0][7]
-                if data["role"]=="admin":
-                    messages.success(request, 'Login successful!!')
-                    request.session['email'] = email
-                    url = "admin/{}/{}".format(data["userId"],data["email"])
-                    return redirect(url)
-                elif data["role"]=='user':
-                    messages.success(request, 'Login successful!!')
-                    request.session['email'] = email
-                    url="{}/{}".format(data["userId"],data["email"])
-                    return redirect(url)
-               
-            else:
-              
-                 messages.success(request, 'incorrect password please try again!!')
-                 return render(request, 'authentication/login.html')
-        else:
-            messages.success(request, 'Account does not exist with the entered credentials!! signup to create an account')
-            return render(request, 'authentication/login.html')
-    else:
-        return render(request, 'authentication/login.html')
-
-
-def Sign_Up(request):
-    if request.method == "POST":
-        firstname = request.POST.get('firstname')
-        lastname = request.POST.get('lastname')
-        gender = request.POST.get('gender')
-        address = request.POST.get('address')
-        DOB = request.POST.get('DOB')
-        mobileno = request.POST.get('mobileno')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        cursor = connection.cursor()
-        cursor.execute("""SELECT * FROM users WHERE email = %s""", [email])
-        row = cursor.fetchall()
-        if cursor.rowcount == 0:
-            request.session['firstname'] = firstname
-            request.session['lastname'] = lastname
-            request.session['gender'] = gender
-            request.session['address'] = address
-            request.session['DOB'] = DOB
-            request.session['mobileno'] = mobileno
-            request.session['email'] = email
-            request.session['password'] = password
-            otp = get_random_string(6, allowed_chars='0123456789')
-            print(type(otp))
-            request.session['otp'] = otp
-            send_mail(subject='{} is your Pack your bags OTP'.format(otp),message='click on the below link to Verify your email.Note that this link will only be active for 10minutes.',from_email='cse190001033@iiti.ac.in',recipient_list=[email],fail_silently=False,
-            html_message="<h2>Please enter the below OTP to complete your verification.Note that this OTP will only be active for 10minutes.</h2><br><h2>{}</h2>".format(otp))
-            request.session['email_link_is_active'] = True
-            messages.success(request,'OTP sent to your email please check your inbox!!')
-            return redirect('http://127.0.0.1:8000/login/emailverification')
-        else:
-            messages.success(
-                request, 'User with the entered email already exists please login to continue!!!')
-            return redirect('http://127.0.0.1:8000/login')
-            
-
-    else:
-        return render(request, 'authentication/signup.html')
-
-def Verify_User_by_website(request):
- if request.session.get('email_link_is_active'):
-    if request.method =='POST':
-        otp = request.POST.get('otp')
-        cursor = connection.cursor()
-        if request.session.get('otp')!=None:
-         otp_from_email = request.session.get('otp')
-         if otp == otp_from_email:
-             firstname = request.session.get('firstname')
-             lastname = request.session.get('lastname')
-             email = request.session.get('email')
-             DOB = request.session.get('DOB')
-             gender = request.session.get('gender')
-             address = request.session.get('address')
-             mobileno = request.session.get('mobileno')
-             password = request.session.get('password')
-             password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt(rounds=12))
-             cursor.execute("""INSERT INTO users(firstname,lastname,gender,address,DOB,mobileno,email,password) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",(firstname,lastname,gender,address,DOB,mobileno,email,password))
-             messages.success(request,'verification successful!!please  login to continue')
-             return redirect('http://127.0.0.1:8000/login')
-         else:
-             messages.success(request,'invalid otp try again!!')
-             return redirect('http://127.0.0.1:8000/login/emailverification')
-
-        else:
-            messages.success(request,'Signup before email verification!!')
-            return redirect('http://127.0.0.1:8000/signup')
-    else:
-        return render(request,'authentication/verify_email.html')
- else:
-     return render(request,'authentication/error.html')
-
-
-
-
-
-
-def user(request, userId, email):
- if request.session.get('email')!=None:
-    cursor = connection.cursor()
-    cursor.execute("""SELECT * FROM users WHERE email= %s""", [email])
-    row = cursor.fetchall()
-    dateOfBirth = row[0][8].strftime("%Y-%m-%d")
-    data = {
-        'firstname': row[0][0],
-        'lastname': row[0][1],
-        'gender': row[0][2],
-        'address': row[0][3],
-        'mobileno': row[0][4],
-        'email': row[0][5],
-        'password': row[0][6],
-        'userId': row[0][7],
-        'DOB': dateOfBirth,
-        'wallet': row[0][9]
-    }
-
-    return render(request, 'authentication/user.html', data)
- else:
-     return render(request,'authentication/error.html')
-
-def admin(request,userId,email):
-    if request.session.get('email')!=None:
-        cursor = connection.cursor()
-        cursor.execute("""SELECT * FROM users WHERE userID= %s""", [userId])
-        row = cursor.fetchall()
-        dateOfBirth = row[0][8].strftime("%Y-%m-%d")
-        data={
-        'firstname': row[0][0],
-        'lastname': row[0][1],
-        'gender': row[0][2],
-        'address': row[0][3],
-        'mobileno': row[0][4],
-        'email': row[0][5],
-        'password': row[0][6],
-        'userId': row[0][7],
-        'DOB': dateOfBirth,
-        'wallet': row[0][9]     
-        }
-        return render(request, 'authentication/admin.html', data)
-    else:
-        return render(request,'authentication/error.html')
-
-
-
-def Profile(request, userId, email):
- if request.session.get('email')!=None:
-    cursor = connection.cursor()
-    cursor.execute("""SELECT * FROM users WHERE email= %s""", [email])
-    row = cursor.fetchall()
-    genders = ['Male', 'Female', 'Others']
-
-    dateOfBirth = row[0][8].strftime("%Y-%m-%d")
-    data = {
-        'firstname': row[0][0],
-        'lastname': row[0][1],
-        'gender': row[0][2],
-        'address': row[0][3],
-        'mobileno': row[0][4],
-        'email': row[0][5],
-        'password': row[0][6],
-        'userId': row[0][7],
-        'DOB': dateOfBirth,
-        'genders': genders
-    }
-    if request.method == "POST":
-        firstname = request.POST.get('firstname')
-        lastname = request.POST.get('lastname')
-        gender = request.POST.get('gender')
-        address = request.POST.get('address')
-        DOB = request.POST.get('DOB')
-        mobileno = request.POST.get('mobileno')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        if bcrypt.checkpw(password.encode('utf8'), data['password'].encode('utf8')):
-            messages.success(request, 'Profile is Updated Successfully!')
-            cursor.execute("""UPDATE users SET firstname=%s,lastname=%s,gender=%s,address=%s,mobileno=%s,email=%s,DOB=%s WHERE userId=%s """,
-                           (firstname, lastname, gender, address, mobileno, email, DOB, data['userId']))
-            return redirect('http://127.0.0.1:8000/login/{}/{}'.format(data["userId"], data["email"]))
-        else:
-            messages.success(request, 'incorrect password please try again!!')
-            return render(request, 'authentication/profile.html', data)
-    else:
-        return render(request, "authentication/profile.html", data)
- else:
-     return render(request,'authentication/error.html')
-
-
-def ChangePassword(request, userId, email):
- if request.session.get('email')!=None:
-    cursor = connection.cursor()
-    cursor.execute("""SELECT * FROM users WHERE email= %s """, [email])
-    row = cursor.fetchall()
-    dbPassword = row[0][6]
-    if request.method == "POST":
-        oldPassword = request.POST.get('oldpassword')
-        newPassword = request.POST.get('newpassword')
-        confirmPassword = request.POST.get('confirmpassword')
-        if bcrypt.checkpw(oldPassword.encode('utf8'), dbPassword.encode('utf8')):
-            if newPassword == confirmPassword:
-                dbPassword = bcrypt.hashpw(newPassword.encode(
-                    'utf8'), bcrypt.gensalt(rounds=12))
-                cursor.execute(
-                    """UPDATE users SET password=%s WHERE email=%s""", (dbPassword, email))
-                messages.success(request, 'Password changed successfully!')
-                return redirect('http://127.0.0.1:8000/login/{}/{}'.format(userId, email))
-            else:
-                messages.success(
-                    request, 'new password and confirm password must be the same!!')
-                return render(request, 'authentication/changepassword.html')
-        else:
-            messages.success(request, 'incorrect password!!')
-            return render(request, 'authentication/changepassword.html')
-
-    else:
-        return render(request, 'authentication/changepassword.html')
- else:
-     return render(request,'authentication/error.html')
-
-def Admin_ChangePassword(request,userId,email):
-    if request.session.get('email')!=None:
-     cursor = connection.cursor()
-     cursor.execute("""SELECT * FROM users WHERE email= %s """, [email])
-     row = cursor.fetchall()
-     dbPassword = row[0][6]
-     if request.method == "POST":
-        oldPassword = request.POST.get('oldpassword')
-        newPassword = request.POST.get('newpassword')
-        confirmPassword = request.POST.get('confirmpassword')
-        if bcrypt.checkpw(oldPassword.encode('utf8'), dbPassword.encode('utf8')):
-            if newPassword == confirmPassword:
-                dbPassword = bcrypt.hashpw(newPassword.encode(
-                    'utf8'), bcrypt.gensalt(rounds=12))
-                cursor.execute(
-                    """UPDATE users SET password=%s WHERE email=%s""", (dbPassword, email))
-                messages.success(request, 'Password changed successfully!')
-                return redirect('http://127.0.0.1:8000/login/admin/{}/{}'.format(userId, email))
-            else:
-                messages.success(
-                    request, 'new password and confirm password must be the same!!')
-                return render(request, 'authentication/changepassword.html')
-        else:
-            messages.success(request, 'incorrect password!!')
-            return render(request, 'authentication/changepassword.html')
-
-     else:
-        return render(request, 'authentication/changepassword.html')
-    else:
-     return render(request,'authentication/error.html')
-
-
-def Forgot_Password(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        cursor = connection.cursor()
-        cursor.execute("""SELECT * FROM users WHERE email= %s""", [email] )
-        if cursor.rowcount==1:
-            send_mail(subject='reset password request',message='click on the below link to reset your password.Note that this link will only be active for 10minutes.',from_email='cse190001033@iiti.ac.in',recipient_list=[email],fail_silently=False,
-            html_message="<h1> click on the below link to reset your password.Note that this link will only be active for 10minutes.</h1><br><a href='http://127.0.0.1:8000/login/forgotpassword/{}/resetpassword'>to reset your password click here</a>".format(email))
-            request.session['link_is_active'] = True
-            messages.success(request,'rest link sent to the entered mail please check your inbox!!')
-            return render(request,'authentication/forgotpassword.html')
-        else:
-            messages.success(request,'account with the entered email doesnt exist')
-            return render(request,'authentication/forgotpassword.html')
-    else:
-        return render(request,'authentication/forgotpassword.html')
-# authentication views ends here flights part begins.
-
-def Reset_Password(request,email):
-    if request.session.get('link_is_active'):
-        if request.method=='POST':
-            newpassword = request.POST.get('newpassword')
-            confirmpassword = request.POST.get('confirmpassword')
-            if newpassword == confirmpassword:
-                cursor = connection.cursor()
-                dbPassword = bcrypt.hashpw(newpassword.encode(
-                    'utf8'), bcrypt.gensalt(rounds=12))
-                cursor.execute(
-                    """UPDATE users SET password=%s WHERE email=%s""", (dbPassword, email))
-                messages.success(request, 'Password changed successfully!')
-                return redirect('http://127.0.0.1:8000/login')
-            else:
-                messages.success('both fileds must be the same!!')
-                return render(request,'authentication/reset_password.html')
-                 
-        else:
-            return render(request,'authentication/reset_password.html')    
-    else:
-        return render(request,'authentication/error.html')
+#  views starts here
 
 def Flights(request, userId, email):
- if request.session.get('email')!=None:
+ if request.session.get('email')== email and request.session.get('role')=='user':
     if request.method == "POST":
         from_p = request.POST.get("startfrom")
         to_p = request.POST.get("destination")
@@ -361,8 +34,7 @@ def Flights(request, userId, email):
     else:
 
         cursor = connection.cursor()
-        cursor.execute(
-            """SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
+        cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
         row = cursor.fetchall()
         firstname = row[0][0]
         lastname = row[0][1]
@@ -392,12 +64,14 @@ def Flights(request, userId, email):
             'to_p_list': to_p_list
         }
         return render(request, 'authentication/flights.html', data)
+ elif request.session.get('email')!=None:
+        return render(request,'authentication/page_not_found.html')
  else:
-     return render(request,'authentication/error.html')
+        return render(request,'authentication/error.html')
 
 
 def Flights_Search(request, userId, email):
- if request.session.get('email')!=None:
+ if request.session.get('email')== email and request.session.get('role')=='user':
     cursor = connection.cursor()
     cursor.execute("SELECT DISTINCT from_p FROM route")
     a = cursor.rowcount
@@ -419,49 +93,22 @@ def Flights_Search(request, userId, email):
     firstname = row[0][0]
     lastname = row[0][1]
     wallet = row[0][2]
-
     from_p = request.GET.get('startfrom')
     to_p = request.GET.get('destination')
     date = request.GET.get('dateOfTravel')
     passengers = int(request.GET.get('travellers'))
     if request.method == "POST":
-        temp = []
-        companies = []
         from_p = request.GET.get('startfrom')
         to_p = request.GET.get('destination')
         date = request.GET.get('dateOfTravel')
-        # Indigo = request.POST.get('Indigo')
-        # AirAsia = request.POST.get('AirAsia')
-        # SpiceJet = request.POST.get('SpiceJet')
-        # TruJet = request.POST.get('TruJet')
-        # AirIndia = request.POST.get('AirIndia')
-        # total = ['AirAsia', 'Indigo', 'SpiceJet', 'TruJet', 'AirIndia']
-        # temp = [Indigo, AirAsia, SpiceJet, TruJet, AirIndia]
-        # unchecked = []
-        # print(temp)
-        # for company in temp:
-        #     if company != None:
-        #         companies.append(company)
-
-        # unchecked = [i for i in total +
-        #              companies if i not in total or i not in companies]
-        # companies = tuple(companies)
-        # print(companies)
         passengers = int(request.GET.get('travellers'))
         minm_price = int(request.POST.get("minm_price"))
         maxm_price = int(request.POST.get("maxm_price"))
-        print(minm_price, type(minm_price), maxm_price, type(maxm_price))
         cursor = connection.cursor()
-        # if len(companies) != 0:
-        #     cursor.execute("""select FSID,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant
-        #      FROM flight_schedule JOIN flight_specific ON flight_schedule.Flight_No=flight_specific.Flight_No JOIN route ON route.RID=flight_specific.RID JOIN flight ON flight.Flight_ID=flight_specific.Flight_ID
-        #      WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s  AND Company IN %s""", (date, from_p, to_p, minm_price, maxm_price, companies))
-        # else:
         cursor.execute("""select FSID,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant
              FROM flight_schedule JOIN flight_details ON flight_schedule.Flight_No=flight_details.Flight_No JOIN route ON route.RID=flight_details.RID JOIN flight ON flight.Flight_ID=flight_details.Flight_ID
              WHERE no_of_seats_vacant>0 AND date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s """, (date, from_p, to_p, minm_price, maxm_price))
         a = cursor.rowcount
-        # companies = list(companies)
         row = cursor.fetchall()
         if cursor.rowcount != 0:
             flights = []
@@ -494,8 +141,6 @@ def Flights_Search(request, userId, email):
                     'to_p_list': to_p_list,
                     'minm_price': minm_price,
                     'maxm_price': maxm_price,
-                    # 'companies': companies,
-                    # 'unchecked': unchecked,
                 }
             return render(request, 'authentication/flights_search.html', data)
         else:
@@ -514,9 +159,6 @@ def Flights_Search(request, userId, email):
                 'to_p_list': to_p_list,
                 'minm_price': minm_price,
                 'maxm_price': maxm_price,
-                # 'companies': companies,
-                # 'unchecked': unchecked,
-
             }
             return render(request, 'authentication/flights_search.html', data)
     else:
@@ -571,12 +213,14 @@ def Flights_Search(request, userId, email):
                 'to_p_list': to_p_list
             }
             return render(request, 'authentication/flights_search.html', data)
+ elif request.session.get('email')!=None:
+        return render(request,'authentication/page_not_found.html')
  else:
-     return render(request,'authentication/error.html')
+        return render(request,'authentication/error.html')
 
 
 def Flights_Book(request, userId, email):
- if request.session.get('email')!=None:
+ if request.session.get('email')== email and request.session.get('role')=='user':
    if request.method == "POST":
       flight_schedule=request.GET.get("c1")
       flight_schedule=int(flight_schedule)
@@ -606,6 +250,8 @@ def Flights_Book(request, userId, email):
          cursor.execute("""SELECT Booking_ID FROM flight_ticket WHERE User_ID=%s and Date_of_booking=%s""", (userId,date_time))
          row = cursor.fetchall()
          booking_id = row[0][0]
+         subject = 'E-ticket for booking id:{}'.format(row[0][0])
+         text_content = 'You are receiving this message because your booking is confirmed with the booking id:{} the booking details  can be viewed through the website in the my bookings section we hope u have a great journey!!'.format(row[0][0])
          cursor = connection.cursor()
          cursor.execute("""INSERT INTO flight_transaction(booking_ID,description,amount) VALUES(%s,%s,%s)""",(booking_id,"payment",total_fare))
          cursor = connection.cursor()
@@ -623,6 +269,8 @@ def Flights_Book(request, userId, email):
          no_of_seats_vacant = vacant-passengers
          cursor = connection.cursor()
          cursor.execute("""UPDATE flight_schedule SET no_of_seats_vacant=%s WHERE FSID=%s""",(no_of_seats_vacant,flight_schedule))
+         msg = EmailMultiAlternatives(subject, text_content, 'cse190001033@iiti.ac.in', [email])
+         msg.send()
          messages.success(request,"Booking Successful!Check Your Ticket In My Bookings")
          return redirect("http://127.0.0.1:8000/login/{}/{}".format(userId,email))
       else:
@@ -678,13 +326,15 @@ def Flights_Book(request, userId, email):
       else:
           messages.success(request, 'please select valid number of passengers!')
           return redirect('http://127.0.0.1:8000/login/{}/{}/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(userId, email, from_p, to_p, date_from, passengers))
+ elif request.session.get('email')!=None:
+        return render(request,'authentication/page_not_found.html')
  else:
-     return render(request,'authentication/error.html')
+        return render(request,'authentication/error.html')
 
 #flights views ends here buses part starts here.
 
 def Buses(request, userId, email):
- if request.session.get('email')!=None:
+ if request.session.get('email')== email and request.session.get('role')=='user':
     if request.method == "POST":
         from_p = request.POST.get("startfrom")
         to_p = request.POST.get("destination")
@@ -726,13 +376,14 @@ def Buses(request, userId, email):
             'to_p_list': to_p_list
         }
         return render(request, 'authentication/buses.html', data)
+ elif request.session.get('email')!=None:
+        return render(request,'authentication/page_not_found.html')
  else:
-     return render(request,'authentication/error.html')
-
+        return render(request,'authentication/error.html')
 
 
 def Buses_Search(request, userId, email):
- if request.session.get('email')!=None:
+ if request.session.get('email')== email and request.session.get('role')=='user':
     cursor = connection.cursor()
     cursor.execute("SELECT DISTINCT from_p FROM route")
     a = cursor.rowcount
@@ -760,44 +411,17 @@ def Buses_Search(request, userId, email):
     date = request.GET.get('dateOfTravel')
     passengers = int(request.GET.get('travellers'))
     if request.method == "POST":
-        temp = []
-        companies = []
         from_p = request.GET.get('startfrom')
         to_p = request.GET.get('destination')
-        date = request.GET.get('dateOfTravel')
-        #bus companies 
-        # Orange_Travels = request.POST.get('Orange Travels')
-        # Amaravathi = request.POST.get('Amaravathi')
-        # Deluxe = request.POST.get('Deluxe')
-        # Chalo = request.POST.get('Chalo')
-        # Aictsl = request.POST.get('AICTSL')
-        # total = ['Orange Travels', 'Amaravathi', 'Deluxe', 'Chalo', 'AICTSL']
-        # temp = [Orange_Travels, Amaravathi, Deluxe, Chalo, Aictsl]
-        # unchecked = []
-        # print(temp)
-        # for company in temp:
-        #     if company != None:
-        #         companies.append(company)
-
-        # unchecked = [i for i in total +
-        #              companies if i not in total or i not in companies]
-        # companies = tuple(companies)
-        # print(companies)
+        date = request.GET.get('dateOfTravel')  
         passengers = int(request.GET.get('travellers'))
         minm_price = int(request.POST.get("minm_price"))
         maxm_price = int(request.POST.get("maxm_price"))
-        print(minm_price, type(minm_price), maxm_price, type(maxm_price))
-        cursor = connection.cursor()
-        # if len(companies) != 0:
-        #     cursor.execute("""select BSID,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant
-        #      FROM flight_schedule JOIN bus_specific ON bus_schedule.Bus_No=bus_specific.Bus_No JOIN route ON route.RID=bus_specific.RID JOIN bus ON bus.Bus_ID=bus_specific.Bus_ID
-        #      WHERE date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s  AND Company IN %s""", (date, from_p, to_p, minm_price, maxm_price, companies))
-        # else:
+        cursor = connection.cursor()  
         cursor.execute("""select BSID,Company,from_p,to_p,Time_From,Time_To,Price,no_of_seats_vacant
         FROM bus_schedule JOIN bus_details ON bus_schedule.Bus_No=bus_details.Bus_No JOIN route ON route.RID=bus_details.RID JOIN bus ON bus.Bus_ID=bus_details.Bus_ID
         WHERE no_of_seats_vacant>0 AND date_from=%s AND from_p=%s AND to_p=%s AND Price BETWEEN %s AND %s """, (date, from_p, to_p, minm_price, maxm_price))
         a = cursor.rowcount
-        # companies = list(companies)
         row = cursor.fetchall()
         if cursor.rowcount != 0:
             buses = []
@@ -850,8 +474,6 @@ def Buses_Search(request, userId, email):
                 'to_p_list': to_p_list,
                 'minm_price': minm_price,
                 'maxm_price': maxm_price,
-                # 'companies': companies,
-                # 'unchecked': unchecked,
 
             }
             return render(request, 'authentication/buses_search.html', data)
@@ -907,14 +529,16 @@ def Buses_Search(request, userId, email):
                 'to_p_list': to_p_list
             }
             return render(request, 'authentication/buses_search.html', data)
+ elif request.session.get('email')!=None:
+        return render(request,'authentication/page_not_found.html')
  else:
-     return render(request,'authentication/error.html')
+        return render(request,'authentication/error.html')
 
 
 
 
 def Buses_Book(request, userId, email):
- if request.session.get('email')!=None:
+ if request.session.get('email')== email and request.session.get('role')=='user':
    if request.method == "POST":
       bus_schedule=request.GET.get("c1")
       bus_schedule=int(bus_schedule)
@@ -945,6 +569,8 @@ def Buses_Book(request, userId, email):
          row = cursor.fetchall()
          
          booking_id = row[0][0]
+         subject = 'E-ticket for booking id:{}'.format(row[0][0])
+         text_content = 'You are receiving this message because your booking is confirmed with the booking id:{} the booking details  can be viewed through the website in the my bookings section we hope u have a great journey!!'.format(row[0][0])
          cursor = connection.cursor()
          cursor.execute("""INSERT INTO bus_transaction(booking_ID,description,amount) VALUES(%s,%s,%s)""",(booking_id,"payment",total_fare))
          cursor = connection.cursor()
@@ -963,6 +589,8 @@ def Buses_Book(request, userId, email):
          cursor = connection.cursor()
          cursor.execute("""UPDATE bus_schedule SET no_of_seats_vacant=%s WHERE BSID=%s""",(no_of_seats_vacant,bus_schedule))
          messages.success(request,"Booking Successful!Check Your Ticket In My Bookings")
+         msg = EmailMultiAlternatives(subject, text_content, 'cse190001033@iiti.ac.in', [email])
+         msg.send()
          return redirect("http://127.0.0.1:8000/login/{}/{}".format(userId,email))
       else:
           messages.success(request,"No Sufficient Money For Transaction In Wallet!")
@@ -1017,15 +645,17 @@ def Buses_Book(request, userId, email):
       else:
           messages.success(request, 'please select valid number of passengers!')
           return redirect('http://127.0.0.1:8000/login/{}/{}/buses/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(userId, email, from_p, to_p, date_from, passengers))
+ elif request.session.get('email')!=None:
+        return render(request,'authentication/page_not_found.html')
  else:
-     return render(request,'authentication/error.html')
+        return render(request,'authentication/error.html')
 
 
 
 #buses views ends here boking views starts here.
 
 def My_Bookings(request,userId,email):
- if request.session.get('email')!=None:
+ if request.session.get('email')== email and request.session.get('role')=='user':
     cursor = connection.cursor()
     cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
     user = cursor.fetchall()
@@ -1087,7 +717,6 @@ def My_Bookings(request,userId,email):
     
     if len(bookings)!=0:
         bookings.sort(reverse = True,key=myFunc)
-        print(bookings)
         data={
             'bookings':bookings,
             'userId':userId,
@@ -1109,13 +738,15 @@ def My_Bookings(request,userId,email):
             'wallet':wallet
         }
         return render(request,'authentication/my_bookings.html',data)
+ elif request.session.get('email')!=None:
+        return render(request,'authentication/page_not_found.html')
  else:
-     return render(request,'authentication/error.html')
+        return render(request,'authentication/error.html')
 # Create your views here.
 
 
 def Booking_Details(request,userId,email,type_of_transport,bookingId):
- if request.session.get('email')!=None:
+ if request.session.get('email')== email and request.session.get('role')=='user':
     if request.method=="POST":
         if type_of_transport=='flight':
             cursor = connection.cursor()
@@ -1128,11 +759,8 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
             date_from=row[0][4]
             time_from=row[0][5]
             date_from=date_from.strftime("%Y-%m-%d")
-            # print(date_from)
             time_from=time_from.strftime("%H:%M:%S")
-            # print(time_from)
             date_time=date_from+" "+time_from
-            # print(date_time)
             now=datetime.now()
             Date_Time=now.strftime("%Y-%m-%d %H:%M:%S")
             if Date_Time<date_time:
@@ -1166,11 +794,8 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
             date_from=row[0][4]
             time_from=row[0][5]
             date_from=date_from.strftime("%Y-%m-%d")
-            # print(date_from)
             time_from=time_from.strftime("%H:%M:%S")
-            # print(time_from)
             date_time=date_from+" "+time_from
-            # print(date_time)
             now=datetime.now()
             Date_Time=now.strftime("%Y-%m-%d %H:%M:%S")
             if Date_Time<date_time:
@@ -1309,26 +934,33 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
             }
             return render(request,'authentication/booking_details.html',data)
 
+ elif request.session.get('email')!=None:
+        return render(request,'authentication/page_not_found.html')
  else:
-     return render(request,'authentication/error.html')
+        return render(request,'authentication/error.html')
 
 
 def View_ticket_as_PDF(request,userId,email,type_of_transport,bookingId):
- if request.session.get('email')!=None:
-    if type_of_transport =='flight':
-       template_path = 'authentication/flight_pdf.html'
+ if request.session.get('email')== email and request.session.get('role')=='user':
+       template_path = 'authentication/{}_pdf.html'.format(type_of_transport)
        cursor = connection.cursor()
        cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
        user = cursor.fetchall()
        firstname = user[0][0]
        lastname = user[0][1]
        wallet = user[0][2]
-       cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,flight_passenger.Gender,Age,Seat_no,status,date_from,date_to
-       FROM flight_ticket JOIN users ON flight_ticket.User_ID=users.userID JOIN flight_schedule ON flight_ticket.FSID=flight_schedule.FSID JOIN flight_details ON flight_details.Flight_No=flight_schedule.Flight_No JOIN flight ON flight_details.Flight_ID=flight.Flight_ID
-       JOIN route ON route.RID=flight_details.RID JOIN flight_passenger ON flight_passenger.Booking_ID=flight_ticket.Booking_ID JOIN flight_transaction ON flight_transaction.booking_ID = flight_ticket.Booking_ID WHERE userID=%s AND flight_ticket.Booking_ID=%s""",(int(userId),int(bookingId)))
+       if type_of_transport == 'flight':
+        image = 'fa fa-plane fa-3x'
+        cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,flight_passenger.Gender,Age,Seat_no,status,date_from,date_to
+        FROM flight_ticket JOIN users ON flight_ticket.User_ID=users.userID JOIN flight_schedule ON flight_ticket.FSID=flight_schedule.FSID JOIN flight_details ON flight_details.Flight_No=flight_schedule.Flight_No JOIN flight ON flight_details.Flight_ID=flight.Flight_ID
+        JOIN route ON route.RID=flight_details.RID JOIN flight_passenger ON flight_passenger.Booking_ID=flight_ticket.Booking_ID JOIN flight_transaction ON flight_transaction.booking_ID = flight_ticket.Booking_ID WHERE userID=%s AND flight_ticket.Booking_ID=%s""",(int(userId),int(bookingId)))
+       elif type_of_transport == 'bus':
+        image = 'fa fa-bus fa-3x'
+        cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,bus_passenger.Gender,Age,Seat_no,status,date_from,date_to
+        FROM bus_ticket JOIN users ON bus_ticket.User_ID=users.userID JOIN bus_schedule ON bus_ticket.BSID=bus_schedule.BSID JOIN bus_details ON bus_details.Bus_No=bus_schedule.Bus_No JOIN bus ON bus_details.Bus_ID=bus.Bus_ID
+        JOIN route ON route.RID=bus_details.RID JOIN bus_passenger ON bus_passenger.Booking_ID=bus_ticket.Booking_ID JOIN bus_transaction ON bus_transaction.booking_ID = bus_ticket.Booking_ID WHERE userID=%s AND bus_ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
        row = cursor.fetchall()
        a = cursor.rowcount
-       no_of_passengers = a
        passengers=[]
        for n in range(a):
            passengers.append({
@@ -1350,7 +982,7 @@ def View_ticket_as_PDF(request,userId,email,type_of_transport,bookingId):
         'from_p':row[0][6],
         'to_p':row[0][7],
         'transactionId':row[0][8],
-        'image':'fa fa-plane fa-3x',
+        'image':image,
         'firstname':firstname,
         'lastname':lastname,
         'wallet':wallet,
@@ -1372,557 +1004,9 @@ def View_ticket_as_PDF(request,userId,email,type_of_transport,bookingId):
        if pdf.err:
           return HttpResponse('We had some errors <pre>' + html + '</pre>')
        return response
-    elif type_of_transport=='bus':
-     template_path = 'authentication/bus_pdf.html'
-     cursor = connection.cursor()
-     cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
-     user = cursor.fetchall()
-     firstname = user[0][0]
-     lastname = user[0][1]
-     wallet = user[0][2]
-     cursor = connection.cursor()
-     cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,bus_passenger.Gender,Age,Seat_no,status,date_from,date_to
-     FROM bus_ticket JOIN users ON bus_ticket.User_ID=users.userID JOIN bus_schedule ON bus_ticket.BSID=bus_schedule.BSID JOIN bus_details ON bus_details.Bus_No=bus_schedule.Bus_No JOIN bus ON bus_details.Bus_ID=bus.Bus_ID
-     JOIN route ON route.RID=bus_details.RID JOIN bus_passenger ON bus_passenger.Booking_ID=bus_ticket.Booking_ID JOIN bus_transaction ON bus_transaction.booking_ID = bus_ticket.Booking_ID WHERE userID=%s AND bus_ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
-     row = cursor.fetchall()
-     a = cursor.rowcount
-     no_of_passengers = a
-     passengers=[]
-     for n in range(a):
-        passengers.append({
-            'name':row[n][9],
-            'gender':row[n][10],
-            'age':row[n][11],
-            'seat_no':row[n][12],
-            'no':n+1
-        })
-     data={
-        'passengers':passengers,
-        'date_of_booking':row[0][0],
-        'no_of_passengers':row[0][1],
-        'price_per_person':row[0][2],
-        'total_price':row[0][2]*row[0][1],
-        'company':row[0][3],
-        'time_from':row[0][4].strftime("%H:%M"),
-        'time_to':row[0][5].strftime("%H:%M"),
-        'from_p':row[0][6],
-        'to_p':row[0][7],
-        'transactionId':row[0][8],
-        'image':'fa fa-bus fa-3x',
-        'firstname':firstname,
-        'lastname':lastname,
-        'wallet':wallet,
-        'email':email,
-        'userId':userId,
-        'status':row[0][13],
-        'type':type_of_transport,
-        'booking_id':bookingId,
-        'date_from':row[0][14],
-        'date_to':row[0][15]
-     }
-     context = data
-     response = HttpResponse(content_type='application/pdf')
-     response['Content-Disposition'] = 'inline; filename="booking_details.pdf"'
-     template = get_template(template_path)
-     html = template.render(context)
-     pdf = pisa.CreatePDF(html,dest=response)
-        
-     if pdf.err:
-          return HttpResponse('We had some errors <pre>' + html + '</pre>')
-     return response
-     
-
-      
+ elif request.session.get('email')!=None:
+        return render(request,'authentication/page_not_found.html')
  else:
-     return render(request,'authentication/error.html')
+        return render(request,'authentication/error.html')
     
-def Admin_Flights(request,userId,email):
-    if request.session.get('email')!=None:
-        
-            data={
-                'email':email,
-                'userId':userId
-            }
-            return render(request, 'authentication/admin_flights.html',data)
 
-    else:
-        return render(request,'authentication/error.html')
-
-
-def Admin_Flights_List(request,userId,email):
-    if request.session.get('email')!=None:
-        flight_id = request.GET.get('flight_id')
-        cursor = connection.cursor()
-        if flight_id==None:
-         cursor.execute("""SELECT * FROM flight""")
-        else:
-         cursor.execute("""SELECT * FROM flight WHERE Flight_ID=%s""",[flight_id])
-        row = cursor.fetchall()
-        flights=[]
-        a = cursor.rowcount
-        if a!=0:
-         for n in range(a):
-             flights.append({
-                 'id':row[n][0],
-                 'company':row[n][1],
-                 'name':row[n][2],
-                 'capacity':row[n][3]
-             })
-
-         data = {
-            'flights':flights,
-            'flight_id':flight_id,
-            'userId':userId,
-            'email':email
-         }
-         
-        else:
-            data={
-                'flights':None,
-                'flight_id':flight_id,
-                'userId':userId,
-                'email':email
-            }
-        if request.method=='POST':
-            Flight_id = request.POST.get('Flight_id')
-            Flight_name = request.POST.get('Flight_name')
-            Flight_capacity =request.POST.get('seat_capacity')
-            cursor.execute("""SELECT * FROM flight WHERE Flight_ID=%s""",[int(Flight_id)])
-            if cursor.rowcount!=0:
-             messages.success(request,'flight with the entered flight id already exists!!')
-             return render(request,'authentication/admin_flights_list.html',data)
-            else:
-                
-                cursor.execute("""INSERT INTO flight (Flight_ID,Company,Flight_name,seat_Capacity) VALUES (%s,%s,%s,%s)""",(int(Flight_id),'Voyage',Flight_name,int(Flight_capacity)))
-                messages.success(request,'flight added successfully')
-                return redirect('http://127.0.0.1:8000/login/admin/{}/{}'.format(userId,email))
-        else:
-         return render(request,'authentication/admin_flights_list.html',data)
-    else:
-        return render(request,'authentication/error.html')
-
-def Admin_Flights_Details(request,userId,email):
-    if request.session.get('email') !=None:
-        flight_no = request.GET.get('flight_no')
-        cursor = connection.cursor()
-        from_p_list =[]
-        cursor.execute("""SELECT DISTINCT from_p FROM route""")
-        row =cursor.fetchall()
-        a = cursor.rowcount
-        for n in range(a):
-            from_p_list.append(row[n][0])
-        to_p_list = []
-        cursor.execute("""SELECT DISTINCT to_p FROM route""")
-        row = cursor.fetchall()
-        a = cursor.rowcount
-        for n in range(a):
-            to_p_list.append(row[n][0])
-        if flight_no==None:
-         cursor.execute("""SELECT * FROM flight_details JOIN route on flight_details.RID = route.RID""")
-        else:
-         cursor.execute("""SELECT * FROM flight_details JOIN route on flight_details.RID = route.RID WHERE Flight_No=%s""",[flight_no])
-        row = cursor.fetchall()
-        flights=[]
-        a = cursor.rowcount
-        if a!=0:
-         for n in range(a):
-             flights.append({
-                 'id':row[n][0],
-                 'from_time':row[n][1],
-                 'to_time':row[n][2],
-                 'price':row[n][3],
-                 'no':row[n][4],
-                 'from_p':row[n][7],
-                 'to_p':row[n][8]
-             })
-
-         data = {
-            'flights':flights,
-            'from_p_list':from_p_list,
-            'to_p_list':to_p_list,
-            'flight_no':flight_no,
-            'userId':userId,
-            'email':email
-         }
-         
-        else:
-            data={
-                'flights':None,
-                'from_p_list':from_p_list,
-                'to_p_list':to_p_list,
-                'flight_no':flight_no,
-                'userId':userId,
-                'email':email
-
-            }
-        if request.method=='POST':
-            Flight_id = request.POST.get('Flight_id')
-            time_from = request.POST.get('time_from')
-            time_to =request.POST.get('time_to')
-            flight_no = request.POST.get('Flight_no')
-            starting_point = request.POST.get('starting_point')
-            destination_point = request.POST.get('destination_point')
-            price = request.POST.get('price')
-            cursor.execute("""SELECT RID FROM route WHERE from_p =%s AND to_p =%s""",(starting_point,destination_point))
-            row = cursor.fetchall()
-            if cursor.rowcount==0:
-                messages.success(request,'the entered route does not exist please add route first!!')
-                return redirect('http://127.0.0.1:8000/login/admin/{}/{}/routes'.format(userId,email))
-            else:
-              rid = row[0][0]
-              cursor.execute("""SELECT * FROM flight WHERE Flight_ID=%s""",[Flight_id])
-              if cursor.rowcount==0:
-                  messages.success(request,'flight does not exist please add the flight!!')
-                  return redirect('http://127.0.0.1:8000/login/admin/{}/{}/flights/list'.format(userId,email))
-              else:
-               cursor.execute("""SELECT * FROM flight_details WHERE Flight_ID=%s AND Time_From=%s AND Time_To=%s AND Price=%s AND Flight_No=%s AND RID=%s""",(int(Flight_id),time_from,time_to,int(price),int(flight_no),int(row[0][0])))
-               if cursor.rowcount!=0:
-                messages.success(request,'flight details already exists!!')
-                return render(request,'authentication/admin_flights_details.html',data)
-               else:
-                
-                cursor.execute("""INSERT INTO flight_details (Flight_ID,Time_From,Time_To,Price,Flight_No,RID) VALUES (%s,%s,%s,%s,%s,%s)""",(int(Flight_id),time_from,time_to,int(price),int(flight_no),rid))
-                messages.success(request,'flight details added successfully')
-                return redirect('http://127.0.0.1:8000/login/admin/{}/{}'.format(userId,email))
-        else:
-         return render(request,'authentication/admin_flights_details.html',data)
-           
-
-    else:
-        return render(request,'authentication/error.html')
-
-
-
-def Admin_Flights_Schedule(request,userId,email):
- if request.session.get('email')!=None:
-     date_filter = request.GET.get('date_from')
-     cursor = connection.cursor()
-     if date_filter==None:
-         cursor.execute("""SELECT * FROM flight_schedule""")
-     else:
-         print(date_filter)
-         print(date_filter)
-         cursor.execute("""SELECT * FROM flight_schedule WHERE date_from=%s""",[date_filter])
-     row = cursor.fetchall()
-     schedules=[]
-     a = cursor.rowcount
-     if a!=0:
-         for n in range(a):
-          schedules.append({
-            'flight_no':row[n][0],
-            'date_from':row[n][1],
-            'date_to':row[n][2],
-            'seats':row[n][4]
-          })
-         data={
-         'schedules':schedules,
-         'date_filter':date_filter,
-         'userId':userId,
-         'email':email
-          }
-     else:
-         data={
-           'schedules':None,
-           'date_filter':date_filter,
-           'userId':userId,
-           'email':email
-         }
-     if request.method=='POST':
-         flight_no = request.POST.get('Flight_No')
-         date_from = request.POST.get('date_from')
-         date_to   = request.POST.get('date_to')
-         cursor.execute("""SELECT Time_From,seat_Capacity FROM flight_details JOIN flight_schedule ON flight_details.Flight_No = flight_schedule.Flight_No JOIN flight ON flight.Flight_ID = flight_details.Flight_ID WHERE flight_details.Flight_No =%s""",[flight_no])
-         if cursor.rowcount==0:
-             messages.success(request,'flight with the entered flight number does not exist please add flight details first!! ')
-             return redirect('http://127.0.0.1:8000/login/admin/{}/{}/flights/details'.format(userId,email))
-         else:
-             now = datetime.now()
-             now = now.strftime("%Y-%m-%d %H:%M:%S")
-             time_from_db = row[0][1].strftime("%H:%M:%S")
-             date_time_db = date_from+' '+time_from_db
-             if date_time_db<now:
-                 messages.success(request,'you cannot add a flight schedule in the past')
-                 return redirect('http://127.0.0.1:8000/login/admin/{}/{}/flights/schedule'.format(userId,email))
-             else:
-               row = cursor.fetchall()
-               seats=row[0][1]
-               cursor.execute("""INSERT INTO flight_schedule (Flight_No,date_from,date_to,no_of_seats_vacant,Total_seats) VALUES(%s,%s,%s,%s,%s)""",(flight_no,date_from,date_to,int(seats),int(seats)))
-               messages.success(request,'flight schedule added successfully')
-               return redirect('http://127.0.0.1:8000/login/admin/{}/{}/flights/schedule'.format(userId,email))
-     else:
-         return render(request,'authentication/admin_flights_schedule.html',data)
- else:
-     return render(request,'authentication/error.html')
-
-
-def Admin_Buses(request,userId,email):
-    if request.session.get('email')!=None:
-      
-            data={
-                'email':email,
-                'userId':userId
-            }
-            return render(request, 'authentication/admin_buses.html',data)
-    else:
-        return render(request,'authentication/error.html')
-
-
-
-def Admin_Routes(request,userId,email):
-      if request.session.get('email')!=None:
-        start = request.GET.get('from_p')
-        end = request.GET.get('to_p')
-        cursor = connection.cursor()
-        if start==None:
-         cursor.execute("""SELECT * FROM route""")
-        else:
-         cursor.execute("""SELECT * FROM route WHERE from_p=%s AND to_p=%s""",(start,end))
-        row = cursor.fetchall()
-        routes=[]
-        a = cursor.rowcount
-        if a!=0:
-         for n in range(a):
-             routes.append({
-                 'no':n+1,
-                 'RID':row[n][0],
-                 'from_p':row[n][1],
-                 'to_p':row[n][2]
-             })
-
-         data = {
-            'routes':routes,
-            'start':start,
-            'end':end,
-            'userId':userId,
-            'email':email
-         }
-         
-        else:
-            data={
-                'routes':None,
-                'start':start,
-                'end':end,
-                'userId':userId,
-                'email':email
-            }
-        if request.method=='POST':
-            start = request.POST.get('from_p')
-            end = request.POST.get('to_p')
-            cursor.execute("""SELECT * FROM route WHERE from_p=%s AND to_p=%s""",(start,end))
-            if cursor.rowcount!=0:
-             messages.success(request,'route already exists!!')
-             return render(request,'authentication/admin_routes.html',data)
-            else:
-                cursor.execute("""INSERT INTO route (from_p,to_p) VALUES (%s,%s)""",(start,end))
-                messages.success(request,'route added successfully')
-                return redirect('http://127.0.0.1:8000/login/admin/{}/{}'.format(userId,email))
-        else:
-         return render(request,'authentication/admin_routes.html',data)
-      else:
-         return render(request,'authentication/error.html')
-
-def Admin_Buses_List(request,userId,email):
-    if request.session.get('email')!=None:
-        bus_id = request.GET.get('bus_id')
-        cursor = connection.cursor()
-        if bus_id==None:
-         cursor.execute("""SELECT * FROM bus""")
-        else:
-         cursor.execute("""SELECT * FROM bus WHERE Bus_ID=%s""",[bus_id])
-        row = cursor.fetchall()
-        buses=[]
-        a = cursor.rowcount
-        if a!=0:
-         for n in range(a):
-             buses.append({
-                 'id':row[n][0],
-                 'company':row[n][1],
-                 'name':row[n][2],
-                  'capacity':row[n][3]
-             })
-
-         data = {
-            'buses':buses,
-            'bus_id':bus_id,
-            'userId':userId,
-            'email':email
-         }
-         
-        else:
-            data={
-                'buses':None,
-                'bus_id':bus_id,
-                'userId':userId,
-                'email':email
-            }
-        if request.method=='POST':
-            Bus_id = request.POST.get('Bus_id')
-            Bus_name = request.POST.get('Bus_name')
-            Bus_capacity =request.POST.get('seat_capacity')
-            cursor.execute("""SELECT * FROM bus WHERE Bus_ID=%s""",[int(Bus_id)])
-            if cursor.rowcount!=0:
-             messages.success(request,'bus already exists!!')
-             return render(request,'authentication/admin_buses_list.html',data)
-            else:
-                
-                cursor.execute("""INSERT INTO bus(Bus_ID,Company,Bus_name,seat_Capacity) VALUES (%s,%s,%s,%s)""",(int(Bus_id),'Voyage',Bus_name,int(Bus_capacity)))
-                messages.success(request,'Bus added successfully')
-                return redirect('http://127.0.0.1:8000/login/admin/{}/{}'.format(userId,email))
-        else:
-         return render(request,'authentication/admin_buses_list.html',data)
-    else:
-        return render(request,'authentication/error.html') 
-
-def Admin_Buses_Details(request,userId,email):
-    if request.session.get('email') !=None:
-        bus_no = request.GET.get('bus_no')
-        cursor = connection.cursor()
-        from_p_list =[]
-        cursor.execute("""SELECT DISTINCT from_p FROM route""")
-        row =cursor.fetchall()
-        a = cursor.rowcount
-        for n in range(a):
-            from_p_list.append(row[n][0])
-        to_p_list = []
-        cursor.execute("""SELECT DISTINCT to_p FROM route""")
-        row = cursor.fetchall()
-        a = cursor.rowcount
-        for n in range(a):
-            to_p_list.append(row[n][0])
-        if bus_no==None:
-         cursor.execute("""SELECT * FROM bus_details JOIN route on bus_details.RID = route.RID""")
-        else:
-         cursor.execute("""SELECT * FROM bus_details JOIN route on bus_details.RID = route.RID WHERE Bus_No=%s""",[bus_no])
-        row = cursor.fetchall()
-        buses=[]
-        a = cursor.rowcount
-        if a!=0:
-         for n in range(a):
-             buses.append({
-                 'id':row[n][0],
-                 'from_time':row[n][1],
-                 'to_time':row[n][2],
-                 'price':row[n][3],
-                 'no':row[n][4],
-                 'from_p':row[n][7],
-                 'to_p':row[n][8]
-             })
-
-         data = {
-            'buses':buses,
-            'from_p_list':from_p_list,
-            'to_p_list':to_p_list,
-            'bus_no':bus_no,
-            'userId':userId,
-            'email':email
-         }
-         
-        else:
-            data={
-                'buses':None,
-                'from_p_list':from_p_list,
-                'to_p_list':to_p_list,
-                'bus_no':bus_no,
-                'userId':userId,
-                'email':email
-
-            }
-        if request.method=='POST':
-            Bus_id = request.POST.get('Bus_id')
-            time_from = request.POST.get('time_from')
-            time_to =request.POST.get('time_to')
-            bus_no = request.POST.get('Bus_no')
-            starting_point = request.POST.get('starting_point')
-            destination_point = request.POST.get('destination_point')
-            price = request.POST.get('price')
-            cursor.execute("""SELECT RID FROM route WHERE from_p =%s AND to_p =%s""",(starting_point,destination_point))
-            row = cursor.fetchall()
-            if cursor.rowcount==0:
-                messages.success(request,'the entered route does not exist, please add route first!!')
-                return redirect('http://127.0.0.1:8000/login/admin/{}/{}/routes'.format(userId,email))
-            else:
-              rid = row[0][0]
-              cursor.execute("""SELECT * FROM bus WHERE Bus_ID=%s""",[Bus_id])
-              if cursor.rowcount==0:
-                  messages.success(request,'bus does not exist witht he entered bus id please add bus!!')
-                  return redirect('http://127.0.0.1:8000/login/admin/{}/{}/buses/list'.format(userId,email))
-              else:
-               cursor.execute("""SELECT * FROM bus_details WHERE Bus_ID=%s AND Time_From=%s AND Time_To=%s AND Price=%s AND Bus_No=%s AND RID=%s""",(int(Bus_id),time_from,time_to,int(price),int(bus_no),int(row[0][0])))
-               if cursor.rowcount!=0:
-                messages.success(request,'bus details already exists!!')
-                return render(request,'authentication/admin_buses_details.html',data)
-               else:
-                
-                cursor.execute("""INSERT INTO bus_details (Bus_ID,Time_From,Time_To,Price,Bus_No,RID) VALUES (%s,%s,%s,%s,%s,%s)""",(int(Bus_id),time_from,time_to,int(price),int(bus_no),rid))
-                messages.success(request,'bus details added successfully')
-                return redirect('http://127.0.0.1:8000/login/admin/{}/{}'.format(userId,email))
-        else:
-         return render(request,'authentication/admin_buses_details.html',data)
-           
-
-    else:
-        return render(request,'authentication/error.html') 
-
-def Admin_Buses_Schedule(request,userId,email):
- if request.session.get('email')!=None:
-     date_filter = request.GET.get('date_from')
-     cursor = connection.cursor()
-     if date_filter==None:
-         cursor.execute("""SELECT * FROM bus_schedule""")
-     else:
-         print(date_filter)
-         print(date_filter)
-         cursor.execute("""SELECT * FROM bus_schedule WHERE date_from=%s""",[date_filter])
-     row = cursor.fetchall()
-     schedules=[]
-     a = cursor.rowcount
-     if a!=0:
-         for n in range(a):
-          schedules.append({
-            'bus_no':row[n][0],
-            'date_from':row[n][1],
-            'date_to':row[n][2],
-            'seats':row[n][4]
-          })
-         data={
-         'schedules':schedules,
-         'date_filter':date_filter,
-         'userId':userId,
-         'email':email
-          }
-     else:
-         data={
-           'schedules':None,
-           'date_filter':date_filter,
-           'userId':userId,
-           'email':email
-         }
-     if request.method=='POST':
-         bus_no = request.POST.get('Bus_No')
-         date_from = request.POST.get('date_from')
-         date_to   = request.POST.get('date_to')
-         cursor.execute("""SELECT Time_From,seat_Capacity FROM bus_details JOIN bus_schedule ON bus_details.Bus_No = bus_schedule.Bus_No JOIN bus ON bus.Bus_ID = bus_details.Bus_ID WHERE bus_details.Bus_No =%s""",[bus_no])
-         if cursor.rowcount==0:
-             messages.success(request,'bus with the entered bus number does not exist, please add the bus no in the bus details first!!')
-             return redirect('http://127.0.0.1:8000/login/admin/{}/{}/buses/details'.format(userId,email))
-         else:
-             now = datetime.now()
-             now = now.strftime("%Y-%m-%d %H:%M:%S")
-             time_from_db = row[0][1].strftime("%H:%M:%S")
-             date_time_db = date_from+' '+time_from_db
-             if date_time_db<now:
-                 messages.success(request,'you cannot add a bus schedule in the past')
-                 return redirect('http://127.0.0.1:8000/login/admin/{}/{}/buses/schedule'.format(userId,email))
-             else:
-               row = cursor.fetchall()
-               seats=row[0][1]
-               cursor.execute("""SELECT * FROM bus_schedule""")
-               count = cursor.rowcount
-               count = count +1
-               cursor.execute("""INSERT INTO bus_schedule (Bus_No,date_from,date_to,no_of_seats_vacant,Total_seats) VALUES(%s,%s,%s,%s,%s)""",(bus_no,date_from,date_to,int(seats),int(seats),))
-               messages.success(request,'bus schedule added successfully')
-               return redirect('http://127.0.0.1:8000/login/admin/{}/{}'.format(userId,email))
-     else:
-         return render(request,'authentication/admin_buses_schedule.html',data)
- else:
-     return render(request,'authentication/error.html')

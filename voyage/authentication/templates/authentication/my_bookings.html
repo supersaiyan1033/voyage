@@ -245,8 +245,9 @@ transform:scale(1.01);
       </nav>
       </div>
       <br><br><br>
-      <h3 style="text-align:center;padding:20px;margin:10px;">My bookings</h3>
-      <br><br><br>
+      <h3 style="text-align:center;padding:20px;margin:auto;">My bookings</h3>
+      <hr>
+      <br><br>
 {% if bookings %}
 <table style="width:80vw;margin:auto;">
 {% for booking in bookings%}
@@ -297,7 +298,7 @@ transform:scale(1.01);
 {% endfor %}
 </table>
 {% else %}
-<h4>You have not done any bookings yet</h4>
+<h4 style="text-align:center;">You have not done any bookings yet</h4>
 {% endif %}
 
 {% if messages %}
