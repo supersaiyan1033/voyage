@@ -22,14 +22,16 @@ def myFunc(e):
 
 #  views starts here
 
-def Flights(request, userId, email):
+def Flights(request):
+ userId=request.session.get('userId')
+ email=request.session.get('email')
  if request.session.get('email')== email and request.session.get('role')=='user':
     if request.method == "POST":
         from_p = request.POST.get("startfrom")
         to_p = request.POST.get("destination")
         date = request.POST.get("dateOfTravel")
         passengers = request.POST.get("travellers")
-        return redirect('http://127.0.0.1:8000/login/{}/{}/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(userId, email, from_p, to_p, date, passengers))
+        return redirect('http://127.0.0.1:8000/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(from_p, to_p, date, passengers))
 
     else:
 
@@ -70,7 +72,9 @@ def Flights(request, userId, email):
         return render(request,'authentication/error.html')
 
 
-def Flights_Search(request, userId, email):
+def Flights_Search(request):
+ userId=request.session.get('userId')
+ email=request.session.get('email')   
  if request.session.get('email')== email and request.session.get('role')=='user':
     cursor = connection.cursor()
     cursor.execute("SELECT DISTINCT from_p FROM route")
@@ -219,7 +223,9 @@ def Flights_Search(request, userId, email):
         return render(request,'authentication/error.html')
 
 
-def Flights_Book(request, userId, email):
+def Flights_Book(request):
+ userId=request.session.get('userId')
+ email=request.session.get('email')
  if request.session.get('email')== email and request.session.get('role')=='user':
    if request.method == "POST":
       flight_schedule=request.GET.get("c1")
@@ -255,7 +261,7 @@ def Flights_Book(request, userId, email):
          cursor = connection.cursor()
          cursor.execute("""INSERT INTO flight_transaction(booking_ID,description,amount) VALUES(%s,%s,%s)""",(booking_id,"payment",total_fare))
          cursor = connection.cursor()
-         cursor.execute("""SELECT no_of_seats_vacant,Total_seats FROM flight_schedule WHERE FSID=%s""", [flight_schedule])
+         cursor.execute("""SELECT no_of_seats_vacant,seat_Capacity FROM flight_schedule JOIN flight_details ON flight_schedule.Flight_No=flight_details.Flight_No JOIN flight ON flight_details.Flight_ID=flight.Flight_ID WHERE FSID=%s""", [flight_schedule])
          row = cursor.fetchall()
          vacant = row[0][0]
          total = row[0][1]
@@ -272,10 +278,10 @@ def Flights_Book(request, userId, email):
          msg = EmailMultiAlternatives(subject, text_content, 'cse190001033@iiti.ac.in', [email])
          msg.send()
          messages.success(request,"Booking Successful!Check Your Ticket In My Bookings")
-         return redirect("http://127.0.0.1:8000/login/{}/{}".format(userId,email))
+         return redirect("http://127.0.0.1:8000/home")
       else:
           messages.success(request,"No Sufficient Money For Transaction In Wallet!")
-          return redirect("http://127.0.0.1:8000/login/{}/{}/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}".format(userId, email, from_p, to_p,date_from,passengers))
+          return redirect("http://127.0.0.1:8000/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}".format(from_p, to_p,date_from,passengers))
    else:
       flight_schedule=request.GET.get("c1")
       flight_schedule=int(flight_schedule)
@@ -322,10 +328,10 @@ def Flights_Book(request, userId, email):
               return render(request, 'authentication/flights_book.html', data)
           else:
               messages.success(request, 'No.of passengers excede available no.of seats!')
-              return redirect('http://127.0.0.1:8000/login/{}/{}/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(userId, email, from_p, to_p, date_from, passengers))
+              return redirect('http://127.0.0.1:8000/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(from_p, to_p, date_from, passengers))
       else:
           messages.success(request, 'please select valid number of passengers!')
-          return redirect('http://127.0.0.1:8000/login/{}/{}/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(userId, email, from_p, to_p, date_from, passengers))
+          return redirect('http://127.0.0.1:8000/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(from_p, to_p, date_from, passengers))
  elif request.session.get('email')!=None:
         return render(request,'authentication/page_not_found.html')
  else:
@@ -333,14 +339,16 @@ def Flights_Book(request, userId, email):
 
 #flights views ends here buses part starts here.
 
-def Buses(request, userId, email):
+def Buses(request):
+ userId=request.session.get('userId')
+ email=request.session.get('email')
  if request.session.get('email')== email and request.session.get('role')=='user':
     if request.method == "POST":
         from_p = request.POST.get("startfrom")
         to_p = request.POST.get("destination")
         date = request.POST.get("dateOfTravel")
         passengers = request.POST.get("travellers")
-        return redirect('http://127.0.0.1:8000/login/{}/{}/buses/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(userId, email, from_p, to_p, date, passengers))
+        return redirect('http://127.0.0.1:8000/buses/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(from_p, to_p, date, passengers))
 
     else:
 
@@ -382,7 +390,9 @@ def Buses(request, userId, email):
         return render(request,'authentication/error.html')
 
 
-def Buses_Search(request, userId, email):
+def Buses_Search(request):
+ userId=request.session.get('userId')
+ email=request.session.get('email')
  if request.session.get('email')== email and request.session.get('role')=='user':
     cursor = connection.cursor()
     cursor.execute("SELECT DISTINCT from_p FROM route")
@@ -537,7 +547,9 @@ def Buses_Search(request, userId, email):
 
 
 
-def Buses_Book(request, userId, email):
+def Buses_Book(request):
+ userId=request.session.get('userId')
+ email=request.session.get('email')
  if request.session.get('email')== email and request.session.get('role')=='user':
    if request.method == "POST":
       bus_schedule=request.GET.get("c1")
@@ -574,7 +586,7 @@ def Buses_Book(request, userId, email):
          cursor = connection.cursor()
          cursor.execute("""INSERT INTO bus_transaction(booking_ID,description,amount) VALUES(%s,%s,%s)""",(booking_id,"payment",total_fare))
          cursor = connection.cursor()
-         cursor.execute("""SELECT no_of_seats_vacant,Total_seats FROM bus_schedule WHERE BSID=%s""", [bus_schedule])
+         cursor.execute("""SELECT no_of_seats_vacant,seat_Capacity FROM bus_schedule JOIN bus_details ON bus_schedule.Bus_No=bus_details.Bus_No JOIN bus ON bus_details.Bus_ID=bus.Bus_ID WHERE BSID=%s""", [bus_schedule])
          row = cursor.fetchall()
          vacant = row[0][0]
          total = row[0][1]
@@ -591,10 +603,10 @@ def Buses_Book(request, userId, email):
          messages.success(request,"Booking Successful!Check Your Ticket In My Bookings")
          msg = EmailMultiAlternatives(subject, text_content, 'cse190001033@iiti.ac.in', [email])
          msg.send()
-         return redirect("http://127.0.0.1:8000/login/{}/{}".format(userId,email))
+         return redirect("http://127.0.0.1:8000/home")
       else:
           messages.success(request,"No Sufficient Money For Transaction In Wallet!")
-          return redirect("http://127.0.0.1:8000/login/{}/{}/buses/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}".format(userId, email, from_p, to_p,date_from,passengers))
+          return redirect("http://127.0.0.1:8000/buses/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}".format(from_p, to_p,date_from,passengers))
    else:
       bus_schedule=request.GET.get("c1")
       bus_schedule=int(bus_schedule)
@@ -641,10 +653,10 @@ def Buses_Book(request, userId, email):
               return render(request, 'authentication/buses_book.html', data)
           else:
               messages.success(request, 'No.of passengers excede available no.of seats!')
-              return redirect('http://127.0.0.1:8000/login/{}/{}/buses/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(userId, email, from_p, to_p, date_from, passengers))
+              return redirect('http://127.0.0.1:8000/buses/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(from_p, to_p, date_from, passengers))
       else:
           messages.success(request, 'please select valid number of passengers!')
-          return redirect('http://127.0.0.1:8000/login/{}/{}/buses/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(userId, email, from_p, to_p, date_from, passengers))
+          return redirect('http://127.0.0.1:8000/buses/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(from_p, to_p, date_from, passengers))
  elif request.session.get('email')!=None:
         return render(request,'authentication/page_not_found.html')
  else:
@@ -654,7 +666,9 @@ def Buses_Book(request, userId, email):
 
 #buses views ends here boking views starts here.
 
-def My_Bookings(request,userId,email):
+def My_Bookings(request):
+ userId=request.session.get('userId')
+ email=request.session.get('email')
  if request.session.get('email')== email and request.session.get('role')=='user':
     cursor = connection.cursor()
     cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
@@ -745,7 +759,9 @@ def My_Bookings(request,userId,email):
 # Create your views here.
 
 
-def Booking_Details(request,userId,email,type_of_transport,bookingId):
+def Booking_Details(request,type_of_transport,bookingId):
+ userId=request.session.get('userId')
+ email=request.session.get('email')
  if request.session.get('email')== email and request.session.get('role')=='user':
     if request.method=="POST":
         if type_of_transport=='flight':
@@ -779,10 +795,10 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
                 cursor = connection.cursor()
                 cursor.execute("""INSERT INTO flight_transaction(booking_ID,description,amount) VALUES(%s,%s,%s)""",(bookingId,"refund",(price*no_of_passengers)))
                 messages.success(request, 'Ticket Cancelled Successfully!')
-                return redirect("http://127.0.0.1:8000/login/{}/{}".format(userId,email))
+                return redirect("http://127.0.0.1:8000/home")
             else:
                 messages.success(request, 'Ticket Cannot Be Cancelled!') 
-                return redirect("http://127.0.0.1:8000/login/{}/{}/mybookings/{}/{}/details".format(userId,email,type_of_transport,bookingId))
+                return redirect("http://127.0.0.1:8000/mybookings/{}/{}/details".format(type_of_transport,bookingId))
         else:
             cursor = connection.cursor()
             cursor.execute("""SELECT No_of_passengers,Price,bus_ticket.BSID,no_of_seats_vacant,date_from,Time_From FROM  bus_ticket JOIN bus_schedule ON bus_ticket.BSID=bus_schedule.BSID JOIN bus_details ON bus_schedule.Bus_No=bus_details.Bus_No WHERE Booking_ID=%s""", [bookingId])
@@ -814,10 +830,10 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
                 cursor = connection.cursor()
                 cursor.execute("""INSERT INTO bus_transaction(booking_ID,description,amount) VALUES(%s,%s,%s)""",(bookingId,"refund",(price*no_of_passengers)))
                 messages.success(request, 'Ticket Cancelled Successfully!')
-                return redirect("http://127.0.0.1:8000/login/{}/{}".format(userId,email))
+                return redirect("http://127.0.0.1:8000/home")
             else:
                 messages.success(request, 'Ticket Cannot Be Cancelled!')
-                return redirect("http://127.0.0.1:8000/login/{}/{}/mybookings/{}/{}/details".format(userId,email,type_of_transport,bookingId))      
+                return redirect("http://127.0.0.1:8000/mybookings/{}/{}/details".format(type_of_transport,bookingId))      
     else:    
         cursor = connection.cursor()
         cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
@@ -940,7 +956,9 @@ def Booking_Details(request,userId,email,type_of_transport,bookingId):
         return render(request,'authentication/error.html')
 
 
-def View_ticket_as_PDF(request,userId,email,type_of_transport,bookingId):
+def View_ticket_as_PDF(request,type_of_transport,bookingId):
+ userId=request.session.get('userId')
+ email=request.session.get('email')
  if request.session.get('email')== email and request.session.get('role')=='user':
        template_path = 'authentication/{}_pdf.html'.format(type_of_transport)
        cursor = connection.cursor()

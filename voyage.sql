@@ -283,12 +283,11 @@ CREATE TABLE `bus_schedule` (
   `date_from` date NOT NULL,
   `date_to` date NOT NULL,
   `no_of_seats_vacant` int DEFAULT NULL,
-  `Total_seats` int NOT NULL,
   `BSID` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`BSID`),
   KEY `Buses_No_idx` (`Bus_No`),
   CONSTRAINT `Buses_No` FOREIGN KEY (`Bus_No`) REFERENCES `bus_details` (`Bus_No`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -297,7 +296,7 @@ CREATE TABLE `bus_schedule` (
 
 LOCK TABLES `bus_schedule` WRITE;
 /*!40000 ALTER TABLE `bus_schedule` DISABLE KEYS */;
-INSERT INTO `bus_schedule` VALUES (20,'2020-11-15','2020-11-15',100,100,1),(21,'2020-11-15','2020-11-15',80,80,2),(22,'2020-11-15','2020-11-15',55,55,3),(23,'2020-11-15','2020-11-15',100,100,4),(24,'2020-11-15','2020-11-15',100,100,5),(25,'2020-11-15','2020-11-15',45,45,6),(26,'2020-11-15','2020-11-15',60,60,7),(27,'2020-11-15','2020-11-15',50,50,8),(28,'2020-11-15','2020-11-15',45,45,9),(29,'2020-11-15','2020-11-15',55,55,10),(30,'2020-11-15','2020-11-15',70,70,11);
+INSERT INTO `bus_schedule` VALUES (20,'2020-11-15','2020-11-15',100,1),(21,'2020-11-15','2020-11-15',80,2),(22,'2020-11-15','2020-11-15',55,3),(23,'2020-11-15','2020-11-15',100,4),(24,'2020-11-15','2020-11-15',100,5),(25,'2020-11-15','2020-11-15',45,6),(26,'2020-11-15','2020-11-15',60,7),(27,'2020-11-15','2020-11-15',50,8),(28,'2020-11-15','2020-11-15',45,9),(29,'2020-11-15','2020-11-15',55,10),(30,'2020-11-15','2020-11-15',70,11),(25,'2020-11-16','2020-11-16',45,12);
 /*!40000 ALTER TABLE `bus_schedule` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -468,7 +467,6 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
-INSERT INTO `django_session` VALUES ('lstsb65sa8d2y29yqmc1tirwp5bufxzf','eyJlbWFpbCI6ImtAZ21haWwuY29tIiwidXNlcklkIjoxMX0:1kbpiU:t7Melvo0EhFbgh2NQgBaP4BsrCWVDUqLM-B64aMemDE','2020-11-08 19:28:46.105574');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -571,13 +569,12 @@ CREATE TABLE `flight_schedule` (
   `date_from` date NOT NULL,
   `date_to` date NOT NULL,
   `no_of_seats_vacant` int DEFAULT NULL,
-  `Total_seats` int NOT NULL DEFAULT '40',
   `FSID` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`FSID`),
   KEY `ID_idx` (`no_of_seats_vacant`),
   KEY `KID_idx` (`Flight_No`),
   CONSTRAINT `F_No` FOREIGN KEY (`Flight_No`) REFERENCES `flight_details` (`Flight_No`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -586,7 +583,7 @@ CREATE TABLE `flight_schedule` (
 
 LOCK TABLES `flight_schedule` WRITE;
 /*!40000 ALTER TABLE `flight_schedule` DISABLE KEYS */;
-INSERT INTO `flight_schedule` VALUES (1,'2020-11-15','2020-11-15',100,100,1),(2,'2020-11-15','2020-11-15',200,200,2),(3,'2020-11-15','2020-11-15',150,150,3),(4,'2020-11-15','2020-11-15',200,200,4),(5,'2020-11-15','2020-11-15',100,100,5),(6,'2020-11-15','2020-11-15',50,50,6),(7,'2020-11-15','2020-11-15',150,150,7),(8,'2020-11-15','2020-11-15',100,100,8),(9,'2020-11-15','2020-11-15',100,100,9),(10,'2020-11-15','2020-11-15',150,150,10),(11,'2020-11-15','2020-11-15',50,50,11),(12,'2020-11-15','2020-11-15',50,50,12);
+INSERT INTO `flight_schedule` VALUES (1,'2020-11-15','2020-11-15',100,1),(2,'2020-11-15','2020-11-15',200,2),(3,'2020-11-15','2020-11-15',150,3),(4,'2020-11-15','2020-11-15',200,4),(5,'2020-11-15','2020-11-15',100,5),(6,'2020-11-15','2020-11-15',50,6),(7,'2020-11-15','2020-11-15',150,7),(8,'2020-11-15','2020-11-15',100,8),(9,'2020-11-15','2020-11-15',100,9),(10,'2020-11-15','2020-11-15',150,10),(11,'2020-11-15','2020-11-15',50,11),(12,'2020-11-15','2020-11-15',50,12);
 /*!40000 ALTER TABLE `flight_schedule` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -661,7 +658,7 @@ CREATE TABLE `route` (
   `from_p` varchar(45) DEFAULT NULL,
   `to_p` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`RID`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -696,7 +693,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`userID`),
   UNIQUE KEY `userID_UNIQUE` (`userID`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -705,7 +702,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('sairam','Kola','Male','warangal','1234554321','sairamkola001@gmail.com','$2b$12$CUZyDgprTNv2e9Duib00XOXPyjnAHwNHG7s1wM.8rB.7zYu32OBeW',12,'2020-11-05',100000,'user');
+INSERT INTO `users` VALUES ('sairam','Kola','Male','warangal','1234554321','sairamkola001@gmail.com','$2b$12$CUZyDgprTNv2e9Duib00XOXPyjnAHwNHG7s1wM.8rB.7zYu32OBeW',12,'2020-11-05',100000,'user'),('sairam','Kola','Male','warangal','1234554321','sairamkola010@gmail.com','$2b$12$T/B90fTR1INKuU2nmxPJ8ugYefWm5m08mRmKBRmVzTIDMSzogXiLa',13,'2020-11-12',100000,'admin');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -718,4 +715,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-09  9:11:25
+-- Dump completed on 2020-11-13  0:47:20

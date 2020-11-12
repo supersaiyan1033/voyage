@@ -26,7 +26,11 @@ def Home(request):
     if request.session.get('email')!=None:
         email = request.session.get('email')
         userId = request.session.get('userId')
-        url = "login/{}/{}".format(userId,email)
+        role=request.session.get('role')
+        if role=="user":
+            url ="http://127.0.0.1:8000/home"
+        else:
+            url="http://127.0.0.1:8000/admin/home"    
         return redirect(url)
     else:
       return render(request, 'authentication/home.html')
@@ -63,13 +67,13 @@ def Log_In(request):
                     messages.success(request, 'Login successful!!')
                     request.session['email'] = email
                     request.session['role'] = data['role']
-                    url = "admin/{}/{}".format(data["userId"],data["email"])
+                    url = "http://127.0.0.1:8000/admin/home"
                     return redirect(url)
                 elif data["role"]=='user':
                     messages.success(request, 'Login successful!!')
                     request.session['email'] = email
                     request.session['role'] = data['role']
-                    url="{}/{}".format(data["userId"],data["email"])
+                    url="http://127.0.0.1:8000/home"
                     return redirect(url)
                
             else:
@@ -158,7 +162,9 @@ def Verify_User_by_website(request):
 
 
 
-def user(request, userId, email):
+def user(request):
+ userId=request.session.get('userId')
+ email=request.session.get('email')
  if request.session.get('email')==email and request.session.get('role')=='user':
     cursor = connection.cursor()
     cursor.execute("""SELECT * FROM users WHERE email= %s""", [email])
@@ -187,7 +193,9 @@ def user(request, userId, email):
 
 
 
-def Profile(request, userId, email):
+def Profile(request):
+ userId=request.session.get('userId')
+ email=request.session.get('email')
  if request.session.get('email') == email:
     cursor = connection.cursor()
     cursor.execute("""SELECT * FROM users WHERE email= %s""", [email])
@@ -220,7 +228,7 @@ def Profile(request, userId, email):
             messages.success(request, 'Profile is Updated Successfully!')
             cursor.execute("""UPDATE users SET firstname=%s,lastname=%s,gender=%s,address=%s,mobileno=%s,email=%s,DOB=%s WHERE userId=%s """,
                            (firstname, lastname, gender, address, mobileno, email, DOB, data['userId']))
-            return redirect('http://127.0.0.1:8000/login/{}/{}'.format(data["userId"], data["email"]))
+            return redirect('http://127.0.0.1:8000/home')
         else:
             messages.success(request, 'incorrect password please try again!!')
             return render(request, 'authentication/profile.html', data)
@@ -230,7 +238,9 @@ def Profile(request, userId, email):
      return render(request,'authentication/error.html')
 
 
-def ChangePassword(request, userId, email):
+def ChangePassword(request):
+ userId=request.session.get('userId')
+ email=request.session.get('email')   
  if request.session.get('email') == email:
     cursor = connection.cursor()
     cursor.execute("""SELECT * FROM users WHERE email= %s """, [email])
@@ -247,7 +257,7 @@ def ChangePassword(request, userId, email):
                 cursor.execute(
                     """UPDATE users SET password=%s WHERE email=%s""", (dbPassword, email))
                 messages.success(request, 'Password changed successfully!')
-                return redirect('http://127.0.0.1:8000/login/{}/{}'.format(userId, email))
+                return redirect('http://127.0.0.1:8000/home')
             else:
                 messages.success(
                     request, 'new password and confirm password must be the same!!')
@@ -261,7 +271,9 @@ def ChangePassword(request, userId, email):
  else:
      return render(request,'authentication/error.html')
 
-def Admin_ChangePassword(request,userId,email):
+def Admin_ChangePassword(request):
+    userId=request.session.get('userId')
+    email=request.session.get('email')
     if request.session.get('email') ==email:
      cursor = connection.cursor()
      cursor.execute("""SELECT * FROM users WHERE email= %s """, [email])
@@ -278,7 +290,7 @@ def Admin_ChangePassword(request,userId,email):
                 cursor.execute(
                     """UPDATE users SET password=%s WHERE email=%s""", (dbPassword, email))
                 messages.success(request, 'Password changed successfully!')
-                return redirect('http://127.0.0.1:8000/login/admin/{}/{}'.format(userId, email))
+                return redirect('http://127.0.0.1:8000/admin/home')
             else:
                 messages.success(
                     request, 'new password and confirm password must be the same!!')

@@ -20,7 +20,9 @@ from django.utils.crypto import get_random_string
 def myFunc(e):
   return e['date_of_booking']
 
-def admin(request,userId,email):
+def admin(request):
+    userId=request.session.get('userId')
+    email=request.session.get('email')
     if request.session.get('email')== email and request.session.get('role')=='admin':
         cursor = connection.cursor()
         cursor.execute("""SELECT * FROM users WHERE userID= %s""", [userId])
@@ -44,7 +46,9 @@ def admin(request,userId,email):
     else:
         return render(request,'authentication/error.html')
 
-def Admin_Flights(request,userId,email):
+def Admin_Flights(request):
+    userId=request.session.get('userId')
+    email=request.session.get('email')
     if request.session.get('email')== email and request.session.get('role')=='admin':
         
             data={
@@ -58,7 +62,9 @@ def Admin_Flights(request,userId,email):
     else:
         return render(request,'authentication/error.html')
 
-def Admin_Flights_List(request,userId,email):
+def Admin_Flights_List(request):
+    userId=request.session.get('userId')
+    email=request.session.get('email')
     if request.session.get('email')== email and request.session.get('role')=='admin':
         flight_id = request.GET.get('flight_id')
         cursor = connection.cursor()
@@ -104,7 +110,7 @@ def Admin_Flights_List(request,userId,email):
                 
                 cursor.execute("""INSERT INTO flight (Flight_ID,Company,Flight_name,seat_Capacity) VALUES (%s,%s,%s,%s)""",(int(Flight_id),'Voyage',Flight_name,int(Flight_capacity)))
                 messages.success(request,'flight added successfully')
-                return redirect('http://127.0.0.1:8000/login/admin/{}/{}'.format(userId,email))
+                return redirect('http://127.0.0.1:8000/admin/home')
         else:
          return render(request,'authentication/admin_flights_list.html',data)
     elif request.session.get('email')!=None:
@@ -112,7 +118,9 @@ def Admin_Flights_List(request,userId,email):
     else:
         return render(request,'authentication/error.html')
 
-def Admin_Flights_Details(request,userId,email):
+def Admin_Flights_Details(request):
+    userId=request.session.get('userId')
+    email=request.session.get('email')
     if request.session.get('email')== email and request.session.get('role')=='admin':
         flight_no = request.GET.get('flight_no')
         cursor = connection.cursor()
@@ -178,13 +186,13 @@ def Admin_Flights_Details(request,userId,email):
             row = cursor.fetchall()
             if cursor.rowcount==0:
                 messages.success(request,'the entered route does not exist please add route first!!')
-                return redirect('http://127.0.0.1:8000/login/admin/{}/{}/routes'.format(userId,email))
+                return redirect('http://127.0.0.1:8000/admin/routes')
             else:
               rid = row[0][0]
               cursor.execute("""SELECT * FROM flight WHERE Flight_ID=%s""",[Flight_id])
               if cursor.rowcount==0:
                   messages.success(request,'flight does not exist please add the flight!!')
-                  return redirect('http://127.0.0.1:8000/login/admin/{}/{}/flights/list'.format(userId,email))
+                  return redirect('http://127.0.0.1:8000/admin/flights/list')
               else:
                cursor.execute("""SELECT * FROM flight_details WHERE Flight_ID=%s AND Time_From=%s AND Time_To=%s AND Price=%s AND Flight_No=%s AND RID=%s""",(int(Flight_id),time_from,time_to,int(price),int(flight_no),int(row[0][0])))
                if cursor.rowcount!=0:
@@ -194,7 +202,7 @@ def Admin_Flights_Details(request,userId,email):
                 
                 cursor.execute("""INSERT INTO flight_details (Flight_ID,Time_From,Time_To,Price,Flight_No,RID) VALUES (%s,%s,%s,%s,%s,%s)""",(int(Flight_id),time_from,time_to,int(price),int(flight_no),rid))
                 messages.success(request,'flight details added successfully')
-                return redirect('http://127.0.0.1:8000/login/admin/{}/{}'.format(userId,email))
+                return redirect('http://127.0.0.1:8000/admin/home')
         else:
          return render(request,'authentication/admin_flights_details.html',data)
            
@@ -206,15 +214,15 @@ def Admin_Flights_Details(request,userId,email):
 
 
 
-def Admin_Flights_Schedule(request,userId,email):
+def Admin_Flights_Schedule(request):
+ userId=request.session.get('userId')
+ email=request.session.get('email')   
  if request.session.get('email')== email and request.session.get('role')=='admin':
      date_filter = request.GET.get('date_from')
      cursor = connection.cursor()
      if date_filter==None:
          cursor.execute("""SELECT * FROM flight_schedule""")
      else:
-         print(date_filter)
-         print(date_filter)
          cursor.execute("""SELECT * FROM flight_schedule WHERE date_from=%s""",[date_filter])
      row = cursor.fetchall()
      schedules=[]
@@ -247,7 +255,7 @@ def Admin_Flights_Schedule(request,userId,email):
          cursor.execute("""SELECT Time_From,seat_Capacity FROM flight_details JOIN flight_schedule ON flight_details.Flight_No = flight_schedule.Flight_No JOIN flight ON flight.Flight_ID = flight_details.Flight_ID WHERE flight_details.Flight_No =%s""",[flight_no])
          if cursor.rowcount==0:
              messages.success(request,'flight with the entered flight number does not exist please add flight details first!! ')
-             return redirect('http://127.0.0.1:8000/login/admin/{}/{}/flights/details'.format(userId,email))
+             return redirect('http://127.0.0.1:8000/admin/flights/details')
          else:
              now = datetime.now()
              now = now.strftime("%Y-%m-%d %H:%M:%S")
@@ -255,13 +263,13 @@ def Admin_Flights_Schedule(request,userId,email):
              date_time_db = date_from+' '+time_from_db
              if date_time_db<now:
                  messages.success(request,'you cannot add a flight schedule in the past')
-                 return redirect('http://127.0.0.1:8000/login/admin/{}/{}/flights/schedule'.format(userId,email))
+                 return redirect('http://127.0.0.1:8000/admin/flights/schedule')
              else:
                row = cursor.fetchall()
                seats=row[0][1]
-               cursor.execute("""INSERT INTO flight_schedule (Flight_No,date_from,date_to,no_of_seats_vacant,Total_seats) VALUES(%s,%s,%s,%s,%s)""",(flight_no,date_from,date_to,int(seats),int(seats)))
+               cursor.execute("""INSERT INTO flight_schedule (Flight_No,date_from,date_to,no_of_seats_vacant) VALUES(%s,%s,%s,%s)""",(flight_no,date_from,date_to,int(seats)))
                messages.success(request,'flight schedule added successfully')
-               return redirect('http://127.0.0.1:8000/login/admin/{}/{}/flights/schedule'.format(userId,email))
+               return redirect('http://127.0.0.1:8000/admin/flights/schedule')
      else:
          return render(request,'authentication/admin_flights_schedule.html',data)
  elif request.session.get('email')!=None:
@@ -270,7 +278,9 @@ def Admin_Flights_Schedule(request,userId,email):
         return render(request,'authentication/error.html')
 
 
-def Admin_Buses(request,userId,email):
+def Admin_Buses(request):
+    userId=request.session.get('userId')
+    email=request.session.get('email')
     if request.session.get('email')== email and request.session.get('role')=='admin':
       
             data={
@@ -285,7 +295,9 @@ def Admin_Buses(request,userId,email):
 
 
 
-def Admin_Routes(request,userId,email):
+def Admin_Routes(request):
+      userId=request.session.get('userId')
+      email=request.session.get('email')
       if request.session.get('email')== email and request.session.get('role')=='admin':
         start = request.GET.get('from_p')
         end = request.GET.get('to_p')
@@ -332,7 +344,7 @@ def Admin_Routes(request,userId,email):
             else:
                 cursor.execute("""INSERT INTO route (from_p,to_p) VALUES (%s,%s)""",(start,end))
                 messages.success(request,'route added successfully')
-                return redirect('http://127.0.0.1:8000/login/admin/{}/{}'.format(userId,email))
+                return redirect('http://127.0.0.1:8000/admin/home')
         else:
          return render(request,'authentication/admin_routes.html',data)
       elif request.session.get('email')!=None:
@@ -340,7 +352,9 @@ def Admin_Routes(request,userId,email):
       else:
         return render(request,'authentication/error.html')
 
-def Admin_Buses_List(request,userId,email):
+def Admin_Buses_List(request):
+    userId=request.session.get('userId')
+    email=request.session.get('email')
     if request.session.get('email')== email and request.session.get('role')=='admin':
         bus_id = request.GET.get('bus_id')
         cursor = connection.cursor()
@@ -386,7 +400,7 @@ def Admin_Buses_List(request,userId,email):
                 
                 cursor.execute("""INSERT INTO bus(Bus_ID,Company,Bus_name,seat_Capacity) VALUES (%s,%s,%s,%s)""",(int(Bus_id),'Voyage',Bus_name,int(Bus_capacity)))
                 messages.success(request,'Bus added successfully')
-                return redirect('http://127.0.0.1:8000/login/admin/{}/{}'.format(userId,email))
+                return redirect('http://127.0.0.1:8000/admin/home')
         else:
          return render(request,'authentication/admin_buses_list.html',data)
     elif request.session.get('email')!=None:
@@ -394,7 +408,9 @@ def Admin_Buses_List(request,userId,email):
     else:
         return render(request,'authentication/error.html') 
 
-def Admin_Buses_Details(request,userId,email):
+def Admin_Buses_Details(request):
+    userId=request.session.get('userId')
+    email=request.session.get('email')
     if request.session.get('email')== email and request.session.get('role')=='admin':
         bus_no = request.GET.get('bus_no')
         cursor = connection.cursor()
@@ -460,13 +476,13 @@ def Admin_Buses_Details(request,userId,email):
             row = cursor.fetchall()
             if cursor.rowcount==0:
                 messages.success(request,'the entered route does not exist, please add route first!!')
-                return redirect('http://127.0.0.1:8000/login/admin/{}/{}/routes'.format(userId,email))
+                return redirect('http://127.0.0.1:8000/admin/routes')
             else:
               rid = row[0][0]
               cursor.execute("""SELECT * FROM bus WHERE Bus_ID=%s""",[Bus_id])
               if cursor.rowcount==0:
                   messages.success(request,'bus does not exist witht he entered bus id please add bus!!')
-                  return redirect('http://127.0.0.1:8000/login/admin/{}/{}/buses/list'.format(userId,email))
+                  return redirect('http://127.0.0.1:8000/admin/buses/list')
               else:
                cursor.execute("""SELECT * FROM bus_details WHERE Bus_ID=%s AND Time_From=%s AND Time_To=%s AND Price=%s AND Bus_No=%s AND RID=%s""",(int(Bus_id),time_from,time_to,int(price),int(bus_no),int(row[0][0])))
                if cursor.rowcount!=0:
@@ -476,7 +492,7 @@ def Admin_Buses_Details(request,userId,email):
                 
                 cursor.execute("""INSERT INTO bus_details (Bus_ID,Time_From,Time_To,Price,Bus_No,RID) VALUES (%s,%s,%s,%s,%s,%s)""",(int(Bus_id),time_from,time_to,int(price),int(bus_no),rid))
                 messages.success(request,'bus details added successfully')
-                return redirect('http://127.0.0.1:8000/login/admin/{}/{}'.format(userId,email))
+                return redirect('http://127.0.0.1:8000/admin/home')
         else:
          return render(request,'authentication/admin_buses_details.html',data)
            
@@ -486,7 +502,9 @@ def Admin_Buses_Details(request,userId,email):
     else:
         return render(request,'authentication/error.html') 
 
-def Admin_Buses_Schedule(request,userId,email):
+def Admin_Buses_Schedule(request):
+ userId=request.session.get('userId')
+ email=request.session.get('email')
  if request.session.get('email')== email and request.session.get('role')=='admin':
      date_filter = request.GET.get('date_from')
      cursor = connection.cursor()
@@ -527,7 +545,7 @@ def Admin_Buses_Schedule(request,userId,email):
          cursor.execute("""SELECT Time_From,seat_Capacity FROM bus_details JOIN bus_schedule ON bus_details.Bus_No = bus_schedule.Bus_No JOIN bus ON bus.Bus_ID = bus_details.Bus_ID WHERE bus_details.Bus_No =%s""",[bus_no])
          if cursor.rowcount==0:
              messages.success(request,'bus with the entered bus number does not exist, please add the bus no in the bus details first!!')
-             return redirect('http://127.0.0.1:8000/login/admin/{}/{}/buses/details'.format(userId,email))
+             return redirect('http://127.0.0.1:8000/admin/buses/details')
          else:
              now = datetime.now()
              now = now.strftime("%Y-%m-%d %H:%M:%S")
@@ -535,16 +553,16 @@ def Admin_Buses_Schedule(request,userId,email):
              date_time_db = date_from+' '+time_from_db
              if date_time_db<now:
                  messages.success(request,'you cannot add a bus schedule in the past')
-                 return redirect('http://127.0.0.1:8000/login/admin/{}/{}/buses/schedule'.format(userId,email))
+                 return redirect('http://127.0.0.1:8000/admin/buses/schedule')
              else:
                row = cursor.fetchall()
                seats=row[0][1]
                cursor.execute("""SELECT * FROM bus_schedule""")
                count = cursor.rowcount
                count = count +1
-               cursor.execute("""INSERT INTO bus_schedule (Bus_No,date_from,date_to,no_of_seats_vacant,Total_seats) VALUES(%s,%s,%s,%s,%s)""",(bus_no,date_from,date_to,int(seats),int(seats),))
+               cursor.execute("""INSERT INTO bus_schedule (Bus_No,date_from,date_to,no_of_seats_vacant) VALUES(%s,%s,%s,%s)""",(bus_no,date_from,date_to,int(seats)))
                messages.success(request,'bus schedule added successfully')
-               return redirect('http://127.0.0.1:8000/login/admin/{}/{}'.format(userId,email))
+               return redirect('http://127.0.0.1:8000/admin/home')
      else:
          return render(request,'authentication/admin_buses_schedule.html',data)
  elif request.session.get('email')!=None:
