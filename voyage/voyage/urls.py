@@ -23,6 +23,8 @@ urlpatterns = [
     # authentication urls
     path('admin/', admin.site.urls),
     path('',auth_views.Home,name='home'),
+    path('contactus',auth_views.Contact_us,name="Contact-us"),
+    path('aboutus',auth_views.About_us,name="about-us"),
     path('login/',auth_views.Log_In,name='auth-login'),
     path('login/emailverification',auth_views.Verify_User_by_website,name='auth-verify'),
     path('login/forgotpassword',auth_views.Forgot_Password,name='forgot_password'),
@@ -45,6 +47,7 @@ urlpatterns = [
     #buses views urls
     path('buses',views.Buses,name='buses'),
     path('buses/search/',views.Buses_Search,name='buses_search'),
+    # path('buses/seats/',views.Buses_Seat_Select,name='buses-seats'),
     path('buses/book/',views.Buses_Book,name='buses_book'),
  
 
