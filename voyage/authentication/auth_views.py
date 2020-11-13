@@ -36,6 +36,22 @@ def Home(request):
       return render(request, 'authentication/home.html')
 
 
+
+def About_us(request):
+    return render(request,'authentication/about_us.html')
+
+def Contact_us(request):
+    if request.method =='POST':
+        email = request.POST.get('email')
+        name = request.POST.get('name')
+        message = request.POST.get('message')
+        send_mail(subject='Contact us',from_email='cse190001033@iiti.ac.in',recipient_list=['cse190001033@iiti.ac.in'],html_message='<h4>from:{}</h4><br><h4>to:cse190001033@iiti.ac.in</h4><br><h3>{}</h3>'.format(email,message),message=message)
+        messages.success(request,'sent successfully')
+        return render(request,'authentication/contact_us.html')
+    else:
+     return render(request,'authentication/contact_us.html')
+
+
 def Log_In(request):
     request.session.flush()
     request.session.clear_expired()

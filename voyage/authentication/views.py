@@ -20,6 +20,9 @@ from django.utils.crypto import get_random_string
 def myFunc(e):
   return e['date_of_booking']
 
+def sortFunc(e):
+    return e['seat_no']
+
 #  views starts here
 
 def Flights(request):
@@ -490,8 +493,6 @@ def Buses_Search(request):
                     'to_p_list': to_p_list,
                     'minm_price': minm_price,
                     'maxm_price': maxm_price,
-                    # 'companies': companies,
-                    # 'unchecked': unchecked,
                 }
             return render(request, 'authentication/buses_search.html', data)
         else:
@@ -571,7 +572,58 @@ def Buses_Search(request):
         return render(request,'authentication/error.html')
 
 
+# def Buses_Seat_Select(request):
+#  userId=request.session.get('userId')
+#  email=request.session.get('email')
+#  if request.session.get('email')== email and request.session.get('role')=='user':
+#      bus_schedule=request.GET.get("c1")
+#      bus_schedule=int(bus_schedule)
+#      cursor = connection.cursor()
+#      cursor.execute("""SELECT seat_Capacity,no_of_seats_vacant FROM bus_schedule JOIN bus_details ON bus_schedule.Bus_No = bus_details.Bus_No JOIN bus ON bus_details.Bus_ID = bus.Bus_ID WHERE BSID=%s""",[bus_schedule] )
+#      row = cursor.fetchall()
+#      total = row[0][0]
+#      vacant = row[0][1]
+#      cursor.execute("""SELECT Seat_no FROM bus_passenger JOIN ticket_bus ON bus_passenger.Booking_ID = ticket_bus.Booking_ID JOIN bus_schedule ON bus_schedule.BSID= ticket_bus.BSID WHERE bus_schedule.BSID =%s""",[bus_schedule])
+#      row = cursor.fetchall()
+#      a = cursor.rowcount
+#      booked_seats =[]
+#      total_seats =[]
+#      for n in range(a):
+#          booked_seats.append(row[n][0])
+#      for n in range(len(total)):
+#          total_seats.append(n+1)
+#      vacant_seats = []
+#      vacant_seats = total_seats - booked_seats
+#      vacant_seats_check = []
+#      booked_seats_check =[]
+#      for n in range(len(vacant_seats)):
+#          vacant_seats_check.append({
+#              'status':'booked',
+#              'seat_no':vacant_seats[n]
+#          })
+#      for n in range(len(booked_seats)):
+#          booked_seats_check.append({
+#              'status':None,
+#              'seat_no':booked_seats[n]
+#          })
+#      seats = booked_seats_check + vacant_seats_check
+#      seats.sort(lakey=sortFunc)
 
+
+
+
+
+    
+         
+
+#      data={
+#          'seats':range(1, total_seats+1)
+#      }
+#      return  render(request,'authentication/bus_seat_select.html',data)
+#  elif request.session.get('email')!=None:
+#         return render(request,'authentication/page_not_found.html')
+#  else:
+#         return render(request,'authentication/error.html') 
 
 def Buses_Book(request):
  userId=request.session.get('userId')
@@ -895,30 +947,30 @@ def Booking_Details(request,type_of_transport,bookingId):
         wallet = user[0][2]
         if type_of_transport =='flight':
         
-            cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,flight_passenger.Gender,Age,Seat_no,status,date_from,date_to
+            cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Name,flight_passenger.Gender,Age,Seat_no,status,date_from,date_to
             FROM flight_ticket JOIN users ON flight_ticket.User_ID=users.userID JOIN flight_schedule ON flight_ticket.FSID=flight_schedule.FSID JOIN flight_details ON flight_details.Flight_No=flight_schedule.Flight_No JOIN flight ON flight_details.Flight_ID=flight.Flight_ID
-            JOIN route ON route.RID=flight_details.RID JOIN flight_passenger ON flight_passenger.Booking_ID=flight_ticket.Booking_ID JOIN flight_transaction ON flight_transaction.booking_ID = flight_ticket.Booking_ID WHERE userID=%s AND flight_ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
+            JOIN route ON route.RID=flight_details.RID JOIN flight_passenger ON flight_passenger.Booking_ID=flight_ticket.Booking_ID WHERE userID=%s AND flight_ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
             row = cursor.fetchall()
             a = cursor.rowcount
             no_of_passengers = a
             passengers=[]
-            date_from=row[0][14]
+            date_from=row[0][13]
             date_from=date_from.strftime("%Y-%m-%d")
             time_from=row[0][4]
             time_from=time_from.strftime("%H:%M")
             date_time=date_from+" "+time_from
             now = datetime.now()
             Date_Time=now.strftime("%Y-%m-%d %H:%M")
-            if row[0][13]=="booked" and Date_Time<date_time:
+            if row[0][12]=="booked" and Date_Time<date_time:
                 status_code=1
             else:
                 status_code=None
             for n in range(a):
                 passengers.append({
-            'name':row[n][9],
-            'gender':row[n][10],
-            'age':row[n][11],
-            'seat_no':row[n][12],
+            'name':row[n][8],
+            'gender':row[n][9],
+            'age':row[n][10],
+            'seat_no':row[n][11],
             'no':n+1
                 })
             data={
@@ -932,16 +984,15 @@ def Booking_Details(request,type_of_transport,bookingId):
         'time_to':row[0][5].strftime("%H:%M"),
         'from_p':row[0][6],
         'to_p':row[0][7],
-        'transactionId':row[0][8],
         'image':'fa fa-plane fa-3x',
         'firstname':firstname,
         'lastname':lastname,
         'wallet':wallet,
         'email':email,
         'userId':userId,
-        'status':row[0][13],
-        'date_from':row[0][14],
-        'date_to':row[0][15],
+        'status':row[0][12],
+        'date_from':row[0][13],
+        'date_to':row[0][14],
         'status_code':status_code,
         'type':'flight',
         'booking_Id':bookingId
@@ -956,23 +1007,23 @@ def Booking_Details(request,type_of_transport,bookingId):
             a = cursor.rowcount
             no_of_passengers = a
             passengers=[]
-            date_from=row[0][14]
+            date_from=row[0][13]
             date_from=date_from.strftime("%Y-%m-%d")
             time_from=row[0][4]
             time_from=time_from.strftime("%H:%M")
             date_time=date_from+" "+time_from
             now = datetime.now()
             Date_Time=now.strftime("%Y-%m-%d %H:%M")
-            if row[0][13]=="booked" and Date_Time<date_time:
+            if row[0][12]=="booked" and Date_Time<date_time:
                 status_code=1
             else:
                 status_code=None
             for n in range(a):
                 passengers.append({
-            'name':row[n][9],
-            'gender':row[n][10],
-            'age':row[n][11],
-            'seat_no':row[n][12],
+            'name':row[n][8],
+            'gender':row[n][9],
+            'age':row[n][10],
+            'seat_no':row[n][11],
             'no':n+1
                 })
             data={
@@ -986,16 +1037,15 @@ def Booking_Details(request,type_of_transport,bookingId):
         'time_to':row[0][5].strftime("%H:%M"),
         'from_p':row[0][6],
         'to_p':row[0][7],
-        'transactionId':row[0][8],
         'image':'fa fa-bus fa-3x',
         'firstname':firstname,
         'lastname':lastname,
         'wallet':wallet,
         'email':email,
         'userId':userId,
-        'status':row[0][13],
-        'date_from':row[0][14],
-        'date_to':row[0][15],
+        'status':row[0][12],
+        'date_from':row[0][13],
+        'date_to':row[0][14],
         'status_code':status_code,
         'type':'bus',
         'booking_Id':bookingId
@@ -1021,23 +1071,23 @@ def View_ticket_as_PDF(request,type_of_transport,bookingId):
        wallet = user[0][2]
        if type_of_transport == 'flight':
         image = 'fa fa-plane fa-3x'
-        cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,flight_passenger.Gender,Age,Seat_no,status,date_from,date_to
+        cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Name,flight_passenger.Gender,Age,Seat_no,status,date_from,date_to
         FROM flight_ticket JOIN users ON flight_ticket.User_ID=users.userID JOIN flight_schedule ON flight_ticket.FSID=flight_schedule.FSID JOIN flight_details ON flight_details.Flight_No=flight_schedule.Flight_No JOIN flight ON flight_details.Flight_ID=flight.Flight_ID
-        JOIN route ON route.RID=flight_details.RID JOIN flight_passenger ON flight_passenger.Booking_ID=flight_ticket.Booking_ID JOIN flight_transaction ON flight_transaction.booking_ID = flight_ticket.Booking_ID WHERE userID=%s AND flight_ticket.Booking_ID=%s""",(int(userId),int(bookingId)))
+        JOIN route ON route.RID=flight_details.RID JOIN flight_passenger ON flight_passenger.Booking_ID=flight_ticket.Booking_ID  WHERE userID=%s AND flight_ticket.Booking_ID=%s""",(int(userId),int(bookingId)))
        elif type_of_transport == 'bus':
         image = 'fa fa-bus fa-3x'
-        cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Transaction_ID,Name,bus_passenger.Gender,Age,Seat_no,status,date_from,date_to
+        cursor.execute("""SELECT Date_of_booking,No_of_passengers,Price,Company,Time_From,Time_To,from_p,to_p,Name,bus_passenger.Gender,Age,Seat_no,status,date_from,date_to
         FROM bus_ticket JOIN users ON bus_ticket.User_ID=users.userID JOIN bus_schedule ON bus_ticket.BSID=bus_schedule.BSID JOIN bus_details ON bus_details.Bus_No=bus_schedule.Bus_No JOIN bus ON bus_details.Bus_ID=bus.Bus_ID
-        JOIN route ON route.RID=bus_details.RID JOIN bus_passenger ON bus_passenger.Booking_ID=bus_ticket.Booking_ID JOIN bus_transaction ON bus_transaction.booking_ID = bus_ticket.Booking_ID WHERE userID=%s AND bus_ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
+        JOIN route ON route.RID=bus_details.RID JOIN bus_passenger ON bus_passenger.Booking_ID=bus_ticket.Booking_ID WHERE userID=%s AND bus_ticket.Booking_ID=%s""",(int(userId),int(bookingId)) )
        row = cursor.fetchall()
        a = cursor.rowcount
        passengers=[]
        for n in range(a):
            passengers.append({
-            'name':row[n][9],
-            'gender':row[n][10],
-            'age':row[n][11],
-            'seat_no':row[n][12],
+            'name':row[n][8],
+            'gender':row[n][9],
+            'age':row[n][10],
+            'seat_no':row[n][11],
             'no':n+1
            })
        data={
@@ -1051,7 +1101,6 @@ def View_ticket_as_PDF(request,type_of_transport,bookingId):
         'time_to':row[0][5].strftime("%H:%M"),
         'from_p':row[0][6],
         'to_p':row[0][7],
-        'transactionId':row[0][8],
         'image':image,
         'firstname':firstname,
         'lastname':lastname,
@@ -1060,9 +1109,10 @@ def View_ticket_as_PDF(request,type_of_transport,bookingId):
         'userId':userId,
         'type':type_of_transport,
         'booking_id':bookingId,
-        'status':row[0][13],
-        'date_from':row[0][14],
-        'date_to':row[0][15]
+        'status':row[0][12],
+        'date_from':row[0][13],
+        'date_to':row[0][14],
+        'booking_Id':bookingId
         }
        context = data
        response = HttpResponse(content_type='application/pdf')

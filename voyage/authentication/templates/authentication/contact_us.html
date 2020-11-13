@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Voyage-login</title>
+    <title>Contact us</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata">
     <link href="https://fonts.googleapis.com/css2?family=Piedra&display=swap" rel="stylesheet">
    <style>
@@ -22,7 +22,7 @@ body{
     padding:0px 20px;
     position: absolute;
     top: 50%;
-    left: 50%;
+    left: 15%;
     transform: translate(-50%,-50%);
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
@@ -52,6 +52,16 @@ body{
 }
 .textbox input{
     border:none;
+    outline:none;
+    background: white;
+    font-size: 18px;
+    color:black;
+    width:250px;
+    float:left;
+    margin: 0 10px;
+}
+.textbox textarea{
+     border:none;
     outline:none;
     background: white;
     font-size: 18px;
@@ -155,28 +165,30 @@ border-radius:7px;
         <ul>
           <li><a href="{% url 'home' %}"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
           <li><a href="{% url 'auth-signup' %}"><i class="fa fa-user" aria-hidden="true" style="padding-right:10px;" class="icon"></i>Signup</a></li>
-          <li><a href="{% url 'about-us'%}"><i class="fa fa-info" aria-hidden="true" style="padding-right:10px;"class="icon"></i>About</a></li>
+          <li><a href="{% url 'about-us' %}"><i class="fa fa-info" aria-hidden="true" style="padding-right:10px;"class="icon"></i>About</a></li>
           <li><a href="{% url 'Contact-us'%}"><i class="fa fa-phone" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Contact</a></li>
         </ul>
       </nav>
       <form method="POST">
        {%csrf_token%}
     <div class="login-box">
-        <h1><i class="fa fa-user" style="margin-right:10px;"></i>Login</h1>
+        <h1><i class="fa fa-envelope-o" style="margin-right:10px;"></i>Contact us</h1>
+          <div class="textbox">
+            <i class="fa fa-user" aria-hidden="true"></i>
+            <input type="text" placeholder="name" name="name" value="" autocomplete="off" required>
+        </div>
         <div class="textbox" >
             <i class="fa fa-envelope" aria-hidden="true"></i>
             <input type="text" placeholder="email" name="email" value="" autocomplete="off" required>
         </div>
-        <div class="textbox">
-            <i class="fa fa-lock" aria-hidden="true"></i>
-            <input type="password" placeholder="password" name="password" value="" autocomplete="off" required>
+         <div class="textbox" >
+            <i class="fa fa-comment" aria-hidden="true"></i>
+            <textarea rows="4" placeholder="message..." name="message" value="" required></textarea>
         </div>
         <div class="loginbtn">
-           <input class="btn" type="submit" name="" value="Sign in">
+           <input class="btn" type="submit" name="" value="Send">
         </div>
          
-           <a class='signup 'href="{% url 'auth-signup' %}"><p>Don't Have An Account?SignUp</p></a>
-           <a class='signup 'href="{% url 'forgot_password' %}"><p>Forgot password</p></a> 
     </div>
     </form>
      {% if messages %}

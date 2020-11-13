@@ -252,24 +252,31 @@ def Admin_Flights_Schedule(request):
          flight_no = request.POST.get('Flight_No')
          date_from = request.POST.get('date_from')
          date_to   = request.POST.get('date_to')
-         cursor.execute("""SELECT Time_From,seat_Capacity FROM flight_details JOIN flight_schedule ON flight_details.Flight_No = flight_schedule.Flight_No JOIN flight ON flight.Flight_ID = flight_details.Flight_ID WHERE flight_details.Flight_No =%s""",[flight_no])
+         cursor.execute("""SELECT Time_From,seat_Capacity,Time_To FROM flight_details JOIN flight_schedule ON flight_details.Flight_No = flight_schedule.Flight_No JOIN flight ON flight.Flight_ID = flight_details.Flight_ID WHERE flight_details.Flight_No =%s""",[flight_no])
          if cursor.rowcount==0:
              messages.success(request,'flight with the entered flight number does not exist please add flight details first!! ')
              return redirect('http://127.0.0.1:8000/admin/flights/details')
          else:
+             row = cursor.fetchall()
+             seats=row[0][1]
              now = datetime.now()
              now = now.strftime("%Y-%m-%d %H:%M:%S")
-             time_from_db = row[0][1].strftime("%H:%M:%S")
-             date_time_db = date_from+' '+time_from_db
-             if date_time_db<now:
+             time_from_db = row[0][0].strftime("%H:%M:%S")
+             time_to_db = row[0][2].strftime("H:%M:%S")
+             date_time_from_db = date_from+' '+time_from_db
+             date_time_to_db = date_to+' '+time_to_db
+             if date_time_from_db<now or date_time_to_db<date_time_from_db :
                  messages.success(request,'you cannot add a flight schedule in the past')
                  return redirect('http://127.0.0.1:8000/admin/flights/schedule')
              else:
-               row = cursor.fetchall()
-               seats=row[0][1]
-               cursor.execute("""INSERT INTO flight_schedule (Flight_No,date_from,date_to,no_of_seats_vacant) VALUES(%s,%s,%s,%s)""",(flight_no,date_from,date_to,int(seats)))
-               messages.success(request,'flight schedule added successfully')
-               return redirect('http://127.0.0.1:8000/admin/flights/schedule')
+               cursor.execute("""SELECT * FROM flight_schedule WHERE Flight_No =%s AND date_from =%s AND date_to=%s AND no_of_seats_vacant=%s""",(flight_no,date_from,date_to,int(seats)))
+               if cursor.rowcount!=0:
+                   messages.success(request,'flight schedule already exists!!')
+                   return redirect('http://127.0.0.1:8000/admin/flights/schedule')
+               else:
+                cursor.execute("""INSERT INTO flight_schedule (Flight_No,date_from,date_to,no_of_seats_vacant) VALUES(%s,%s,%s,%s)""",(flight_no,date_from,date_to,int(seats)))
+                messages.success(request,'flight schedule added successfully')
+                return redirect('http://127.0.0.1:8000/admin/flights/schedule')
      else:
          return render(request,'authentication/admin_flights_schedule.html',data)
  elif request.session.get('email')!=None:
@@ -511,8 +518,6 @@ def Admin_Buses_Schedule(request):
      if date_filter==None:
          cursor.execute("""SELECT bus_schedule.Bus_No,date_from,date_to,seat_Capacity FROM bus_schedule JOIN bus_details ON bus_schedule.Bus_No = bus_details.Bus_No JOIN bus ON bus_details.Bus_ID = bus.Bus_ID """)
      else:
-         print(date_filter)
-         print(date_filter)
          cursor.execute("""SELECT bus_schedule.Bus_No,date_from,date_to,seat_Capacity FROM bus_schedule JOIN bus_details ON bus_schedule.Bus_No = bus_details.Bus_No JOIN bus ON bus_details.Bus_ID = bus.Bus_ID  WHERE date_from=%s""",[date_filter])
      row = cursor.fetchall()
      schedules=[]
@@ -542,27 +547,31 @@ def Admin_Buses_Schedule(request):
          bus_no = request.POST.get('Bus_No')
          date_from = request.POST.get('date_from')
          date_to   = request.POST.get('date_to')
-         cursor.execute("""SELECT Time_From,seat_Capacity FROM bus_details JOIN bus_schedule ON bus_details.Bus_No = bus_schedule.Bus_No JOIN bus ON bus.Bus_ID = bus_details.Bus_ID WHERE bus_details.Bus_No =%s""",[bus_no])
+         cursor.execute("""SELECT Time_From,seat_Capacity,Time_To FROM bus_details JOIN bus_schedule ON bus_details.Bus_No = bus_schedule.Bus_No JOIN bus ON bus.Bus_ID = bus_details.Bus_ID WHERE bus_details.Bus_No =%s""",[bus_no])
          if cursor.rowcount==0:
              messages.success(request,'bus with the entered bus number does not exist, please add the bus no in the bus details first!!')
              return redirect('http://127.0.0.1:8000/admin/buses/details')
          else:
+             row = cursor.fetchall()
+             seats=row[0][1]
              now = datetime.now()
              now = now.strftime("%Y-%m-%d %H:%M:%S")
-             time_from_db = row[0][1].strftime("%H:%M:%S")
-             date_time_db = date_from+' '+time_from_db
-             if date_time_db<now:
+             time_from_db = row[0][0].strftime("%H:%M:%S")
+             time_to_db = row[0][2].strftime("H:%M:%S")
+             date_time_from_db = date_from+' '+time_from_db 
+             date_time_to_db = date_to+' '+time_to_db
+             if date_time_from_db<now or date_time_from_db>date_time_to_db:
                  messages.success(request,'you cannot add a bus schedule in the past')
                  return redirect('http://127.0.0.1:8000/admin/buses/schedule')
              else:
-               row = cursor.fetchall()
-               seats=row[0][1]
-               cursor.execute("""SELECT * FROM bus_schedule""")
-               count = cursor.rowcount
-               count = count +1
-               cursor.execute("""INSERT INTO bus_schedule (Bus_No,date_from,date_to,no_of_seats_vacant) VALUES(%s,%s,%s,%s)""",(bus_no,date_from,date_to,int(seats)))
-               messages.success(request,'bus schedule added successfully')
-               return redirect('http://127.0.0.1:8000/admin/home')
+               cursor.execute("""SELECT * FROM bus_schedule WHERE Bus_No=%s AND date_from=%s AND date_to=%s AND no_of_seats_vacant=%s""",(bus_no,date_from,date_to,int(seats)))
+               if cursor.rowcount!=0:
+                   messages.success(request,'Bus schedule already exists!!')
+                   return redirect('http://127.0.0.1:8000/admin/buses/schedule')
+               else:
+                cursor.execute("""INSERT INTO bus_schedule (Bus_No,date_from,date_to,no_of_seats_vacant) VALUES(%s,%s,%s,%s)""",(bus_no,date_from,date_to,int(seats)))
+                messages.success(request,'bus schedule added successfully')
+                return redirect('http://127.0.0.1:8000/admin/home')
      else:
          return render(request,'authentication/admin_buses_schedule.html',data)
  elif request.session.get('email')!=None:
