@@ -25,7 +25,7 @@ def myFunc(e):
 def Flights(request):
  userId=request.session.get('userId')
  email=request.session.get('email')
- if request.session.get('email')== email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
     if request.method == "POST":
         from_p = request.POST.get("startfrom")
         to_p = request.POST.get("destination")
@@ -75,7 +75,7 @@ def Flights(request):
 def Flights_Search(request):
  userId=request.session.get('userId')
  email=request.session.get('email')   
- if request.session.get('email')== email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
     cursor = connection.cursor()
     cursor.execute("SELECT DISTINCT from_p FROM route")
     a = cursor.rowcount
@@ -226,7 +226,7 @@ def Flights_Search(request):
 def Flights_Book(request):
  userId=request.session.get('userId')
  email=request.session.get('email')
- if request.session.get('email')== email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
    if request.method == "POST":
       flight_schedule=request.GET.get("c1")
       flight_schedule=int(flight_schedule)
@@ -342,7 +342,7 @@ def Flights_Book(request):
 def Buses(request):
  userId=request.session.get('userId')
  email=request.session.get('email')
- if request.session.get('email')== email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
     if request.method == "POST":
         from_p = request.POST.get("startfrom")
         to_p = request.POST.get("destination")
@@ -393,7 +393,7 @@ def Buses(request):
 def Buses_Search(request):
  userId=request.session.get('userId')
  email=request.session.get('email')
- if request.session.get('email')== email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
     cursor = connection.cursor()
     cursor.execute("SELECT DISTINCT from_p FROM route")
     a = cursor.rowcount
@@ -550,7 +550,7 @@ def Buses_Search(request):
 def Buses_Book(request):
  userId=request.session.get('userId')
  email=request.session.get('email')
- if request.session.get('email')== email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
    if request.method == "POST":
       bus_schedule=request.GET.get("c1")
       bus_schedule=int(bus_schedule)
@@ -669,7 +669,7 @@ def Buses_Book(request):
 def My_Bookings(request):
  userId=request.session.get('userId')
  email=request.session.get('email')
- if request.session.get('email')== email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
     cursor = connection.cursor()
     cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
     user = cursor.fetchall()
@@ -762,7 +762,7 @@ def My_Bookings(request):
 def Booking_Details(request,type_of_transport,bookingId):
  userId=request.session.get('userId')
  email=request.session.get('email')
- if request.session.get('email')== email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
     if request.method=="POST":
         if type_of_transport=='flight':
             cursor = connection.cursor()
@@ -959,7 +959,7 @@ def Booking_Details(request,type_of_transport,bookingId):
 def View_ticket_as_PDF(request,type_of_transport,bookingId):
  userId=request.session.get('userId')
  email=request.session.get('email')
- if request.session.get('email')== email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
        template_path = 'authentication/{}_pdf.html'.format(type_of_transport)
        cursor = connection.cursor()
        cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])

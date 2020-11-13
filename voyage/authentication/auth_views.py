@@ -165,7 +165,7 @@ def Verify_User_by_website(request):
 def user(request):
  userId=request.session.get('userId')
  email=request.session.get('email')
- if request.session.get('email')==email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
     cursor = connection.cursor()
     cursor.execute("""SELECT * FROM users WHERE email= %s""", [email])
     row = cursor.fetchall()

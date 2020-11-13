@@ -23,7 +23,7 @@ def myFunc(e):
 def admin(request):
     userId=request.session.get('userId')
     email=request.session.get('email')
-    if request.session.get('email')== email and request.session.get('role')=='admin':
+    if  request.session.get('role')=='admin':
         cursor = connection.cursor()
         cursor.execute("""SELECT * FROM users WHERE userID= %s""", [userId])
         row = cursor.fetchall()
@@ -49,7 +49,7 @@ def admin(request):
 def Admin_Flights(request):
     userId=request.session.get('userId')
     email=request.session.get('email')
-    if request.session.get('email')== email and request.session.get('role')=='admin':
+    if  request.session.get('role')=='admin':
         
             data={
                 'email':email,
@@ -65,7 +65,7 @@ def Admin_Flights(request):
 def Admin_Flights_List(request):
     userId=request.session.get('userId')
     email=request.session.get('email')
-    if request.session.get('email')== email and request.session.get('role')=='admin':
+    if  request.session.get('role')=='admin':
         flight_id = request.GET.get('flight_id')
         cursor = connection.cursor()
         if flight_id==None:
@@ -121,7 +121,7 @@ def Admin_Flights_List(request):
 def Admin_Flights_Details(request):
     userId=request.session.get('userId')
     email=request.session.get('email')
-    if request.session.get('email')== email and request.session.get('role')=='admin':
+    if  request.session.get('role')=='admin':
         flight_no = request.GET.get('flight_no')
         cursor = connection.cursor()
         from_p_list =[]
@@ -217,7 +217,7 @@ def Admin_Flights_Details(request):
 def Admin_Flights_Schedule(request):
  userId=request.session.get('userId')
  email=request.session.get('email')   
- if request.session.get('email')== email and request.session.get('role')=='admin':
+ if request.session.get('role')=='admin':
      date_filter = request.GET.get('date_from')
      cursor = connection.cursor()
      if date_filter==None:
@@ -281,7 +281,7 @@ def Admin_Flights_Schedule(request):
 def Admin_Buses(request):
     userId=request.session.get('userId')
     email=request.session.get('email')
-    if request.session.get('email')== email and request.session.get('role')=='admin':
+    if  request.session.get('role')=='admin':
       
             data={
                 'email':email,
@@ -298,7 +298,7 @@ def Admin_Buses(request):
 def Admin_Routes(request):
       userId=request.session.get('userId')
       email=request.session.get('email')
-      if request.session.get('email')== email and request.session.get('role')=='admin':
+      if  request.session.get('role')=='admin':
         start = request.GET.get('from_p')
         end = request.GET.get('to_p')
         cursor = connection.cursor()
@@ -355,7 +355,7 @@ def Admin_Routes(request):
 def Admin_Buses_List(request):
     userId=request.session.get('userId')
     email=request.session.get('email')
-    if request.session.get('email')== email and request.session.get('role')=='admin':
+    if  request.session.get('role')=='admin':
         bus_id = request.GET.get('bus_id')
         cursor = connection.cursor()
         if bus_id==None:
@@ -411,7 +411,7 @@ def Admin_Buses_List(request):
 def Admin_Buses_Details(request):
     userId=request.session.get('userId')
     email=request.session.get('email')
-    if request.session.get('email')== email and request.session.get('role')=='admin':
+    if  request.session.get('role')=='admin':
         bus_no = request.GET.get('bus_no')
         cursor = connection.cursor()
         from_p_list =[]
@@ -505,7 +505,7 @@ def Admin_Buses_Details(request):
 def Admin_Buses_Schedule(request):
  userId=request.session.get('userId')
  email=request.session.get('email')
- if request.session.get('email')== email and request.session.get('role')=='admin':
+ if  request.session.get('role')=='admin':
      date_filter = request.GET.get('date_from')
      cursor = connection.cursor()
      if date_filter==None:
