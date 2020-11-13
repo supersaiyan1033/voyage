@@ -221,9 +221,9 @@ def Admin_Flights_Schedule(request):
      date_filter = request.GET.get('date_from')
      cursor = connection.cursor()
      if date_filter==None:
-         cursor.execute("""SELECT * FROM flight_schedule""")
+         cursor.execute("""SELECT flight_schedule.Flight_No,date_from,date_to,seat_Capacity FROM flight_schedule JOIN flight_details ON flight_schedule.Flight_No = flight_details.Flight_No JOIN flight ON flight_details.Flight_ID = flight.Flight_ID """)
      else:
-         cursor.execute("""SELECT * FROM flight_schedule WHERE date_from=%s""",[date_filter])
+         cursor.execute("""SELECT flight_schedule.Flight_No,date_from,date_to,seat_Capacity FROM flight_schedule JOIN flight_details ON flight_schedule.Flight_No = flight_details.Flight_No JOIN flight ON flight_details.Flight_ID = flight.Flight_ID WHERE date_from=%s""",[date_filter])
      row = cursor.fetchall()
      schedules=[]
      a = cursor.rowcount
@@ -233,7 +233,7 @@ def Admin_Flights_Schedule(request):
             'flight_no':row[n][0],
             'date_from':row[n][1],
             'date_to':row[n][2],
-            'seats':row[n][4]
+            'seats':row[n][3]
           })
          data={
          'schedules':schedules,
@@ -509,11 +509,11 @@ def Admin_Buses_Schedule(request):
      date_filter = request.GET.get('date_from')
      cursor = connection.cursor()
      if date_filter==None:
-         cursor.execute("""SELECT * FROM bus_schedule""")
+         cursor.execute("""SELECT bus_schedule.Bus_No,date_from,date_to,seat_Capacity FROM bus_schedule JOIN bus_details ON bus_schedule.Bus_No = bus_details.Bus_No JOIN bus ON bus_details.Bus_ID = bus.Bus_ID """)
      else:
          print(date_filter)
          print(date_filter)
-         cursor.execute("""SELECT * FROM bus_schedule WHERE date_from=%s""",[date_filter])
+         cursor.execute("""SELECT bus_schedule.Bus_No,date_from,date_to,seat_Capacity FROM bus_schedule JOIN bus_details ON bus_schedule.Bus_No = bus_details.Bus_No JOIN bus ON bus_details.Bus_ID = bus.Bus_ID  WHERE date_from=%s""",[date_filter])
      row = cursor.fetchall()
      schedules=[]
      a = cursor.rowcount
@@ -523,7 +523,7 @@ def Admin_Buses_Schedule(request):
             'bus_no':row[n][0],
             'date_from':row[n][1],
             'date_to':row[n][2],
-            'seats':row[n][4]
+            'seats':row[n][3]
           })
          data={
          'schedules':schedules,
