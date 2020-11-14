@@ -353,7 +353,7 @@ def Reset_Password(request,email):
                 messages.success(request, 'Password changed successfully!')
                 return redirect('http://127.0.0.1:8000/login')
             else:
-                messages.success('both fileds must be the same!!')
+                messages.success(request,'both fileds must be the same!!')
                 return render(request,'authentication/reset_password.html')
                  
         else:
