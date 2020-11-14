@@ -316,7 +316,7 @@ td{
 </tr>
 <tr>
 <div class="passengers">
-<form method="POST">
+<form method="POST" onsubmit="return confirm('Do you want to confirm your booking?');">
 {% csrf_token %}
 <table style="margin:auto;">
 {% for p in passengers %}
