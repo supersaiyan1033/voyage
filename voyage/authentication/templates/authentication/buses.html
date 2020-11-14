@@ -261,7 +261,7 @@ transform:scale(1.01);
       <div class="item"><a   href="http://127.0.0.1:8000/profile" style="text-decoration:none;color:white;" ><i class="fa fa-user" style="padding-right:10px;color:red"></i>profile</a></div>
       <div class="item"><a  href="http://127.0.0.1:8000/changepassword" style="text-decoration:none;color:white;"><i class="fa fa-key" style="padding-right:10px;color:red"></i>change password</a></div>
       <div class="item"><a href="http://127.0.0.1:8000/mybookings" style="text-decoration:none;color:white;"><i class="fa fa-suitcase" style="padding-right:10px;color:red"></i>My bookings</a></div>
-      <div class="item" ><a  href="{% url 'auth-login' %}" style="text-decoration:none;color:white;"><i class="fa fa-sign-out" style="padding-right:10px;color:red"></i>log out</a></div>
+      <div class="item" ><a  href="{% url 'auth-login' %}" style="text-decoration:none;color:white;" onclick="return confirm('Do you really want to logout?');"><i class="fa fa-sign-out" style="padding-right:10px;color:red"></i>log out</a></div>
     </div>
   </div>
   </nav>

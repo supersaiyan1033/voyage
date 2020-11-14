@@ -239,7 +239,7 @@ transform:scale(1.01);
       <div class="item"><a   href="http://127.0.0.1:8000/profile" style="text-decoration:none;" ><i class="fa fa-user" style="padding-right:10px;color:red"></i>profile</a></div>
       <div class="item"><a  href="http://127.0.0.1:8000/changepassword" style="text-decoration:none;"><i class="fa fa-key" style="padding-right:10px;color:red"></i>change password</a></div>
       <div class="item"><a href="http://127.0.0.1:8000/mybookings" style="text-decoration:none;"><i class="fa fa-suitcase" style="padding-right:10px;color:red"></i>My bookings</a></div>
-      <div class="item" ><a  href="{% url 'auth-login' %}" style="text-decoration:none;"><i class="fa fa-sign-out" style="padding-right:10px;color:red"></i>log out</a></div>
+      <div class="item" ><a  href="{% url 'auth-login' %}" style="text-decoration:none;" onclick="return confirm('Do you really want to logout?');"><i class="fa fa-sign-out" style="padding-right:10px;color:red"></i>log out</a></div>
     </div>
   </div>
       </nav>
@@ -247,7 +247,7 @@ transform:scale(1.01);
       <br><br><br>
       <h3 style="text-align:center;padding:20px;margin:10px;">Booking details:</h3>
       <br><br><br>
-<div class="bookingdetails" style="background_color:white;border-radius:10px;margin:auto;width:80vw;z-index:9999">
+<div class="bookingdetails" style="background_color:white;border-radius:10px;margin:auto;width:90vw;z-index:9999">
 <table>
 <tr>
 <td style="padding:10px 30px;">
@@ -273,7 +273,7 @@ transform:scale(1.01);
 <td style="padding:5px 30px;width:10vw;">
 <h6>bookingId:<strong>{{booking_Id}}
 </td>
-<td style="padding:5px 30px;width:40vw;">
+<td style="padding:5px 30px;width:50vw;">
 <h6>booked at:<strong>{{date_of_booking}}</strong></h6>
 </td>
 <td style="padding:5px 30px;width:20vw;">
@@ -328,7 +328,7 @@ seat no
         </div>
 </div>
 {% if status_code %}
-<form method="POST">
+<form method="POST" onsubmit="return confirm('Do you really want to cancel the ticket?');">
        {% csrf_token %}
 <div class="loginbtn">
              <input class="btn" type="submit" name="" value="Cancel Ticket" >
