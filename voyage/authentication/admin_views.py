@@ -617,9 +617,14 @@ def View_Admin(request):
     if request.method =='POST':
         role = request.POST.get('role')
         email_id = request.POST.get('email_id')
-        cursor.execute("""UPDATE users SET role=%s WHERE email=%s""",(role,email_id))
-        messages.success(request,"role of the user has been updated successfully!!")
-        return redirect('http://127.0.0.1:8000/admin/home')
+        cursor.execute("""SELECT * FROM users WHERE email=%s""",[email_id])
+        if cursor.rowcount!=0:
+         cursor.execute("""UPDATE users SET role=%s WHERE email=%s""",(role,email_id))
+         messages.success(request,"role of the user has been updated successfully!!")
+         return redirect('http://127.0.0.1:8000/admin/home')
+        else:
+            messages.success(request,'user does not exist')
+            return render(request,'authentication/admin_add_admin.html',data)
     else:
         return render(request,'authentication/admin_add_admin.html',data)
    elif request.session.get('email')!=None:
