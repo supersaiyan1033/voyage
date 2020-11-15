@@ -705,7 +705,7 @@ def Buses_Book(request):
          cursor = connection.cursor()
          cursor.execute("""UPDATE bus_schedule SET no_of_seats_vacant=%s WHERE BSID=%s""",(no_of_seats_vacant,bus_schedule))
          messages.success(request,"Booking Successful!Check Your Ticket In My Bookings")
-         msg = EmailMultiAlternatives(subject, text_content, 'cse190001033@iiti.ac.in', [email])
+         msg = EmailMultiAlternatives(subject, text_content, 'cse190001033@iiti.ac.in', [email],)
          msg.send()
          return redirect("http://127.0.0.1:8000/home")
       else:
@@ -1120,6 +1120,7 @@ def View_ticket_as_PDF(request,type_of_transport,bookingId):
        template = get_template(template_path)
        html = template.render(context)
        pdf = pisa.CreatePDF(html,dest=response)
+       print(type(pdf))
         
        if pdf.err:
           return HttpResponse('We had some errors <pre>' + html + '</pre>')

@@ -587,3 +587,45 @@ def Admin_Buses_Schedule(request):
         return render(request,'authentication/page_not_found.html')
  else:
         return render(request,'authentication/error.html')
+
+def View_Admin(request):
+   if  request.session.get('role')=='admin':
+    email = request.GET.get('email')
+    cursor= connection.cursor()
+    if email == None:
+        cursor.execute("""SELECT firstname,lastname,email,role FROM users""")
+    else:
+        cursor.execute("""SELECT firstname,lastname,email,role FROM users WHERE email=%s""",[email])
+    row = cursor.fetchall()
+    a = cursor.rowcount
+    users = []
+    for n in range(a):
+         users.append({
+            'firstname':row[n][0],
+            'lastname':row[n][1],
+            'email':row[n][2],
+            'role':row[n][3]
+         })
+    if len(users)!=0:
+        data={
+            'users':users
+        }
+    else:
+        data={
+            'users':None
+        }
+    if request.method =='POST':
+        role = request.POST.get('role')
+        email_id = request.POST.get('email_id')
+        cursor.execute("""UPDATE users SET role=%s WHERE email=%s""",(role,email_id))
+        messages.success(request,"role of the user has been updated successfully!!")
+        return redirect('http://127.0.0.1:8000/admin/home')
+    else:
+        return render(request,'authentication/admin_add_admin.html',data)
+   elif request.session.get('email')!=None:
+       return render(request,'authentication/page_not_found.html')
+   else:
+       return render(request,'authentication/error.html')
+
+
+

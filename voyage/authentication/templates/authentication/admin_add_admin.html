@@ -12,7 +12,7 @@
  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
-  <title>Bus details</title>
+  <title>Add admin</title>
   <style>
  body{
   background-color:#E8E8E8;
@@ -204,7 +204,9 @@ transform:scale(1.01);
 .results{
 
 }
-
+::placeholder{
+  color:white;
+}
 .flights:hover{
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
@@ -218,12 +220,13 @@ transform:scale(1.01);
     </div>
     <div id="navbar">
     <ul>
-      <li><a href="http://127.0.0.1:8000/admin/home" ><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
+      <li><a href="http://127.0.0.1:8000/admin/home"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
       <li><a href="http://127.0.0.1:8000/admin/flights"><i class="fa fa-plane" aria-hidden="true" style="padding-right:10px;"></i>Flights</a></li>
       {% comment %} <li><a href="#"><i class="fa fa-train" aria-hidden="true" style="padding-right:10px;" class="icon"></i>Trains</a></li> {% endcomment %}
       <li><a href="http://127.0.0.1:8000/admin/buses"><i class="fa fa-bus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Buses</a></li>
-       <li><a href="http://127.0.0.1:8000/admin/routes"><i class="fa fa-map-marker" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Routes</a></li>
-        <li><a href="http://127.0.0.1:8000/admin/add"><i class="fa fa-user-plus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Add admin</a></li>
+       <li><a href="http://127.0.0.1:8000/admin/routes"  ><i class="fa fa-map-marker" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Routes</a></li>
+        <li><a href="http://127.0.0.1:8000/admin/add"  class="active"><i class="fa fa-user-plus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Add admin</a></li>
+
       </ul>
       </div>
   </nav>
@@ -232,55 +235,44 @@ transform:scale(1.01);
 <br>
 <br>
 <div>
- <table style="width:90vw;margin:auto;">
+ <table style="width:80vw;margin:auto;">
 <form method="POST">
  {%csrf_token%}
 <tr>
- <td>
- <input class="form-control" type="text" value="" name="Bus_id" placeholder="Bus ID" required >
- </td>
- <td>
- <input class="form-control" type="text" value="" name="Bus_no" placeholder="Bus No" required >
- </td>
+{% comment %} <td>
+ <input class="form-control" type="number" value="" name="RID" placeholder="route ID" required > {% endcomment %}
 <td>
-
- <input class="form-control" type="text" value="" name="time_from" placeholder="arrival time" required onfocus="this.type='time'" onfocusout="this.type='text'" >
+ <div class="form-group">
+         
+            <div class="col-lg-8">
+             <input class="form-control" type="text" value="" name="email_id" placeholder="email" required >
+            </div>
+          </div>
+ 
 </td>
 <td>
- <input class="form-control" type="text" value="" name="time_to" placeholder="departure time" required onfocus="this.type='time'" onfocusout="this.type='text'" >
-
-</td>
-<td>
-
-<input list="destinations" name="starting_point" value="" placeholder="Starting point">
-  <datalist id="destinations">
-            {% for from_p in from_p_list %}
-             <option value="{{from_p}}">{{from_p}}</option>
-            {% endfor %}
-  </datalist>
-
-</td>
-<td>
-<input list="destinations" name="destination_point" value="" placeholder="Destination point">
-  <datalist id="destinations">
-            {% for to_p in to_p_list %}
-             <option value="{{to_p}}">{{to_p}}</option>
-            {% endfor %}
-  </datalist>
-</td>
-<td>
-<input class="form-control" type="number" value="" name="price" placeholder="price" required >
+  <div class="form-group">
+            <div class="col-lg-8">
+              <div class="ui-select">
+                <select id="Gender" class="form-control" name="role"  required >
+             <option value="admin" selected="selected" >admin</option>
+             <option value="user"  >user</option>
+                </select>
+              </div>
+            </div>
+          </div>
 </td>
 <td>
 <div class="loginbtn">
-  <input class="btn" type="submit" name="" value="Add Bus details" >
+  <input class="btn" type="submit" name="" value="Update" >
 </td>
 </tr>
 </form>
 </table>
+
 </div style="float:right;">
 <div>
- <h4 style="text-align:center">Buses details</h3>
+ <h4 style="text-align:center">Routes</h3>
  <hr> 
 <table style="width=100vw;">
 <tr>
@@ -291,12 +283,16 @@ transform:scale(1.01);
 <h4>Apply filters:</h4>
 <hr>
 
-{% if bus_no %}
-<label for="pricerange">search by Bus number</label><br>
-  <input class="form-control" type="text" value="{{bus_no}}" name="bus_no" placeholder="bus number" required >
-{% else %}
- <input class="form-control" type="text" value="" name="bus_no" placeholder="bus number" required >
- {% endif %}
+
+<label for="pricerange">Search by email:</label><br>
+{% if start %}
+  <input class="form-control" type="text" value="{{email}}" name="email" placeholder="email" required >
+  
+   {% else %}
+   <input class="form-control" type="text" value="" name="email" placeholder="email" required >
+  
+{%endif%}
+
 
 
 <div class="loginbtn">
@@ -306,37 +302,36 @@ transform:scale(1.01);
 </div>
 </td>
 
-{% if buses %}
+{% if users %}
 <td style="text-align:right;padding-left:50px;vertical-align:text-top;align:left;">
 <div class="results" style="border-left-style:solid;float:right;margin:auto;border-color:grey; margin:4px, 4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; text-align:justify; ">
 
-{% for bus in buses %}
+{% for user in users %}
 <div class="flights" style="background-color:white;border-radius:7px;margin:20px;padding:6px;">
 <table>
 <tr>
 <td style="padding:5px 30px;width:6vw">
-<i class="fa fa-bus fa-3x" style="padding:20px;"></i>
+<i class="fa fa-user fa-3x" style="padding:20px;"></i>
  {% comment %} <img src= "{% static flight.image %}" height="70">  {% endcomment %}
 </td>
-<td style="padding:5px 30px;width:5vw;">
-<h6>id:{{bus.id}}</h6>
-</td>
 <td style="padding:5px 30px;width:20vw;">
-<h6>{{bus.from_time}} - {{bus.to_time}}</h6>
+<h6>{{user.firstname}}&nbsp {{user.lastname}}</h6>
+</td>
+<td style="padding:5px 30px;width:30vw;">
+<h6>{{user.email}}</h6>
+</td>
+<td style="padding:5px 30px;width:10vw;">
+<h6><strong>{{user.role}}</strong></h6>
 </td>
 
- <td style="padding:5px 30px;width:10vw;">
-<h6>bus no:{{bus.no}}</h6>
-</td> 
-<td style="padding:5px 30px;width:15vw;">
-<h6>{{bus.from_p}}-{{bus.to_p}}</h6>
-{% comment %} <div class="loginbtn">
+{% comment %} <td style="padding:5px 30px;width:20vw;">
+<h6>to:{{route.to_p}}</h6>
+</td> {% endcomment %}
+{% comment %} <td style="padding:5px 30px;width:5vw;">
+<div class="loginbtn">
              <input class="btn" type="submit" name="" value="Book" onclick="window.location.href='http://127.0.0.1:8000/login/{{userId}}/{{email}}/flights/book/?c1={{flight.flight_schedule}}&c2={{passengers}}'">
-        </div> {% endcomment %}
-</td> 
-<td style="padding:5px 30px;width:10vw;">
-<h6>price:{{bus.price}}</h6>
-</td>
+        </div>
+</td> {% endcomment %}
 </tr>
 </table>
 </div>
@@ -347,7 +342,7 @@ transform:scale(1.01);
 {% else %}
 <td valign="middle" style="padding-left:50px;align:center;" >
   <div class="results" style="border-left-style:solid;margin:auto;border-color:grey; margin:4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; ">
-  <h2 style="text-align:center;padding:20px;margin:10px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="margin-right:10px;color:red;"></i>No Buses found</h2>
+  <h2 style="text-align:center;padding:20px;margin:10px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="margin-right:10px;color:red;"></i>No users found</h2>
   </div>
   </td>
 {% endif %}
@@ -362,6 +357,10 @@ transform:scale(1.01);
 
     {% endif %}
   <script>
+  function toggleSidebar(ref){
+    document.getElementById("sidebar").classList.toggle('active');
+  }
+
 var d1 = new Date();
 var y1= d1.getFullYear();
 var m1 = d1.getMonth()+1;

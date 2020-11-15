@@ -47,7 +47,6 @@ urlpatterns = [
     #buses views urls
     path('buses',views.Buses,name='buses'),
     path('buses/search/',views.Buses_Search,name='buses_search'),
-    # path('buses/seats/',views.Buses_Seat_Select,name='buses-seats'),
     path('buses/book/',views.Buses_Book,name='buses_book'),
  
 
@@ -67,7 +66,9 @@ urlpatterns = [
     path('admin/buses/details',admin_views.Admin_Buses_Details,name='admin-buses-details'),
     path('admin/buses/schedule',admin_views.Admin_Buses_Schedule,name='admin-buses-schedule'),
 
-    path('admin/routes',admin_views.Admin_Routes,name='admin-routes')
+    path('admin/routes',admin_views.Admin_Routes,name='admin-routes'),
+
+    path('admin/add',admin_views.View_Admin,name='admin-add')
 
 
 
