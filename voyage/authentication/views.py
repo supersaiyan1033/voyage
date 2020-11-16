@@ -120,8 +120,10 @@ def Flights_Search(request):
         if cursor.rowcount != 0:
             flights = []
             for n in range(a):
-
-                flights.append({
+                now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                date_time = date+' '+row[n][4].strftime("%H:%M")
+                if date_time>now:
+                 flights.append({
                     'flight_schedule': row[n][0],
                     'company': row[n][1],
                     'from_p': row[n][2],
@@ -131,7 +133,7 @@ def Flights_Search(request):
                     'price': row[n][6],
                     'available': row[n][7],
                     'image':'fa fa-plane fa-3x'
-                })
+                 })
 
                 data = {
                     'userId': userId,
@@ -178,7 +180,10 @@ def Flights_Search(request):
         if cursor.rowcount != 0:
             flights = []
             for n in range(a):
-                flights.append({
+                now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                date_time = date+' '+row[n][4].strftime("%H:%M")
+                if date_time>now:
+                 flights.append({
                     'flight_schedule': row[n][0],
                     'company': row[n][1],
                     'from_p': row[n][2],
@@ -188,7 +193,7 @@ def Flights_Search(request):
                     'price': row[n][6],
                     'available': row[n][7],
                     'image':'fa fa-plane fa-3x'
-                })
+                 })
                 data = {
                     'userId': userId,
                     'firstname': firstname,
@@ -465,8 +470,10 @@ def Buses_Search(request):
         if cursor.rowcount != 0:
             buses = []
             for n in range(a):
-
-                buses.append({
+                now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                date_time = date+' '+row[n][4].strftime("%H:%M")
+                if date_time>now:
+                 buses.append({
                     'bus_schedule': row[n][0],
                     'company': row[n][1],
                     'from_p': row[n][2],
@@ -476,7 +483,7 @@ def Buses_Search(request):
                     'price': row[n][6],
                     'available': row[n][7],
                     'image': 'fa fa-bus fa-3x'
-                })
+                 })
 
                 data = {
                     'userId': userId,
@@ -524,7 +531,10 @@ def Buses_Search(request):
         if cursor.rowcount != 0:
             buses = []
             for n in range(a):
-                buses.append({
+                now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                date_time = date+' '+row[n][4].strftime("%H:%M")
+                if date_time>now:
+                 buses.append({
                     'bus_schedule': row[n][0],
                     'company': row[n][1],
                     'from_p': row[n][2],
@@ -534,7 +544,7 @@ def Buses_Search(request):
                     'price': row[n][6],
                     'available': row[n][7],
                     'image':'fa fa-bus fa-3x'
-                })
+                 })
                 data = {
                     'userId': userId,
                     'firstname': firstname,
@@ -572,58 +582,7 @@ def Buses_Search(request):
         return render(request,'authentication/error.html')
 
 
-# def Buses_Seat_Select(request):
-#  userId=request.session.get('userId')
-#  email=request.session.get('email')
-#  if request.session.get('email')== email and request.session.get('role')=='user':
-#      bus_schedule=request.GET.get("c1")
-#      bus_schedule=int(bus_schedule)
-#      cursor = connection.cursor()
-#      cursor.execute("""SELECT seat_Capacity,no_of_seats_vacant FROM bus_schedule JOIN bus_details ON bus_schedule.Bus_No = bus_details.Bus_No JOIN bus ON bus_details.Bus_ID = bus.Bus_ID WHERE BSID=%s""",[bus_schedule] )
-#      row = cursor.fetchall()
-#      total = row[0][0]
-#      vacant = row[0][1]
-#      cursor.execute("""SELECT Seat_no FROM bus_passenger JOIN ticket_bus ON bus_passenger.Booking_ID = ticket_bus.Booking_ID JOIN bus_schedule ON bus_schedule.BSID= ticket_bus.BSID WHERE bus_schedule.BSID =%s""",[bus_schedule])
-#      row = cursor.fetchall()
-#      a = cursor.rowcount
-#      booked_seats =[]
-#      total_seats =[]
-#      for n in range(a):
-#          booked_seats.append(row[n][0])
-#      for n in range(len(total)):
-#          total_seats.append(n+1)
-#      vacant_seats = []
-#      vacant_seats = total_seats - booked_seats
-#      vacant_seats_check = []
-#      booked_seats_check =[]
-#      for n in range(len(vacant_seats)):
-#          vacant_seats_check.append({
-#              'status':'booked',
-#              'seat_no':vacant_seats[n]
-#          })
-#      for n in range(len(booked_seats)):
-#          booked_seats_check.append({
-#              'status':None,
-#              'seat_no':booked_seats[n]
-#          })
-#      seats = booked_seats_check + vacant_seats_check
-#      seats.sort(lakey=sortFunc)
 
-
-
-
-
-    
-         
-
-#      data={
-#          'seats':range(1, total_seats+1)
-#      }
-#      return  render(request,'authentication/bus_seat_select.html',data)
-#  elif request.session.get('email')!=None:
-#         return render(request,'authentication/page_not_found.html')
-#  else:
-#         return render(request,'authentication/error.html') 
 
 def Buses_Book(request):
  userId=request.session.get('userId')

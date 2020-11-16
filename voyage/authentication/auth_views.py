@@ -66,8 +66,6 @@ def Log_In(request):
     if request.method == "POST":
         email = request.POST.get('email')
         password = request.POST.get('password')
-        hashedpassword = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt(rounds=12))
-        print(hashedpassword)
         cursor = connection.cursor()
         cursor.execute("""SELECT * FROM users WHERE email= %s""", [email])
         row = cursor.fetchall()
@@ -86,7 +84,6 @@ def Log_In(request):
             'DOB': row[0][8],
             'role':row[0][10]
              }
-            print(dbpassword.encode('utf8'))
             if bcrypt.checkpw(password.encode('utf8'), dbpassword.encode('utf8')):
                
                 request.session['userId'] = row[0][7]
