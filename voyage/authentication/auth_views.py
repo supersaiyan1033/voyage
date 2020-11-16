@@ -66,6 +66,8 @@ def Log_In(request):
     if request.method == "POST":
         email = request.POST.get('email')
         password = request.POST.get('password')
+        hashedpassword = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt(rounds=12))
+        print(hashedpassword)
         cursor = connection.cursor()
         cursor.execute("""SELECT * FROM users WHERE email= %s""", [email])
         row = cursor.fetchall()
@@ -84,6 +86,7 @@ def Log_In(request):
             'DOB': row[0][8],
             'role':row[0][10]
              }
+            print(dbpassword.encode('utf8'))
             if bcrypt.checkpw(password.encode('utf8'), dbpassword.encode('utf8')):
                
                 request.session['userId'] = row[0][7]
@@ -189,7 +192,7 @@ def Verify_User_by_website(request):
 def user(request):
  userId=request.session.get('userId')
  email=request.session.get('email')
- if request.session.get('email')==email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
     cursor = connection.cursor()
     cursor.execute("""SELECT * FROM users WHERE email= %s""", [email])
     row = cursor.fetchall()
@@ -354,10 +357,8 @@ def Reset_Password(request,email):
             confirmpassword = request.POST.get('confirmpassword')
             if newpassword == confirmpassword:
                 cursor = connection.cursor()
-                dbPassword = bcrypt.hashpw(newpassword.encode(
-                    'utf8'), bcrypt.gensalt(rounds=12))
-                cursor.execute(
-                    """UPDATE users SET password=%s WHERE email=%s""", (dbPassword, email))
+                dbPassword = bcrypt.hashpw(newpassword.encode('utf8'), bcrypt.gensalt(rounds=12))
+                cursor.execute("""UPDATE users SET password=%s WHERE email=%s""", (dbPassword, email))
                 messages.success(request, 'Password changed successfully!')
                 return redirect('http://127.0.0.1:8000/login')
             else:

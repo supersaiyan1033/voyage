@@ -28,7 +28,7 @@ def sortFunc(e):
 def Flights(request):
  userId=request.session.get('userId')
  email=request.session.get('email')
- if request.session.get('email')== email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
     if request.method == "POST":
         from_p = request.POST.get("startfrom")
         to_p = request.POST.get("destination")
@@ -78,7 +78,7 @@ def Flights(request):
 def Flights_Search(request):
  userId=request.session.get('userId')
  email=request.session.get('email')   
- if request.session.get('email')== email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
     cursor = connection.cursor()
     cursor.execute("SELECT DISTINCT from_p FROM route")
     a = cursor.rowcount
@@ -229,7 +229,7 @@ def Flights_Search(request):
 def Flights_Book(request):
  userId=request.session.get('userId')
  email=request.session.get('email')
- if request.session.get('email')== email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
    if request.method == "POST":
       flight_schedule=request.GET.get("c1")
       flight_schedule=int(flight_schedule)
@@ -268,11 +268,37 @@ def Flights_Book(request):
          row = cursor.fetchall()
          vacant = row[0][0]
          total = row[0][1]
+         cursor=connection.cursor()
+         cursor.execute("""SELECT Seat_no FROM flight_schedule JOIN flight_ticket ON flight_schedule.FSID=flight_ticket.FSID JOIN flight_passenger ON flight_ticket.Booking_ID=flight_passenger.Booking_ID WHERE flight_schedule.FSID=%s and status=%s""",(flight_schedule,"booked"))
+         row=cursor.fetchall()
+         booked=[]
+         if cursor.rowcount!=0:
+             for k in range(cursor.rowcount):
+                 booked.append(row[k][0])
+         cursor=connection.cursor()
+         cursor.execute("""SELECT DISTINCT Seat_no FROM flight_schedule JOIN flight_ticket ON flight_schedule.FSID=flight_ticket.FSID JOIN flight_passenger ON flight_ticket.Booking_ID=flight_passenger.Booking_ID WHERE flight_schedule.FSID=%s and status=%s""",(flight_schedule,"cancelled"))
+         row=cursor.fetchall()
+         cancelled=[]
+         if cursor.rowcount!=0:
+            for m in range(cursor.rowcount):
+                print(row[m][0])
+                cancelled.append(row[m][0])
+         common=[]
+         if len(booked)!=0:
+             for p in range(len(cancelled)):
+                 if cancelled[p] in booked:
+                     common.append(cancelled[p])
+         if len(common)!=0:
+             for q in range(len(common)):
+                 cancelled.remove(common[q])
          for n in range(1,passengers+1):
             name = request.POST.get('name{}'.format(n))
             age = request.POST.get('age{}'.format(n))
             gender = request.POST.get('gender{}'.format(n))
-            seat = total-vacant+n
+            if len(cancelled)!=0:
+                seat=cancelled.pop()
+            else:
+                seat=total-vacant+n
             cursor = connection.cursor()
             cursor.execute("""INSERT INTO flight_passenger(Name,Gender,Age,Booking_ID,Seat_no) VALUES(%s,%s,%s,%s,%s)""",(name, gender, age, booking_id, seat))
          no_of_seats_vacant = vacant-passengers
@@ -345,7 +371,7 @@ def Flights_Book(request):
 def Buses(request):
  userId=request.session.get('userId')
  email=request.session.get('email')
- if request.session.get('email')== email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
     if request.method == "POST":
         from_p = request.POST.get("startfrom")
         to_p = request.POST.get("destination")
@@ -396,7 +422,7 @@ def Buses(request):
 def Buses_Search(request):
  userId=request.session.get('userId')
  email=request.session.get('email')
- if request.session.get('email')== email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
     cursor = connection.cursor()
     cursor.execute("SELECT DISTINCT from_p FROM route")
     a = cursor.rowcount
@@ -602,7 +628,7 @@ def Buses_Search(request):
 def Buses_Book(request):
  userId=request.session.get('userId')
  email=request.session.get('email')
- if request.session.get('email')== email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
    if request.method == "POST":
       bus_schedule=request.GET.get("c1")
       bus_schedule=int(bus_schedule)
@@ -642,18 +668,44 @@ def Buses_Book(request):
          row = cursor.fetchall()
          vacant = row[0][0]
          total = row[0][1]
+         cursor = connection.cursor()
+         cursor.execute("""SELECT Seat_no FROM bus_schedule JOIN bus_ticket ON bus_schedule.BSID=bus_ticket.BSID JOIN bus_passenger ON bus_ticket.Booking_ID=bus_passenger.Booking_ID WHERE bus_schedule.BSID=%s and status=%s""",(bus_schedule,"booked"))
+         row=cursor.fetchall()
+         booked=[]
+         if cursor.rowcount!=0:
+             for n in range(cursor.rowcount):
+                 booked.append(row[n][0])
+         cursor = connection.cursor()
+         cursor.execute("""SELECT DISTINCT Seat_no FROM bus_schedule JOIN bus_ticket ON bus_schedule.BSID=bus_ticket.BSID JOIN bus_passenger ON bus_ticket.Booking_ID=bus_passenger.Booking_ID WHERE bus_schedule.BSID=%s and status=%s""",(bus_schedule,"cancelled"))
+         row=cursor.fetchall()
+         cancelled=[]
+         if cursor.rowcount!=0:
+             for m in range(cursor.rowcount):
+                 cancelled.append(row[m][0])
+         common=[]
+         if len(booked)!=0:
+             for p in range(len(cancelled)):
+                 if cancelled[p] in booked:
+                     common.append(cancelled[p])
+         if len(common)!=0:
+             for q in range(len(common)):
+                 cancelled.remove(common[q])
+         print(cancelled)
          for n in range(1,passengers+1):
             name = request.POST.get('name{}'.format(n))
             age = request.POST.get('age{}'.format(n))
             gender = request.POST.get('gender{}'.format(n))
-            seat = total-vacant+n
+            if len(cancelled)!=0:
+                seat=cancelled.pop()
+            else:
+                seat = total-vacant+n
             cursor = connection.cursor()
             cursor.execute("""INSERT INTO bus_passenger(Name,Gender,Age,Booking_ID,Seat_no) VALUES(%s,%s,%s,%s,%s)""",(name, gender, age, booking_id, seat))
          no_of_seats_vacant = vacant-passengers
          cursor = connection.cursor()
          cursor.execute("""UPDATE bus_schedule SET no_of_seats_vacant=%s WHERE BSID=%s""",(no_of_seats_vacant,bus_schedule))
          messages.success(request,"Booking Successful!Check Your Ticket In My Bookings")
-         msg = EmailMultiAlternatives(subject, text_content, 'cse190001033@iiti.ac.in', [email])
+         msg = EmailMultiAlternatives(subject, text_content, 'cse190001033@iiti.ac.in', [email],)
          msg.send()
          return redirect("http://127.0.0.1:8000/home")
       else:
@@ -721,7 +773,7 @@ def Buses_Book(request):
 def My_Bookings(request):
  userId=request.session.get('userId')
  email=request.session.get('email')
- if request.session.get('email')== email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
     cursor = connection.cursor()
     cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
     user = cursor.fetchall()
@@ -814,7 +866,7 @@ def My_Bookings(request):
 def Booking_Details(request,type_of_transport,bookingId):
  userId=request.session.get('userId')
  email=request.session.get('email')
- if request.session.get('email')== email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
     if request.method=="POST":
         if type_of_transport=='flight':
             cursor = connection.cursor()
@@ -1009,7 +1061,7 @@ def Booking_Details(request,type_of_transport,bookingId):
 def View_ticket_as_PDF(request,type_of_transport,bookingId):
  userId=request.session.get('userId')
  email=request.session.get('email')
- if request.session.get('email')== email and request.session.get('role')=='user':
+ if  request.session.get('role')=='user':
        template_path = 'authentication/{}_pdf.html'.format(type_of_transport)
        cursor = connection.cursor()
        cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
@@ -1068,6 +1120,7 @@ def View_ticket_as_PDF(request,type_of_transport,bookingId):
        template = get_template(template_path)
        html = template.render(context)
        pdf = pisa.CreatePDF(html,dest=response)
+       print(type(pdf))
         
        if pdf.err:
           return HttpResponse('We had some errors <pre>' + html + '</pre>')
