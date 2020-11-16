@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Piedra&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css">
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
+  <title>Add admin</title>
+  <style>
+ body{
+  background-color:#E8E8E8;
+}
+nav{
+width:100%;
+margin:auto;
+position:fixed;
+height:70px;
+background-color:rgba(0,0,0,1);
+z-index:9999;
+}
+nav .logo{
+    float:left;
+    color:#fff;
+    padding-top:18px;
+    padding-bottom:18px;
+    padding-left:20px;
+    padding-right:20px;
+    font-family:'Piedra', cursive;
+    font-weight:bold;
+}
+#navbar ul{
+    text-align:right;
+    margin:0px;
+    padding:0px;
+    display:flex;
+    float:left;
+}
+#navbar ul li{
+    list-style:none;
+    display:inline-block;
+    padding:15px;
+}
+#navbar ul li a{
+    float:left;
+    text-decoration:none;
+    display:inline-block;
+    text-transform:uppercase;
+    color:#fff;
+    font-size:15px;
+    font-family:'ABeeZee', serif;
+    padding:9px 10px;
+    margin-right:8px;
+    position:relative;
+}
+#navbar ul li a:after{
+  background: none repeat scroll 0 0 transparent;
+  content:"";
+  position:absolute;
+  display:block;
+  background:red;
+  bottom:0;
+  height: 2px;
+  left: 50%;
+  transition: width 0.3s ease 0s, left 0.3s ease 0s;
+  width: 0;
+}
+#navbar ul li a:hover:after{
+    color:red;
+    width:100%;
+    left:0;
+    .icon{
+  color:red;
+}
+    
+}
+#navbar ul li a.active:after{
+color:red;
+background:red;
+width:100%;
+left:0;
+}
+
+.textbox{
+    width:100%;
+    overflow:hidden;
+    font-size: 20px ;
+    padding:8px 0;
+    margin:8px 0;
+   border-bottom: 1px solid;
+    border-bottom-color: white ; 
+}
+.textbox i{
+    width:26px;
+   float:left;
+    color:white;
+   
+}
+.textbox input{
+    border:none;
+    outline:none;
+    background: white;
+    font-size: 18px;
+    color:white;
+    float:left;
+    background-color:transparent;
+    margin: 0 10px;
+}
+.loginbtn{
+    text-align:center;
+    margin:0 10px;
+}
+.btn{
+    text-align:center;
+    color:white;
+    background: #e60000;
+    padding:5px 15px;
+    font-size: 18px;
+    cursor: pointer;
+    margin:12px 0px;
+    border-radius:7px;
+}
+.btn:hover{
+  background:#ff1a1a
+}
+.signup{
+    color:black;
+    padding:20px;
+    font-size: 17px;
+    font-weight: bold;
+    text-align:center;
+}
+.signup:hover{
+    color:#ff1a1a;
+}
+#select{
+    color:black;
+    border:none;
+    outline:none;
+    background: white;
+    font-size: 19px;
+    float:left;
+    margin: 0 10px;
+
+}
+.center{
+  padding:10px;
+  margin:auto;
+    border-radius:7px;
+    background-color:#2F4F4F;
+
+}
+.filter{
+  padding:10px;
+  margin:0px 20px;
+  width:15vw;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+#sidebar {
+  position:absolute;
+  top:0px;
+  right:-220px;
+  width:220px;
+  height:100%;
+  background:rgba(0,0,0,0);
+  transition:all 300ms linear;
+}
+#sidebar.active {
+  right:0px;
+  height:100vh;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   background-color:white;
+}
+#sidebar .toggle-btn {
+  position:absolute;
+  right:240px;
+  top:10px;
+}
+#sidebar .toggle-btn span {
+  display:block;
+  width:30px;
+  height:5px;
+  background:white;
+  margin:5px 0px;
+  cursor:pointer;
+}
+#sidebar div.list div.item  {
+  padding:15px 10px;
+  font-weight: bold;
+  border-bottom:1px solid black;
+  color:blue;
+  text-transform:uppercase;
+  font-size:14px;
+}
+#sidebar div.list div.item:hover {
+transform:scale(1.01);
+}
+.results{
+
+}
+::placeholder{
+  color:white;
+}
+.flights:hover{
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="logo">
+      <h3><i class="fa fa-suitcase" aria-hidden="true" style="padding:5px 10px;color:red;"></i>PACK YOUR BAGS</h3>
+    </div>
+    <div id="navbar">
+    <ul>
+      <li><a href="http://127.0.0.1:8000/admin/home"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
+      <li><a href="http://127.0.0.1:8000/admin/flights"><i class="fa fa-plane" aria-hidden="true" style="padding-right:10px;"></i>Flights</a></li>
+      {% comment %} <li><a href="#"><i class="fa fa-train" aria-hidden="true" style="padding-right:10px;" class="icon"></i>Trains</a></li> {% endcomment %}
+      <li><a href="http://127.0.0.1:8000/admin/buses"><i class="fa fa-bus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Buses</a></li>
+       <li><a href="http://127.0.0.1:8000/admin/routes"  ><i class="fa fa-map-marker" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Routes</a></li>
+        <li><a href="http://127.0.0.1:8000/admin/add"  class="active"><i class="fa fa-user-plus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Add admin</a></li>
+
+      </ul>
+      </div>
+  </nav>
+</div>
+<br>
+<br>
+<br>
+<div>
+ <table style="width:80vw;margin:auto;">
+<form method="POST">
+ {%csrf_token%}
+<tr>
+{% comment %} <td>
+ <input class="form-control" type="number" value="" name="RID" placeholder="route ID" required > {% endcomment %}
+<td>
+ <div class="form-group">
+         
+            <div class="col-lg-8">
+             <input class="form-control" type="text" value="" name="email_id" placeholder="email" required >
+            </div>
+          </div>
+ 
+</td>
+<td>
+  <div class="form-group">
+            <div class="col-lg-8">
+              <div class="ui-select">
+                <select id="Gender" class="form-control" name="role"  required >
+             <option value="admin" selected="selected" >admin</option>
+             <option value="user"  >user</option>
+                </select>
+              </div>
+            </div>
+          </div>
+</td>
+<td>
+<div class="loginbtn">
+  <input class="btn" type="submit" name="" value="Update" >
+</td>
+</tr>
+</form>
+</table>
+
+</div style="float:right;">
+<div>
+ <h4 style="text-align:center">Update role</h3>
+ <hr> 
+<table style="width=100vw;">
+<tr>
+<td valign="top" style="align:right;">
+<div class="filter" style="background-color:white;">
+<form method="GET">
+{% csrf_token %}
+<h4>Apply filters:</h4>
+<hr>
+
+
+<label for="pricerange">Search by email:</label><br>
+{% if start %}
+  <input class="form-control" type="text" value="{{email}}" name="email" placeholder="email" required >
+  
+   {% else %}
+   <input class="form-control" type="text" value="" name="email" placeholder="email" required >
+  
+{%endif%}
+
+
+
+<div class="loginbtn">
+           <input class="btn" type="submit" name="" value="Apply" style="background-color:#3392FF;">
+        </div>
+</form>
+</div>
+</td>
+
+{% if users %}
+<td style="text-align:right;padding-left:50px;vertical-align:text-top;align:left;">
+<div class="results" style="border-left-style:solid;float:right;margin:auto;border-color:grey; margin:4px, 4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; text-align:justify; ">
+
+{% for user in users %}
+<div class="flights" style="background-color:white;border-radius:7px;margin:20px;padding:6px;">
+<table>
+<tr>
+<td style="padding:5px 30px;width:6vw">
+<i class="fa fa-user fa-3x" style="padding:20px;"></i>
+ {% comment %} <img src= "{% static flight.image %}" height="70">  {% endcomment %}
+</td>
+<td style="padding:5px 30px;width:20vw;">
+<h6>{{user.firstname}}&nbsp {{user.lastname}}</h6>
+</td>
+<td style="padding:5px 30px;width:30vw;">
+<h6>{{user.email}}</h6>
+</td>
+<td style="padding:5px 30px;width:10vw;">
+<h6><strong>{{user.role}}</strong></h6>
+</td>
+
+{% comment %} <td style="padding:5px 30px;width:20vw;">
+<h6>to:{{route.to_p}}</h6>
+</td> {% endcomment %}
+{% comment %} <td style="padding:5px 30px;width:5vw;">
+<div class="loginbtn">
+             <input class="btn" type="submit" name="" value="Book" onclick="window.location.href='http://127.0.0.1:8000/login/{{userId}}/{{email}}/flights/book/?c1={{flight.flight_schedule}}&c2={{passengers}}'">
+        </div>
+</td> {% endcomment %}
+</tr>
+</table>
+</div>
+{% endfor %}
+
+</div>
+</td>
+{% else %}
+<td valign="middle" style="padding-left:50px;align:center;" >
+  <div class="results" style="border-left-style:solid;margin:auto;border-color:grey; margin:4px; padding:4px;  height: 70vh;  overflow-x: hidden; overflow-y: auto; ">
+  <h2 style="text-align:center;padding:20px;margin:10px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="margin-right:10px;color:red;"></i>No users found</h2>
+  </div>
+  </td>
+{% endif %}
+</tr>
+</table>
+
+{% if messages %}
+        {% for message in messages %}
+         {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
+  <script>
+  function toggleSidebar(ref){
+    document.getElementById("sidebar").classList.toggle('active');
+  }
+
+var d1 = new Date();
+var y1= d1.getFullYear();
+var m1 = d1.getMonth()+1;
+if(m1<10)
+    m1="0"+m1;
+var dt1 = d1.getDate();
+if(dt1<10)
+dt1 = "0"+dt1;
+var d2 = y1+"-"+m1+"-"+dt1;
+document.getElementById('d1').value=d2;
+</script>
+</body>
+</html>

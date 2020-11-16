@@ -45,7 +45,15 @@ def Contact_us(request):
         email = request.POST.get('email')
         name = request.POST.get('name')
         message = request.POST.get('message')
-        send_mail(subject='Contact us',from_email='cse190001033@iiti.ac.in',recipient_list=['cse190001033@iiti.ac.in'],html_message='<h4>from:{}</h4><br><h4>to:cse190001033@iiti.ac.in</h4><br><h3>{}</h3>'.format(email,message),message=message)
+        cursor = connection.cursor()
+        cursor.execute("""SELECT email FROM users WHERE role=%s""",['admin'])
+        a = cursor.rowcount
+        row = cursor.fetchall()
+        admins = []
+        for n in range(a):
+           admins.append(row[n][0])
+
+        send_mail(subject='Contact us',from_email='cse190001033@iiti.ac.in',recipient_list=admins,html_message='<h4>from:{}</h4><br><h4>to:cse190001033@iiti.ac.in</h4><br><h3>{}</h3>'.format(email,message),message=message)
         messages.success(request,'sent successfully')
         return render(request,'authentication/contact_us.html')
     else:
@@ -127,7 +135,7 @@ def Sign_Up(request):
             request.session['password'] = password
             otp = get_random_string(6, allowed_chars='0123456789')
             request.session['otp'] = otp
-            send_mail(subject='{} is your Pack your bags OTP'.format(otp),message='click on the below link to Verify your email.Note that this link will only be active for 10minutes.',from_email='cse190001033@iiti.ac.in',recipient_list=[email],fail_silently=False,
+            send_mail(subject='{} is your Pack your bags OTP'.format(otp),message='click on the below link to Verify your email.Note that this link will only be active for 10minutes.',from_email='cse190001033@iiti.ac.in',recipient_list=[email],fail_silently=True,
             html_message="<h2>Please enter the below OTP to complete your verification.Note that this OTP will only be active for 10minutes.</h2><br><h2>{}</h2>".format(otp))
             request.session['email_link_is_active'] = True
             messages.success(request,'OTP sent to your email please check your inbox!!')
