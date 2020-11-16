@@ -556,7 +556,7 @@ def Admin_Buses_Schedule(request):
              messages.success(request,'bus with the entered bus number does not exist, please add the bus no in the bus details first!!')
              return redirect('http://127.0.0.1:8000/admin/buses/details')
          else:
-             cursor.execute("""SELECT seat_Capcaity FROM bus_details JOIN bus ON bus_details.Bus_ID= bus.Bus_ID WJHERE Bus_No = %s""",[bus_no])
+             cursor.execute("""SELECT seat_Capacity FROM bus_details JOIN bus ON bus_details.Bus_ID= bus.Bus_ID WHERE Bus_No = %s""",[bus_no])
              row = cursor.fetchall()
              seats = row[0][0]
              cursor.execute("""SELECT Time_From,Time_To FROM bus_details  WHERE bus_details.Bus_No =%s""",[bus_no])
