@@ -4,18 +4,18 @@
  ##EXECUTION INSTRUCTIONS
  
  1. DATABASE SETUP:
- step1:(if u don’t have a super user in MySQL): 
+  * step1:(if u don’t have a super user in MySQL): 
   * Open MySQL client and type your password 
   * Run this command in the MySQL client terminal CREATE USER 'project'@'localhost' IDENTIFIED BY 'roomno605';
   * Then run this command GRANT ALL PRIVILEGES ON *.* TO 'project'@'localhost' WITH GRANT OPTION; 
   * Then run this command FLUSH PRIVILEGES; 
- step2:
+  * step2:
   * Open MySQL workbench and click on add a new Connection
   * If you already have a super user you can use that user's username and the default port is 3306 if your default port is different change it to that particular port. 
   * Click on test connection and it will ask you to enter the password you have to enter that password which you used to create a super user.
   * If u get a dialogue box that the connection is successful click on ok. If u get an error please follow the above steps again correctly.
   * Now click on the added connection. 
-  * As in the above picture click on the administration tab which is on the left side beside schemas.
+  *  click on the administration tab which is on the left side beside schemas.
   * Then click on the option data import/restore 
   * You can see that there are two options import from self-contained file and import from dump project folder choose the option import from self-contained file and browse to the location project_files->voyage->voyage.sql file and click on start import which is on the bottom right of this window. 
   * Then go to the schemas tab and click on refresh to see the new database named voyage added. 
@@ -26,7 +26,6 @@
  * Use your super user credentials here in the place of user, password and port and in the name field type the name of database(voyage). 
  * Now save settings.py file.
  * Now go to project_files->voyage and open vs code terminal or command prompt at this location and run this command env\Scripts\activate
- * After this command it should look something like this
  * Now run the command cd voyage 
  * Now run the command python manage.py runserver 
  * It should look something like this 
