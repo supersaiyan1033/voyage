@@ -235,7 +235,7 @@ transform:scale(1.01);
 <br>
 <div>
  <table style="width:80vw;margin:auto;">
-<form method="POST">
+<form method="POST"  onsubmit="return confirm('Do you really want to add this flight?');">
  {%csrf_token%}
 <tr>
  <td>

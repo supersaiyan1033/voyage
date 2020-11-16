@@ -236,7 +236,7 @@ transform:scale(1.01);
 <br>
 <div>
  <table style="width:80vw;margin:auto;">
-<form method="POST">
+<form method="POST"  onsubmit="return confirm('Are you sure u want to make this update?');">
  {%csrf_token%}
 <tr>
 {% comment %} <td>

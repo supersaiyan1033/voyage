@@ -338,7 +338,7 @@ def Forgot_Password(request):
             send_mail(subject='reset password request',message='click on the below link to reset your password.Note that this link will only be active for 10minutes.',from_email='cse190001033@iiti.ac.in',recipient_list=[email],fail_silently=False,
             html_message="<h1> click on the below link to reset your password.Note that this link will only be active for 10minutes.</h1><br><a href='http://127.0.0.1:8000/login/forgotpassword/{}/resetpassword'>to reset your password click here</a>".format(email))
             request.session['link_is_active'] = True
-            messages.success(request,'rest link sent to the entered mail please check your inbox!!')
+            messages.success(request,'reset link sent to the entered mail please check your inbox!!')
             return render(request,'authentication/forgotpassword.html')
         else:
             messages.success(request,'account with the entered email doesnt exist')
