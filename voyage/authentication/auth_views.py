@@ -28,9 +28,9 @@ def Home(request):
         userId = request.session.get('userId')
         role=request.session.get('role')
         if role=="user":
-            url ="http://127.0.0.1:8000/home"
+            url ="https://voyage605app.herokuapp.com/home"
         else:
-            url="http://127.0.0.1:8000/admin/home"    
+            url="https://voyage605app.herokuapp.com/admin/home"    
         return redirect(url)
     else:
       return render(request, 'authentication/home.html')
@@ -91,13 +91,13 @@ def Log_In(request):
                     messages.success(request, 'Login successful!!')
                     request.session['email'] = email
                     request.session['role'] = data['role']
-                    url = "http://127.0.0.1:8000/admin/home"
+                    url = "https://voyage605app.herokuapp.com/admin/home"
                     return redirect(url)
                 elif data["role"]=='user':
                     messages.success(request, 'Login successful!!')
                     request.session['email'] = email
                     request.session['role'] = data['role']
-                    url="http://127.0.0.1:8000/home"
+                    url="https://voyage605app.herokuapp.com/home"
                     return redirect(url)
                
             else:
@@ -139,11 +139,11 @@ def Sign_Up(request):
             html_message="<h2>Please enter the below OTP to complete your verification.Note that this OTP will only be active for 10minutes.</h2><br><h2>{}</h2>".format(otp))
             request.session['email_link_is_active'] = True
             messages.success(request,'OTP sent to your email please check your inbox!!')
-            return redirect('http://127.0.0.1:8000/login/emailverification')
+            return redirect('https://voyage605app.herokuapp.com/login/emailverification')
         else:
             messages.success(
                 request, 'User with the entered email already exists please login to continue!!!')
-            return redirect('http://127.0.0.1:8000/login')
+            return redirect('https://voyage605app.herokuapp.com/login')
             
 
     else:
@@ -168,14 +168,14 @@ def Verify_User_by_website(request):
              password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt(rounds=12))
              cursor.execute("""INSERT INTO users(firstname,lastname,gender,address,DOB,mobileno,email,password) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",(firstname,lastname,gender,address,DOB,mobileno,email,password))
              messages.success(request,'verification successful!!please  login to continue')
-             return redirect('http://127.0.0.1:8000/login')
+             return redirect('https://voyage605app.herokuapp.com/login')
          else:
              messages.success(request,'invalid otp try again!!')
-             return redirect('http://127.0.0.1:8000/login/emailverification')
+             return redirect('https://voyage605app.herokuapp.com/login/emailverification')
 
         else:
             messages.success(request,'Signup before email verification!!')
-            return redirect('http://127.0.0.1:8000/signup')
+            return redirect('https://voyage605app.herokuapp.com/signup')
     else:
         return render(request,'authentication/verify_email.html')
  else:
@@ -252,7 +252,7 @@ def Profile(request):
             messages.success(request, 'Profile is Updated Successfully!')
             cursor.execute("""UPDATE users SET firstname=%s,lastname=%s,gender=%s,address=%s,mobileno=%s,email=%s,DOB=%s WHERE userId=%s """,
                            (firstname, lastname, gender, address, mobileno, email, DOB, data['userId']))
-            return redirect('http://127.0.0.1:8000/home')
+            return redirect('https://voyage605app.herokuapp.com/home')
         else:
             messages.success(request, 'incorrect password please try again!!')
             return render(request, 'authentication/profile.html', data)
@@ -281,7 +281,7 @@ def ChangePassword(request):
                 cursor.execute(
                     """UPDATE users SET password=%s WHERE email=%s""", (dbPassword, email))
                 messages.success(request, 'Password changed successfully!')
-                return redirect('http://127.0.0.1:8000/home')
+                return redirect('https://voyage605app.herokuapp.com/home')
             else:
                 messages.success(
                     request, 'new password and confirm password must be the same!!')
@@ -314,7 +314,7 @@ def Admin_ChangePassword(request):
                 cursor.execute(
                     """UPDATE users SET password=%s WHERE email=%s""", (dbPassword, email))
                 messages.success(request, 'Password changed successfully!')
-                return redirect('http://127.0.0.1:8000/admin/home')
+                return redirect('https://voyage605app.herokuapp.com/admin/home')
             else:
                 messages.success(
                     request, 'new password and confirm password must be the same!!')
@@ -336,7 +336,7 @@ def Forgot_Password(request):
         cursor.execute("""SELECT * FROM users WHERE email= %s""", [email] )
         if cursor.rowcount==1:
             send_mail(subject='reset password request',message='click on the below link to reset your password.Note that this link will only be active for 10minutes.',from_email='cse190001033@iiti.ac.in',recipient_list=[email],fail_silently=False,
-            html_message="<h1> click on the below link to reset your password.Note that this link will only be active for 10minutes.</h1><br><a href='http://127.0.0.1:8000/login/forgotpassword/{}/resetpassword'>to reset your password click here</a>".format(email))
+            html_message="<h1> click on the below link to reset your password.Note that this link will only be active for 10minutes.</h1><br><a href='http://https://voyage605app.herokuapp.com//login/forgotpassword/{}/resetpassword'>to reset your password click here</a>".format(email))
             request.session['link_is_active'] = True
             messages.success(request,'reset link sent to the entered mail please check your inbox!!')
             return render(request,'authentication/forgotpassword.html')
@@ -357,7 +357,7 @@ def Reset_Password(request,email):
                 dbPassword = bcrypt.hashpw(newpassword.encode('utf8'), bcrypt.gensalt(rounds=12))
                 cursor.execute("""UPDATE users SET password=%s WHERE email=%s""", (dbPassword, email))
                 messages.success(request, 'Password changed successfully!')
-                return redirect('http://127.0.0.1:8000/login')
+                return redirect('https://voyage605app.herokuapp.com/login')
             else:
                 messages.success(request,'both fileds must be the same!!')
                 return render(request,'authentication/reset_password.html')
