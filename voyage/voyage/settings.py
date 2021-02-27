@@ -133,10 +133,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 SESSION_COOKIE_AGE=2500
-
-STATICFILES_DIRS=(
-    os.path.join(BASE_DIR,'authentication/static'),
-)
+STATIC_ROOT =os.path.join(BASE_DIR,'static')
+#STATICFILES_DIRS=(os.path.join(BASE_DIR,'static'),
+#)
 
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST_USER='cse190001033@iiti.ac.in'
