@@ -135,7 +135,7 @@ STATIC_URL = '/static/'
 SESSION_COOKIE_AGE=2500
 
 STATICFILES_DIRS=(
-    os.path.join(BASE_DIR,'static'),
+    os.path.join(BASE_DIR,'authentication/static'),
 )
 
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
