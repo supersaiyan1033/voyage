@@ -28,6 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
  #  '192.168.0.10'
+ 'voyage605app.herokuapp.com'
 ]
 
 
