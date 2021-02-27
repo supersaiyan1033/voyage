@@ -240,10 +240,10 @@ transform:scale(1.01);
     </div>
     <div id="navbar">
     <ul>
-      <li><a href="http://127.0.0.1:8000/home"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
-      <li><a href="http://127.0.0.1:8000/flights" ><i class="fa fa-plane" aria-hidden="true" style="padding-right:10px;"></i>Flights</a></li>
+      <li><a href="https://voyage605app.herokuapp.com/home"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
+      <li><a href="https://voyage605app.herokuapp.com/flights" ><i class="fa fa-plane" aria-hidden="true" style="padding-right:10px;"></i>Flights</a></li>
       {% comment %} <li><a href="#"><i class="fa fa-train" aria-hidden="true" style="padding-right:10px;" class="icon"></i>Trains</a></li> {% endcomment %}
-      <li><a href="http://127.0.0.1:8000/buses" class="active"><i class="fa fa-bus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Buses</a></li>
+      <li><a href="https://voyage605app.herokuapp.com/buses" class="active"><i class="fa fa-bus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Buses</a></li>
       {% comment %} <li><a href="#"><i class="fa fa-suitcase" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Trips</a></li> {% endcomment %}
 
       </ul>
@@ -258,9 +258,9 @@ transform:scale(1.01);
     <div class="list">
       <div class="item"><i class="fa fa-user-circle fa-4x" style="color:red;" ></i>{{firstname}} {{lastname}}</div>
       <div class="item"><i class="fa fa-credit-card-alt" style="color:red;padding-right:10px;"></i><i class="fa fa-inr" style="color:white;padding-right:5px;"></i>{{wallet}}</div>
-      <div class="item"><a   href="http://127.0.0.1:8000/profile" style="text-decoration:none;color:white;" ><i class="fa fa-user" style="padding-right:10px;color:red"></i>profile</a></div>
-      <div class="item"><a  href="http://127.0.0.1:8000/changepassword" style="text-decoration:none;color:white;"><i class="fa fa-key" style="padding-right:10px;color:red"></i>change password</a></div>
-      <div class="item"><a href="http://127.0.0.1:8000/mybookings" style="text-decoration:none;color:white;"><i class="fa fa-suitcase" style="padding-right:10px;color:red"></i>My bookings</a></div>
+      <div class="item"><a   href="https://voyage605app.herokuapp.com/profile" style="text-decoration:none;color:white;" ><i class="fa fa-user" style="padding-right:10px;color:red"></i>profile</a></div>
+      <div class="item"><a  href="https://voyage605app.herokuapp.com/changepassword" style="text-decoration:none;color:white;"><i class="fa fa-key" style="padding-right:10px;color:red"></i>change password</a></div>
+      <div class="item"><a href="https://voyage605app.herokuapp.com/mybookings" style="text-decoration:none;color:white;"><i class="fa fa-suitcase" style="padding-right:10px;color:red"></i>My bookings</a></div>
       <div class="item" ><a  href="{% url 'auth-login' %}" style="text-decoration:none;color:white;" onclick="return confirm('Do you really want to logout?');"><i class="fa fa-sign-out" style="padding-right:10px;color:red"></i>log out</a></div>
     </div>
   </div>
