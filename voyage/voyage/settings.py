@@ -81,13 +81,13 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'voyage',
-        'USER':'project',
-        'PASSWORD':'roomno605',
-        'HOST': 'localhost',
+        'USER':'roomno605@voyage1033',
+        'PASSWORD':'nitin@CO1',
+        'HOST': 'voyage1033.mysql.database.azure.com',
         'PORT':'3306',
-         'OPTIONS': {
-                        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-                    }
+        #  'OPTIONS': {
+        #                 'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        #             }
 
     }
 }
