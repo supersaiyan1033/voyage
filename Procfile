@@ -1,1 +1,1 @@
-web: gunicorn voyage.wsgi
+web: gunicorn --pythonpath voyage voyage.wsgi
