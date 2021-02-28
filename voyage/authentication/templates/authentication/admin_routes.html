@@ -220,12 +220,12 @@ transform:scale(1.01);
     </div>
     <div id="navbar">
     <ul>
-      <li><a href="https://voyage605app.herokuapp.com/admin/home"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
-      <li><a href="https://voyage605app.herokuapp.com/admin/flights"><i class="fa fa-plane" aria-hidden="true" style="padding-right:10px;"></i>Flights</a></li>
+      <li><a href="/admin/home"><i class="fa fa-home" aria-hidden="true" style="padding-right:10px;"></i>Home</a></li>
+      <li><a href="/admin/flights"><i class="fa fa-plane" aria-hidden="true" style="padding-right:10px;"></i>Flights</a></li>
       {% comment %} <li><a href="#"><i class="fa fa-train" aria-hidden="true" style="padding-right:10px;" class="icon"></i>Trains</a></li> {% endcomment %}
-      <li><a href="https://voyage605app.herokuapp.com/admin/buses"><i class="fa fa-bus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Buses</a></li>
-       <li><a href="https://voyage605app.herokuapp.com/admin/routes"  class="active"><i class="fa fa-map-marker" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Routes</a></li>
-         <li><a href="https://voyage605app.herokuapp.com/admin/add"><i class="fa fa-user-plus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Add admin</a></li>
+      <li><a href="/admin/buses"><i class="fa fa-bus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Buses</a></li>
+       <li><a href="/admin/routes"  class="active"><i class="fa fa-map-marker" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Routes</a></li>
+         <li><a href="/admin/add"><i class="fa fa-user-plus" aria-hidden="true" style="padding-right:10px;"class="icon"></i>Add admin</a></li>
       </ul>
       </div>
   </nav>
@@ -309,7 +309,7 @@ transform:scale(1.01);
 </td> {% endcomment %}
 {% comment %} <td style="padding:5px 30px;width:5vw;">
 <div class="loginbtn">
-             <input class="btn" type="submit" name="" value="Book" onclick="window.location.href='https://voyage605app.herokuapp.com/login/{{userId}}/{{email}}/flights/book/?c1={{flight.flight_schedule}}&c2={{passengers}}'">
+             <input class="btn" type="submit" name="" value="Book" onclick="window.location.href='/login/{{userId}}/{{email}}/flights/book/?c1={{flight.flight_schedule}}&c2={{passengers}}'">
         </div>
 </td> {% endcomment %}
 </tr>

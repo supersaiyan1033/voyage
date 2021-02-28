@@ -34,7 +34,7 @@ def Flights(request):
         to_p = request.POST.get("destination")
         date = request.POST.get("dateOfTravel")
         passengers = request.POST.get("travellers")
-        return redirect('https://voyage605app.herokuapp.com/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(from_p, to_p, date, passengers))
+        return redirect('/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(from_p, to_p, date, passengers))
 
     else:
 
@@ -312,10 +312,10 @@ def Flights_Book(request):
          msg = EmailMultiAlternatives(subject, text_content, 'cse190001033@iiti.ac.in', [email])
          msg.send()
          messages.success(request,"Booking Successful!Check Your Ticket In My Bookings")
-         return redirect("https://voyage605app.herokuapp.com/home")
+         return redirect("/home")
       else:
           messages.success(request,"No Sufficient Money For Transaction In Wallet!")
-          return redirect("https://voyage605app.herokuapp.com/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}".format(from_p, to_p,date_from,passengers))
+          return redirect("/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}".format(from_p, to_p,date_from,passengers))
    else:
       flight_schedule=request.GET.get("c1")
       flight_schedule=int(flight_schedule)
@@ -362,10 +362,10 @@ def Flights_Book(request):
               return render(request, 'authentication/flights_book.html', data)
           else:
               messages.success(request, 'No.of passengers excede available no.of seats!')
-              return redirect('https://voyage605app.herokuapp.com/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(from_p, to_p, date_from, passengers))
+              return redirect('/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(from_p, to_p, date_from, passengers))
       else:
           messages.success(request, 'please select valid number of passengers!')
-          return redirect('https://voyage605app.herokuapp.com/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(from_p, to_p, date_from, passengers))
+          return redirect('/flights/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(from_p, to_p, date_from, passengers))
  elif request.session.get('email')!=None:
         return render(request,'authentication/page_not_found.html')
  else:
@@ -382,7 +382,7 @@ def Buses(request):
         to_p = request.POST.get("destination")
         date = request.POST.get("dateOfTravel")
         passengers = request.POST.get("travellers")
-        return redirect('https://voyage605app.herokuapp.com/buses/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(from_p, to_p, date, passengers))
+        return redirect('/buses/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(from_p, to_p, date, passengers))
 
     else:
 
@@ -666,10 +666,10 @@ def Buses_Book(request):
          messages.success(request,"Booking Successful!Check Your Ticket In My Bookings")
          msg = EmailMultiAlternatives(subject, text_content, 'cse190001033@iiti.ac.in', [email],)
          msg.send()
-         return redirect("https://voyage605app.herokuapp.com/home")
+         return redirect("/home")
       else:
           messages.success(request,"No Sufficient Money For Transaction In Wallet!")
-          return redirect("https://voyage605app.herokuapp.com/buses/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}".format(from_p, to_p,date_from,passengers))
+          return redirect("/buses/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}".format(from_p, to_p,date_from,passengers))
    else:
       bus_schedule=request.GET.get("c1")
       bus_schedule=int(bus_schedule)
@@ -716,10 +716,10 @@ def Buses_Book(request):
               return render(request, 'authentication/buses_book.html', data)
           else:
               messages.success(request, 'No.of passengers excede available no.of seats!')
-              return redirect('https://voyage605app.herokuapp.com/buses/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(from_p, to_p, date_from, passengers))
+              return redirect('/buses/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(from_p, to_p, date_from, passengers))
       else:
           messages.success(request, 'please select valid number of passengers!')
-          return redirect('https://voyage605app.herokuapp.com/buses/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(from_p, to_p, date_from, passengers))
+          return redirect('/buses/search/?startfrom={}&destination={}&dateOfTravel={}&travellers={}'.format(from_p, to_p, date_from, passengers))
  elif request.session.get('email')!=None:
         return render(request,'authentication/page_not_found.html')
  else:
@@ -858,10 +858,10 @@ def Booking_Details(request,type_of_transport,bookingId):
                 cursor = connection.cursor()
                 cursor.execute("""INSERT INTO flight_transaction(booking_ID,description,amount) VALUES(%s,%s,%s)""",(bookingId,"refund",(price*no_of_passengers)))
                 messages.success(request, 'Ticket Cancelled Successfully!')
-                return redirect("https://voyage605app.herokuapp.com/home")
+                return redirect("/home")
             else:
                 messages.success(request, 'Ticket Cannot Be Cancelled!') 
-                return redirect("https://voyage605app.herokuapp.com/mybookings/{}/{}/details".format(type_of_transport,bookingId))
+                return redirect("/mybookings/{}/{}/details".format(type_of_transport,bookingId))
         else:
             cursor = connection.cursor()
             cursor.execute("""SELECT No_of_passengers,Price,bus_ticket.BSID,no_of_seats_vacant,date_from,Time_From FROM  bus_ticket JOIN bus_schedule ON bus_ticket.BSID=bus_schedule.BSID JOIN bus_details ON bus_schedule.Bus_No=bus_details.Bus_No WHERE Booking_ID=%s""", [bookingId])
@@ -893,10 +893,10 @@ def Booking_Details(request,type_of_transport,bookingId):
                 cursor = connection.cursor()
                 cursor.execute("""INSERT INTO bus_transaction(booking_ID,description,amount) VALUES(%s,%s,%s)""",(bookingId,"refund",(price*no_of_passengers)))
                 messages.success(request, 'Ticket Cancelled Successfully!')
-                return redirect("https://voyage605app.herokuapp.com/home")
+                return redirect("/home")
             else:
                 messages.success(request, 'Ticket Cannot Be Cancelled!')
-                return redirect("https://voyage605app.herokuapp.com/mybookings/{}/{}/details".format(type_of_transport,bookingId))      
+                return redirect("/mybookings/{}/{}/details".format(type_of_transport,bookingId))      
     else:    
         cursor = connection.cursor()
         cursor.execute("""SELECT firstname,lastname,wallet FROM users WHERE userID=%s""", [userId])
