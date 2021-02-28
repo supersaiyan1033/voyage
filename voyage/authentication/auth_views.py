@@ -336,7 +336,7 @@ def Forgot_Password(request):
         cursor.execute("""SELECT * FROM users WHERE email= %s""", [email] )
         if cursor.rowcount==1:
             send_mail(subject='reset password request',message='click on the below link to reset your password.Note that this link will only be active for 10minutes.',from_email='cse190001033@iiti.ac.in',recipient_list=[email],fail_silently=False,
-            html_message="<h1> click on the below link to reset your password.Note that this link will only be active for 10minutes.</h1><br><a href='http://https://voyage605app.herokuapp.com//login/forgotpassword/{}/resetpassword'>to reset your password click here</a>".format(email))
+            html_message="<h1> click on the below link to reset your password.Note that this link will only be active for 10minutes.</h1><br><a href='https://voyage605app.herokuapp.com/login/forgotpassword/{}/resetpassword'>to reset your password click here</a>".format(email))
             request.session['link_is_active'] = True
             messages.success(request,'reset link sent to the entered mail please check your inbox!!')
             return render(request,'authentication/forgotpassword.html')
