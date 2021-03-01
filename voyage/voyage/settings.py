@@ -84,9 +84,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'bb60sayiwdmeyzsvv1zg',
-        'USER':'u2goaatoyn27qvxp',
-        'PASSWORD':'gq7BIe3cTG2iqZULsk1S',
-        'HOST': 'bb60sayiwdmeyzsvv1zg-mysql.services.clever-cloud.com',
+        'USER':'roomno605@voyage1033',
+        'PASSWORD':'nitin@CO1',
+        'HOST': 'voyage1033.mysql.database.azure.com',
         'PORT':'3306',
         #  'OPTIONS': {
         #                 'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
