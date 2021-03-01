@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'voyage.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bb60sayiwdmeyzsvv1zg',
+        'NAME': 'voyage',
         'USER':'roomno605@voyage1033',
         'PASSWORD':'nitin@CO1',
         'HOST': 'voyage1033.mysql.database.azure.com',
