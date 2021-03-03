@@ -110,7 +110,7 @@ def Admin_Flights_List(request):
                 
                 cursor.execute("""INSERT INTO flight (Flight_ID,Company,Flight_name,seat_Capacity) VALUES (%s,%s,%s,%s)""",(int(Flight_id),'Voyage',Flight_name,int(Flight_capacity)))
                 messages.success(request,'flight added successfully')
-                return redirect('http://127.0.0.1:8000/admin/home')
+                return redirect('/admin/home')
         else:
          return render(request,'authentication/admin_flights_list.html',data)
     elif request.session.get('email')!=None:
@@ -186,13 +186,13 @@ def Admin_Flights_Details(request):
             row = cursor.fetchall()
             if cursor.rowcount==0:
                 messages.success(request,'the entered route does not exist please add route first!!')
-                return redirect('http://127.0.0.1:8000/admin/routes')
+                return redirect('/admin/routes')
             else:
               rid = row[0][0]
               cursor.execute("""SELECT * FROM flight WHERE Flight_ID=%s""",[Flight_id])
               if cursor.rowcount==0:
                   messages.success(request,'flight does not exist please add the flight!!')
-                  return redirect('http://127.0.0.1:8000/admin/flights/list')
+                  return redirect('/admin/flights/list')
               else:
                cursor.execute("""SELECT * FROM flight_details WHERE Flight_ID=%s AND Time_From=%s AND Time_To=%s AND Price=%s AND Flight_No=%s AND RID=%s""",(int(Flight_id),time_from,time_to,int(price),int(flight_no),int(row[0][0])))
                if cursor.rowcount!=0:
@@ -202,7 +202,7 @@ def Admin_Flights_Details(request):
                 
                 cursor.execute("""INSERT INTO flight_details (Flight_ID,Time_From,Time_To,Price,Flight_No,RID) VALUES (%s,%s,%s,%s,%s,%s)""",(int(Flight_id),time_from,time_to,int(price),int(flight_no),rid))
                 messages.success(request,'flight details added successfully')
-                return redirect('http://127.0.0.1:8000/admin/home')
+                return redirect('/admin/home')
         else:
          return render(request,'authentication/admin_flights_details.html',data)
            
@@ -255,7 +255,7 @@ def Admin_Flights_Schedule(request):
          cursor.execute("""SELECT * FROM flight_details WHERE Flight_No=%s""",[flight_no])
          if cursor.rowcount==0:
              messages.success(request,'flight with the entered flight number does not exist please add flight details first!! ')
-             return redirect('http://127.0.0.1:8000/admin/flights/details')
+             return redirect('/admin/flights/details')
          else:
              cursor.execute("""SELECT seat_Capacity FROM flight_details JOIN flight ON flight.Flight_ID= flight_details.Flight_ID WHERE Flight_No=%s""",[flight_no])
              row = cursor.fetchall()
@@ -270,16 +270,16 @@ def Admin_Flights_Schedule(request):
              date_time_to_db = date_to+' '+time_to_db
              if date_time_from_db<now or date_time_to_db<date_time_from_db :
                  messages.success(request,'you cannot add a flight schedule in the past')
-                 return redirect('http://127.0.0.1:8000/admin/flights/schedule')
+                 return redirect('/admin/flights/schedule')
              else:
                cursor.execute("""SELECT * FROM flight_schedule WHERE Flight_No =%s AND date_from =%s AND date_to=%s AND no_of_seats_vacant=%s""",(flight_no,date_from,date_to,int(seats)))
                if cursor.rowcount!=0:
                    messages.success(request,'flight schedule already exists!!')
-                   return redirect('http://127.0.0.1:8000/admin/flights/schedule')
+                   return redirect('/admin/flights/schedule')
                else:
                 cursor.execute("""INSERT INTO flight_schedule (Flight_No,date_from,date_to,no_of_seats_vacant) VALUES(%s,%s,%s,%s)""",(flight_no,date_from,date_to,int(seats)))
                 messages.success(request,'flight schedule added successfully')
-                return redirect('http://127.0.0.1:8000/admin/flights/schedule')
+                return redirect('/admin/flights/schedule')
 
      else:
          return render(request,'authentication/admin_flights_schedule.html',data)
@@ -355,7 +355,7 @@ def Admin_Routes(request):
             else:
                 cursor.execute("""INSERT INTO route (from_p,to_p) VALUES (%s,%s)""",(start,end))
                 messages.success(request,'route added successfully')
-                return redirect('http://127.0.0.1:8000/admin/home')
+                return redirect('/admin/home')
         else:
          return render(request,'authentication/admin_routes.html',data)
       elif request.session.get('email')!=None:
@@ -411,7 +411,7 @@ def Admin_Buses_List(request):
                 
                 cursor.execute("""INSERT INTO bus(Bus_ID,Company,Bus_name,seat_Capacity) VALUES (%s,%s,%s,%s)""",(int(Bus_id),'Voyage',Bus_name,int(Bus_capacity)))
                 messages.success(request,'Bus added successfully')
-                return redirect('http://127.0.0.1:8000/admin/home')
+                return redirect('/admin/home')
         else:
          return render(request,'authentication/admin_buses_list.html',data)
     elif request.session.get('email')!=None:
@@ -487,13 +487,13 @@ def Admin_Buses_Details(request):
             row = cursor.fetchall()
             if cursor.rowcount==0:
                 messages.success(request,'the entered route does not exist, please add route first!!')
-                return redirect('http://127.0.0.1:8000/admin/routes')
+                return redirect('/admin/routes')
             else:
               rid = row[0][0]
               cursor.execute("""SELECT * FROM bus WHERE Bus_ID=%s""",[Bus_id])
               if cursor.rowcount==0:
                   messages.success(request,'bus does not exist witht he entered bus id please add bus!!')
-                  return redirect('http://127.0.0.1:8000/admin/buses/list')
+                  return redirect('/admin/buses/list')
               else:
                cursor.execute("""SELECT * FROM bus_details WHERE Bus_ID=%s AND Time_From=%s AND Time_To=%s AND Price=%s AND Bus_No=%s AND RID=%s""",(int(Bus_id),time_from,time_to,int(price),int(bus_no),int(row[0][0])))
                if cursor.rowcount!=0:
@@ -503,7 +503,7 @@ def Admin_Buses_Details(request):
                 
                 cursor.execute("""INSERT INTO bus_details (Bus_ID,Time_From,Time_To,Price,Bus_No,RID) VALUES (%s,%s,%s,%s,%s,%s)""",(int(Bus_id),time_from,time_to,int(price),int(bus_no),rid))
                 messages.success(request,'bus details added successfully')
-                return redirect('http://127.0.0.1:8000/admin/home')
+                return redirect('/admin/home')
         else:
          return render(request,'authentication/admin_buses_details.html',data)
            
@@ -554,7 +554,7 @@ def Admin_Buses_Schedule(request):
          cursor.execute("""SELECT * FROM bus_details WHERE Bus_No=%s""",[bus_no])
          if cursor.rowcount==0:
              messages.success(request,'bus with the entered bus number does not exist, please add the bus no in the bus details first!!')
-             return redirect('http://127.0.0.1:8000/admin/buses/details')
+             return redirect('/admin/buses/details')
          else:
              cursor.execute("""SELECT seat_Capacity FROM bus_details JOIN bus ON bus_details.Bus_ID= bus.Bus_ID WHERE Bus_No = %s""",[bus_no])
              row = cursor.fetchall()
@@ -569,16 +569,16 @@ def Admin_Buses_Schedule(request):
              date_time_to_db = date_to+' '+time_to_db
              if date_time_from_db<now or date_time_from_db>date_time_to_db:
                  messages.success(request,'you cannot add a bus schedule in the past')
-                 return redirect('http://127.0.0.1:8000/admin/buses/schedule')
+                 return redirect('/admin/buses/schedule')
              else:
                cursor.execute("""SELECT * FROM bus_schedule WHERE Bus_No=%s AND date_from=%s AND date_to=%s AND no_of_seats_vacant=%s""",(bus_no,date_from,date_to,int(seats)))
                if cursor.rowcount!=0:
                    messages.success(request,'Bus schedule already exists!!')
-                   return redirect('http://127.0.0.1:8000/admin/buses/schedule')
+                   return redirect('/admin/buses/schedule')
                else:
                 cursor.execute("""INSERT INTO bus_schedule (Bus_No,date_from,date_to,no_of_seats_vacant) VALUES(%s,%s,%s,%s)""",(bus_no,date_from,date_to,int(seats)))
                 messages.success(request,'bus schedule added successfully')
-                return redirect('http://127.0.0.1:8000/admin/home')
+                return redirect('/admin/home')
           
 
      else:
@@ -621,7 +621,7 @@ def View_Admin(request):
         if cursor.rowcount!=0:
          cursor.execute("""UPDATE users SET role=%s WHERE email=%s""",(role,email_id))
          messages.success(request,"role of the user has been updated successfully!!")
-         return redirect('http://127.0.0.1:8000/admin/home')
+         return redirect('/admin/home')
         else:
             messages.success(request,'user does not exist')
             return render(request,'authentication/admin_add_admin.html',data)
