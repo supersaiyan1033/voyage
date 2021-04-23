@@ -664,7 +664,7 @@ def Buses_Book(request):
          cursor = connection.cursor()
          cursor.execute("""UPDATE bus_schedule SET no_of_seats_vacant=%s WHERE BSID=%s""",(no_of_seats_vacant,bus_schedule))
          messages.success(request,"Booking Successful!Check Your Ticket In My Bookings")
-         msg = EmailMultiAlternatives(subject, text_content, 'cse190001033@iiti.ac.in', [email],)
+         msg = EmailMultiAlternatives(subject, text_content, 'nalanda3306@gamil.com', [email],)
          msg.send()
          return redirect("/home")
       else:
