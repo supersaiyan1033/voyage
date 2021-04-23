@@ -27,10 +27,10 @@ SECRET_KEY = '&6v+(%d-*4mt)-*r3&n2zkn6*c5^$v6fayang22jua!iagp!8q'
 DEBUG = False
 
 ALLOWED_HOSTS = [
- #  '192.168.0.10'
- #'voyage605app.herokuapp.com',
-  #'127.0.0.1',
-  '*'
+    #  '192.168.0.10'
+    # 'voyage605app.herokuapp.com',
+    # '127.0.0.1',
+    '*'
 ]
 
 
@@ -84,10 +84,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'voyage',
-        'USER':'roomno605@voyage1033',
-        'PASSWORD':'nitin@CO1',
+        'USER': 'roomno605@voyage1033',
+        'PASSWORD': 'nitin@CO1',
         'HOST': 'voyage1033.mysql.database.azure.com',
-        'PORT':'3306',
+        'PORT': '3306',
         #  'OPTIONS': {
         #                 'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
         #             }
@@ -135,14 +135,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-SESSION_COOKIE_AGE=2500
-STATIC_ROOT =os.path.join(BASE_DIR,'static')
-#STATICFILES_DIRS=(os.path.join(BASE_DIR,'static'),
-#)
+SESSION_COOKIE_AGE = 2500
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATICFILES_DIRS=(os.path.join(BASE_DIR,'static'),
+# )
 
-EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST_USER='nitin.makula@gmail.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST_USER = 'nalanda3306@gmail.com'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_USE_TLS =True
-EMAIL_HOST_PASSWORD='50892562'
+EMAIL_USE_TLS = True
+EMAIL_HOST_PASSWORD = 'roomno@605'
